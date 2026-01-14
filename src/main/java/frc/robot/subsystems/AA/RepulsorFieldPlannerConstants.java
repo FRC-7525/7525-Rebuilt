@@ -23,6 +23,7 @@ public final class RepulsorFieldPlannerConstants {
 	public static final int ARROWS_ON_X_AXIS = 40; // change if you want to modiify the number of arrows on the x-axis
 	public static final int ARROWS_ON_Y_AXIS = 20; // likewise for y axis. more arrows = better viz but slower performance
 
+	//cool stuff
     public static final class DefaultObstalces {
         public static final List<Obstacle> FIELD_OBSTACLES = List.of(
 			new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 2.625)),
