@@ -12,42 +12,43 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {}
 
-  @Override
-  public void robotPeriodic() {}
+	/**
+	 * This function is run when the robot is first started up and should be used for any
+	 * initialization code.
+	 */
+	public Robot() {}
 
-  @Override
-  public void autonomousInit() {}
+	@Override
+	public void robotPeriodic() {}
 
-  @Override
-  public void autonomousPeriodic() {}
+	@Override
+	public void autonomousInit() {}
 
-  @Override
-  public void teleopInit() {}
+	@Override
+	public void autonomousPeriodic() {}
 
-  @Override
-  public void teleopPeriodic() {}
+	@Override
+	public void teleopInit() {}
 
-  @Override
-  public void disabledInit() {}
+	@Override
+	public void teleopPeriodic() {}
 
-  @Override
-  public void disabledPeriodic() {}
+	@Override
+	public void disabledInit() {}
 
-  @Override
-  public void testInit() {}
+	@Override
+	public void disabledPeriodic() {}
 
-  @Override
-  public void testPeriodic() {}
+	@Override
+	public void testInit() {}
 
-  @Override
-  public void simulationInit() {}
+	@Override
+	public void testPeriodic() {}
 
-  @Override
-  public void simulationPeriodic() {}
+	@Override
+	public void simulationInit() {}
+
+	@Override
+	public void simulationPeriodic() {}
 }
