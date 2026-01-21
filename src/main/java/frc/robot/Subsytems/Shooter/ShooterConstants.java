@@ -63,4 +63,21 @@ public final class ShooterConstants {
 	public static final Pose2d HUB_POSITION = new Pose2d(0.0, 0.0, new edu.wpi.first.math.geometry.Rotation2d());
 
 	public static final Pose2d ALLIANCE_BASKET_POSITION = new Pose2d(0.0, 0.0, new edu.wpi.first.math.geometry.Rotation2d());
+
+	// Shot sample data for lookup tables (placeholder/example values)
+	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
+
+	public static final java.util.List<ShotSampleData> HUB_SHOT_SAMPLES = java.util.List.of(
+		new ShotSampleData(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
+		new ShotSampleData(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
+		new ShotSampleData(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
+		new ShotSampleData(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
+	);
+
+	public static final java.util.List<ShotSampleData> ALLIANCE_SHOT_SAMPLES = java.util.List.of(
+		new ShotSampleData(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52),
+		new ShotSampleData(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56),
+		new ShotSampleData(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
+		new ShotSampleData(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
+	);
 }
