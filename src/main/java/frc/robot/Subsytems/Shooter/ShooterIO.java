@@ -12,7 +12,7 @@ public interface ShooterIO {
 		public Angle hoodSetpoint;
 	}
 
-	public abstract void updateOutputs(ShooterIOOutputs outputs);
+	public abstract void logOutputs(ShooterIOOutputs outputs);
 
 	public abstract void setWheelVelocity(AngularVelocity velocity);
 

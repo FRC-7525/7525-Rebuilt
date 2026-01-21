@@ -55,7 +55,7 @@ public final class ShooterMath {
 		Translation2d toTarget = targetPose.getTranslation().minus(robotPose.getTranslation());
 
 		double baseDistance = toTarget.getNorm();
-		if (baseDistance < 1e-6) {
+		if (baseDistance < SOLVER_EPSILON) {
 			return Optional.empty();
 		}
 
@@ -67,7 +67,7 @@ public final class ShooterMath {
 		double predictedDistance = baseDistance;
 
 		// Fixed-point iteration (converges quickly)
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < SOLVER_ITERATIONS; i++) {
 			ShotSolution sol = interpolateByDistance(predictedDistance, table);
 
 			double newDistance = baseDistance - vParallel * sol.timeOfFlightSeconds;

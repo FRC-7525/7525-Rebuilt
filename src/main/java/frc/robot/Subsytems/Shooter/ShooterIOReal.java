@@ -14,14 +14,14 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 public class ShooterIOReal implements ShooterIO {
 
-	private TalonFX leftMotor;
-	private TalonFX rightMotor;
-	private TalonFX hoodMotor;
-	private Angle hoodSetpoint;
-	private AngularVelocity wheelSetpoint;
-	private PIDController hoodPID;
-	private PIDController wheelPID;
-	private SimpleMotorFeedforward wheelFeedforward;
+	protected TalonFX leftMotor;
+	protected TalonFX rightMotor;
+	protected TalonFX hoodMotor;
+	protected Angle hoodSetpoint;
+	protected AngularVelocity wheelSetpoint;
+	protected PIDController hoodPID;
+	protected PIDController wheelPID;
+	protected SimpleMotorFeedforward wheelFeedforward;
 
 	public ShooterIOReal() {
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
@@ -34,7 +34,7 @@ public class ShooterIOReal implements ShooterIO {
 	}
 
 	@Override
-	public void updateOutputs(ShooterIOOutputs outputs) {
+	public void logOutputs(ShooterIOOutputs outputs) {
 		outputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
 		outputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
 		outputs.wheelSetpoint = wheelSetpoint;
@@ -56,11 +56,11 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public boolean atWheelVelocitySetpoint() {
-		return (Math.abs(leftMotor.getVelocity().getValue().in(RotationsPerSecond) - wheelSetpoint.in(RotationsPerSecond)) < 50);
+		return (Math.abs(leftMotor.getVelocity().getValue().in(RotationsPerSecond) - wheelSetpoint.in(RotationsPerSecond)) < WHEEL_VELOCITY_TOLERANCE);
 	}
 
 	@Override
 	public boolean atHoodAngleSetpoint() {
-		return (Math.abs(hoodMotor.getPosition().getValue().in(Degrees) - hoodSetpoint.in(Degrees)) < 0.01);
+		return (Math.abs(hoodMotor.getPosition().getValue().in(Degrees) - hoodSetpoint.in(Degrees)) < HOOD_ANGLE_TOLERANCE_DEGREES);
 	}
 }
