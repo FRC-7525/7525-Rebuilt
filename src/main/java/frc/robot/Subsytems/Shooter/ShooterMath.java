@@ -20,19 +20,13 @@ public final class ShooterMath {
 
 	static {
 		// Example data only — replace with real measured shots
-		HUB_TABLE.addAll(List.of(
-			new ShotSample(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
-			new ShotSample(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
-			new ShotSample(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
-			new ShotSample(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
-		));
+		HUB_TABLE.addAll(
+			List.of(new ShotSample(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50), new ShotSample(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55), new ShotSample(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60), new ShotSample(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65))
+		);
 
-		ALLIANCE_TABLE.addAll(List.of(
-			new ShotSample(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52),
-			new ShotSample(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56),
-			new ShotSample(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
-			new ShotSample(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
-		));
+		ALLIANCE_TABLE.addAll(
+			List.of(new ShotSample(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52), new ShotSample(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56), new ShotSample(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61), new ShotSample(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66))
+		);
 
 		HUB_TABLE.sort(Comparator.comparingDouble(s -> s.distanceMeters));
 		ALLIANCE_TABLE.sort(Comparator.comparingDouble(s -> s.distanceMeters));
@@ -46,7 +40,7 @@ public final class ShooterMath {
 		return solveMovingShot(robotPose, ALLIANCE_BASKET_POSITION, robotVelocity, ALLIANCE_TABLE);
 	}
 
-    // Stolen Maths fr
+	// Stolen Maths fr
 	private static Optional<ShotSolution> solveMovingShot(Pose2d robotPose, Pose2d targetPose, Translation2d robotVelocity, List<ShotSample> table) {
 		if (table.isEmpty()) {
 			return Optional.empty();
