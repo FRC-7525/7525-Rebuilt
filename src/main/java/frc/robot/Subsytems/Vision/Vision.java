@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase {
 				}
 			);
 		}
-		return instance;
+		return instance; 
 	}
 
 	private Vision(VisionIO... io) {
