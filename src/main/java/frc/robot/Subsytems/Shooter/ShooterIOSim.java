@@ -8,7 +8,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -18,18 +17,11 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.GlobalConstants;
 
-public class ShooterIOSim implements ShooterIO {
+public class ShooterIOSim extends ShooterIOReal {
 
-	private TalonFX leftMotor;
 	private TalonFXSimState leftMotorSim;
 	private TalonFXSimState rightMotorSim;
 	private TalonFXSimState hoodMotorSim;
-	private TalonFX rightMotor;
-	private TalonFX hoodMotor;
-	private Angle hoodSetpoint;
-	private AngularVelocity wheelSetpoint;
-	private PIDController hoodPID;
-	private PIDController wheelPID;
 	private SimpleMotorFeedforward wheelFeedforward;
 	private FlywheelSim wheelSim;
 	private SingleJointedArmSim hoodSim;
@@ -50,19 +42,19 @@ public class ShooterIOSim implements ShooterIO {
 		wheelSim = new FlywheelSim(
 			LinearSystemId.createFlywheelSystem(
 				DCMotor.getKrakenX60(2),
-				0.5, // Moment of inertia
-				1.0 // Gearing
+				FLYWHEEL_MOI, // Moment of inertia
+				FLYWHEEL_GEARING // Gearing
 			),
 			DCMotor.getKrakenX60(2)
 		);
 		hoodSim = new SingleJointedArmSim(
 			LinearSystemId.createSingleJointedArmSystem(
 				DCMotor.getFalcon500(1),
-				0.2, // Moment of inertia
-				1.0 // Gearing
+				HOOD_MOI, // Moment of inertia
+				HOOD_GEARING // Gearing
 			),
 			DCMotor.getFalcon500(1),
-			1.0, // Arm length
+			HOOD_ARM_LENGTH_METERS, // Arm length
 			0,
 			0,
 			0,
@@ -72,12 +64,12 @@ public class ShooterIOSim implements ShooterIO {
 	}
 
 	@Override
-	public void updateInputs(ShooterIOInputs inputs) {
-		inputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
-		inputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
-		inputs.wheelSetpoint = wheelSetpoint;
-		inputs.hoodAngle = hoodMotor.getPosition().getValue();
-		inputs.hoodSetpoint = hoodSetpoint;
+	public void logOutputs(ShooterIOOutputs outputs) {
+		outputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
+		outputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
+		outputs.wheelSetpoint = wheelSetpoint;
+		outputs.hoodAngle = hoodMotor.getPosition().getValue();
+		outputs.hoodSetpoint = hoodSetpoint;
 		// Sim update
 		wheelSim.update(GlobalConstants.SIMULATION_PERIOD);
 		hoodSim.update(GlobalConstants.SIMULATION_PERIOD);
@@ -102,11 +94,11 @@ public class ShooterIOSim implements ShooterIO {
 
 	@Override
 	public boolean atWheelVelocitySetpoint() {
-		return (Math.abs(leftMotor.getVelocity().getValue().in(RotationsPerSecond) - wheelSetpoint.in(RotationsPerSecond)) < 50);
+		return (Math.abs(leftMotor.getVelocity().getValue().in(RotationsPerSecond) - wheelSetpoint.in(RotationsPerSecond)) < WHEEL_VELOCITY_TOLERANCE);
 	}
 
 	@Override
 	public boolean atHoodAngleSetpoint() {
-		return (Math.abs(hoodMotor.getPosition().getValue().in(Degrees) - hoodSetpoint.in(Degrees)) < 0.01);
+		return (Math.abs(hoodMotor.getPosition().getValue().in(Degrees) - hoodSetpoint.in(Degrees)) < HOOD_ANGLE_TOLERANCE_DEGREES);
 	}
 }

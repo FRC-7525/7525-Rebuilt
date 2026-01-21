@@ -3,10 +3,7 @@ import os
 import sys
 
 # List of files to excuse (constants and things we didnt make and stuff we wont use)
-excused_files = ["GlobalConstants.java", "Drive.java", "TunerConstants.java", "BuildConstants.java", "LocalADStarAK.java", "VisionUtil.java", "SwerveModule.java", "VisionIOSim.java", "ElevatorConstants.java", "IntakeConstants.java", 
-                "RepulsorFieldPlanner.java", "Force.java", "SubsystemManagerConstants.java", "AutoAlignConstants.java", "SubsystemManager.java", "AutoAlign.java", "AutoAlignStates.java", "CoralerConstants.java", "AlgaerConstants.java", "VisionConstants.java",
-                "LEDStates.java", "LEDIOSim.java", "LEDIOReal.java", "AutoManager.java", "TippingCalculator.java", "WheelRadiusCharacterization.java", "ElevatorIOReal.java", "ElevatorIOSim.java", "FaultManager.java", "AlgaerIOSim.java", "DriveStates.java", "VisionIOPhotonVision.java", "Vision.java", "AutoConstants.java", "AutoManager.java", "SubsystemManagerStates.java", "CoralerStates.java",
-                "PassthroughConstants.java", "RobotState.java"]
+excused_files = ["Drive.java", "ShooterMath.java"]
 
 # Not really dirs becasue the full ones didnt work
 excused_dirs = [
@@ -64,7 +61,13 @@ def check_for_magic_numbers(file_path):
 
 def is_file_excused(file_path, project_root):
     filename = os.path.basename(file_path)
+    # Excuse any file explicitly listed
     if filename in excused_files:
+        return True
+
+    # Excuse any file whose name contains the word 'constants' (case-insensitive)
+    # so things like Constants.java or myConstantsHelper.java are skipped
+    if re.search(r"constants", filename, re.IGNORECASE):
         return True
 
     relative_path = os.path.relpath(file_path, project_root)

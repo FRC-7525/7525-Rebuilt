@@ -14,7 +14,7 @@ import org.team7525.subsystem.SubsystemStates;
 
 public enum ShooterStates implements SubsystemStates {
 	OFF("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
-	REVERSE("REVERSE", () -> Degrees.of(0), () -> RotationsPerSecond.of(-100)), // TODO: get good value
+	REVERSE("REVERSE", () -> Degrees.of(0), () -> REVERSE_WHEEL_SPEED), // TODO: get good value
 	// Use placeholder Pose2d and zero velocity for now; replace with real robot pose/velocity when available.
 	SHOOT_HUB(
 		"SHOOT HUB",
