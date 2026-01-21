@@ -21,7 +21,7 @@ public class IntakeConstants {
 
 	public static class Real {
 
-		public static final int SPIN_MOTOR_ID = 20;  //make real
+		public static final int SPIN_MOTOR_ID = 20; //make real
 		public static final int LINEAR_ACTUATOR_ID = 21;
 	}
 
@@ -29,6 +29,6 @@ public class IntakeConstants {
 
 		public static final int NUM_MOTORS = 1;
 		public static final double MOTOR_MOI = 0.00001;
-		public static final double LINEAR_KP = 10.0;   // Tune in sim
+		public static final double LINEAR_KP = 10.0; // Tune in sim
 	}
 }

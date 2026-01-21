@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Intake;
 
-
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.Intake.IntakeConstants.*;
 
