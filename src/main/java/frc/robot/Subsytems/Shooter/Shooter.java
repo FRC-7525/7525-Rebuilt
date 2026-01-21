@@ -35,7 +35,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	public void runState() {
 		io.setHoodAngle(getState().getHoodAngle());
 		io.setWheelVelocity(getState().getWheelVelocity());
-		io.updateOutputs(outputs);
+		io.logOutputs(outputs);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity);
         Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelVelocity", outputs.rightWheelVelocity);
