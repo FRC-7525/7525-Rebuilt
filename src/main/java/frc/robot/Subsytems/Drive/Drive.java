@@ -87,7 +87,6 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 		logOutputs(driveIO.getDrive().getState());
 
-
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
 	}
@@ -113,12 +112,30 @@ public class Drive extends Subsystem<DriveStates> {
 		lastTime = Utils.getSystemTimeSeconds();
 	}
 
-	public void driveFieldRelative(double xVelocity, double yVelocity, double angularVelocity) {		
-		driveIO.setControl(new SwerveRequest.FieldCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo).withRotationalDeadband(1));
+	public void driveFieldRelative(double xVelocity, double yVelocity, double angularVelocity) {
+		driveIO.setControl(
+			new SwerveRequest.FieldCentric()
+				.withDeadband(DEADBAND)
+				.withVelocityX(xVelocity)
+				.withVelocityY(yVelocity)
+				.withRotationalRate(angularVelocity)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				.withRotationalDeadband(1)
+		);
 	}
 
 	public void driveRobotRelative(double xVelocity, double yVelocity, double angularVelocity) {
-		driveIO.setControl(new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo).withRotationalDeadband(1));
+		driveIO.setControl(
+			new SwerveRequest.RobotCentric()
+				.withDeadband(DEADBAND)
+				.withVelocityX(xVelocity)
+				.withVelocityY(yVelocity)
+				.withRotationalRate(angularVelocity)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				.withRotationalDeadband(1)
+		);
 	}
 
 	public void zeroGyro() {

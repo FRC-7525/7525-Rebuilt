@@ -46,7 +46,6 @@ public class VisionConstants {
 	public static final VisionIO[] SIM_IOS = new VisionIO[] { new VisionIOPhotonVisionSim(CAM_1_NAME, ROBOT_TO_CAM1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(CAM_2_NAME, ROBOT_TO_CAM2, Drive.getInstance()::getPose) };
 	public static final VisionIO[] REAL_IOS = new VisionIO[] { new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1), new VisionIOPhotonVision(FRONT_CAM2_NAME, ROBOT_TO_CAM2) };
 
-
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
 	// TODO: What camera resolutions actually are these? Assuming they're high bc

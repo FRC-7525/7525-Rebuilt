@@ -44,14 +44,8 @@ public class Vision extends SubsystemBase {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] {
-						new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1),
-						new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2),
-					};
-					case SIM -> new VisionIO[] {
-						new VisionIOPhotonVisionSim(CAM_1_NAME, ROBOT_TO_CAM1, Drive.getInstance()::getPose),
-						new VisionIOPhotonVisionSim(CAM_2_NAME, ROBOT_TO_CAM2, Drive.getInstance()::getPose),
-					};
+					case REAL -> new VisionIO[] { new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1), new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2) };
+					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(CAM_1_NAME, ROBOT_TO_CAM1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(CAM_2_NAME, ROBOT_TO_CAM2, Drive.getInstance()::getPose) };
 					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2), new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1) };
 				}
 			);
