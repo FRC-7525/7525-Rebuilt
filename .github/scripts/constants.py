@@ -3,7 +3,7 @@ import os
 import sys
 
 # List of files to excuse (constants and things we didnt make and stuff we wont use)
-excused_files = ["Drive.java", "ShooterMath.java"]
+excused_files = ["Drive.java", "ShooterMath.java", "Vision.java", "DriveStates.java"]
 
 # Not really dirs becasue the full ones didnt work
 excused_dirs = [
