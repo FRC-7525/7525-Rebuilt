@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.GlobalConstants;
 
 public class ShooterIOSim extends ShooterIOReal {
+
 	private TalonFXSimState leftMotorSim;
 	private TalonFXSimState rightMotorSim;
 	private TalonFXSimState hoodMotorSim;
