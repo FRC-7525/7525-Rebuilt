@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import org.team7525.CI.CrashCheck;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what
