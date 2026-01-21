@@ -32,26 +32,25 @@ public class VisionConstants {
 
 	public record VisionMeasurment(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 
-	// Front Left
 	public static final String CAM_1_NAME = "Camera 1";
 	public static final Translation3d ROBOT_TO_CAM1_TRANSLATION = new Translation3d(Units.inchesToMeters(11.809459), Units.inchesToMeters(11.164206), Units.inchesToMeters(8.887162));
 	public static final Rotation3d ROBOT_TO_CAM1_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-30.4));
 	public static final Transform3d ROBOT_TO_CAM1 = new Transform3d(ROBOT_TO_CAM1_TRANSLATION, ROBOT_TO_CAM1_ROTATION);
-	// Front Right
+
 	public static final String CAM_2_NAME = "Camera 2";
 	public static final Translation3d ROBOT_TO_CAM2_TRANSLATION = new Translation3d(Units.inchesToMeters(11.809459), Units.inchesToMeters(-11.164206), Units.inchesToMeters(8.887162));
 	public static final Rotation3d ROBOT_TO_CAM2_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(27.8));
 	public static final Transform3d ROBOT_TO_CAM2 = new Transform3d(ROBOT_TO_CAM2_TRANSLATION, ROBOT_TO_CAM2_ROTATION);
 
 	public static final VisionIO[] SIM_IOS = new VisionIO[] { new VisionIOPhotonVisionSim(CAM_1_NAME, ROBOT_TO_CAM1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(CAM_2_NAME, ROBOT_TO_CAM2, Drive.getInstance()::getPose) };
-	public static final VisionIO[] REAL_IOS = new VisionIO[] { new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1), new VisionIOPhotonVision(FRONT_CAM2_NAME, ROBOT_TO_CAM2) };
+	public static final VisionIO[] REAL_IOS = new VisionIO[] { new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1), new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2) };
 
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
 	// TODO: What camera resolutions actually are these? Assuming they're high bc
 	// 1080p is high
 	// we never even use these why are they here
-	public static final CameraResolution FRONT_RESOLUTION = CameraResolution.HIGH_RESOLUTION;
+	public static final CameraResolution RESOLUTION = CameraResolution.HIGH_RESOLUTION;
 
 	public static final int CAMERA_WIDTH = 1200;
 	public static final int CAMERA_HEIGHT = 800;
