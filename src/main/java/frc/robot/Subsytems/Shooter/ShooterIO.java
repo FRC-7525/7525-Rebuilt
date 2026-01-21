@@ -2,12 +2,9 @@ package frc.robot.Subsytems.Shooter;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
-	@AutoLog
-	class ShooterIOInputs {
-
+	class ShooterIOOutputs { // Don't think this is what you meant but idk
 		public AngularVelocity leftWheelVelocity;
 		public AngularVelocity rightWheelVelocity;
 		public AngularVelocity wheelSetpoint;
@@ -15,7 +12,7 @@ public interface ShooterIO {
 		public Angle hoodSetpoint;
 	}
 
-	public abstract void updateInputs(ShooterIOInputs inputs);
+	public abstract void updateOutputs(ShooterIOOutputs outputs);
 
 	public abstract void setWheelVelocity(AngularVelocity velocity);
 

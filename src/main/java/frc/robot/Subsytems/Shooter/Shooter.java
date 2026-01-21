@@ -3,6 +3,8 @@ package frc.robot.Subsytems.Shooter;
 import static frc.robot.Subsytems.Shooter.ShooterConstants.*;
 
 import frc.robot.GlobalConstants;
+import frc.robot.Subsytems.Shooter.ShooterIO.ShooterIOOutputs;
+
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -10,7 +12,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 
 	private static Shooter instance;
 	private final ShooterIO io;
-	private ShooterIOInputsAutoLogged inputs;
+	private ShooterIOOutputs outputs;
 
 	public static Shooter getInstance() {
 		if (instance == null) {
@@ -26,16 +28,20 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private Shooter(ShooterIO io) {
 		super(SUBSYSTEM_NAME, ShooterStates.OFF);
 		this.io = io;
-		inputs = new ShooterIOInputsAutoLogged();
+		outputs = new ShooterIOOutputs();
 	}
 
 	@Override
 	public void runState() {
 		io.setHoodAngle(getState().getHoodAngle());
 		io.setWheelVelocity(getState().getWheelVelocity());
-		io.updateInputs(inputs);
+		io.updateOutputs(outputs);
 
-		Logger.processInputs(SUBSYSTEM_NAME, inputs);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity);
+        Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelVelocity", outputs.rightWheelVelocity);
+        Logger.recordOutput(SUBSYSTEM_NAME + "/WheelSetpoint", outputs.wheelSetpoint);
+        Logger.recordOutput(SUBSYSTEM_NAME + "/HoodAngle", outputs.hoodAngle);
+        Logger.recordOutput(SUBSYSTEM_NAME + "/HoodSetpoint", outputs.hoodSetpoint);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/ReadyToShoot", readyToShoot());
 	}

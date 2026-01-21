@@ -20,15 +20,19 @@ public final class ShooterMath {
 
 	static {
 		// Example data only — replace with real measured shots
-		HUB_TABLE.add(new ShotSample(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50));
-		HUB_TABLE.add(new ShotSample(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55));
-		HUB_TABLE.add(new ShotSample(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60));
-		HUB_TABLE.add(new ShotSample(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65));
+		HUB_TABLE.addAll(List.of(
+			new ShotSample(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
+			new ShotSample(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
+			new ShotSample(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
+			new ShotSample(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
+		));
 
-		ALLIANCE_TABLE.add(new ShotSample(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52));
-		ALLIANCE_TABLE.add(new ShotSample(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56));
-		ALLIANCE_TABLE.add(new ShotSample(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61));
-		ALLIANCE_TABLE.add(new ShotSample(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66));
+		ALLIANCE_TABLE.addAll(List.of(
+			new ShotSample(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52),
+			new ShotSample(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56),
+			new ShotSample(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
+			new ShotSample(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
+		));
 
 		HUB_TABLE.sort(Comparator.comparingDouble(s -> s.distanceMeters));
 		ALLIANCE_TABLE.sort(Comparator.comparingDouble(s -> s.distanceMeters));
@@ -42,16 +46,7 @@ public final class ShooterMath {
 		return solveMovingShot(robotPose, ALLIANCE_BASKET_POSITION, robotVelocity, ALLIANCE_TABLE);
 	}
 
-	/**
-	 * Stollen Math
-	 * - Compute initial distance to target
-	 * - Project robot velocity onto target direction
-	 * - Predict distance at impact:
-	 *
-	 *     d_impact = d_now - v_parallel * time_of_flight
-	 *
-	 * - Iterate a few times to converge
-	 */
+    // Stolen Maths fr
 	private static Optional<ShotSolution> solveMovingShot(Pose2d robotPose, Pose2d targetPose, Translation2d robotVelocity, List<ShotSample> table) {
 		if (table.isEmpty()) {
 			return Optional.empty();
@@ -126,18 +121,4 @@ public final class ShooterMath {
 			return new ShotSolution(s.hoodAngle, s.flywheelSpeed, s.timeOfFlightSeconds);
 		}
 	}
-	/* ------------------------------------------------------------------
-	 * SHOT TABLE TUNING GUIDE
-	 * ------------------------------------------------------------------
-	 * HOW TO BUILD THE SHOT TABLE:
-	 *
-	 * 1. Disable interpolation and motion compensation.
-	 * 2. Place robot at a known distance (use odometry or tape measure).
-	 * 3. Tune hood angle and flywheel speed until shots are consistent.
-	 * 4. Measure time of flight:
-	 *      - High-speed camera, or
-	 *      - Time from feeder release to score sensor
-	 * 5. Add one entry per ~0.5–1.0 meters.
-	 *
-	 */
 }

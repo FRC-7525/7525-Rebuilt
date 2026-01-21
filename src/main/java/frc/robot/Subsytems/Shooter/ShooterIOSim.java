@@ -72,12 +72,12 @@ public class ShooterIOSim implements ShooterIO {
 	}
 
 	@Override
-	public void updateInputs(ShooterIOInputs inputs) {
-		inputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
-		inputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
-		inputs.wheelSetpoint = wheelSetpoint;
-		inputs.hoodAngle = hoodMotor.getPosition().getValue();
-		inputs.hoodSetpoint = hoodSetpoint;
+	public void updateOutputs(ShooterIOOutputs outputs) {
+		outputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
+		outputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
+		outputs.wheelSetpoint = wheelSetpoint;
+		outputs.hoodAngle = hoodMotor.getPosition().getValue();
+		outputs.hoodSetpoint = hoodSetpoint;
 		// Sim update
 		wheelSim.update(GlobalConstants.SIMULATION_PERIOD);
 		hoodSim.update(GlobalConstants.SIMULATION_PERIOD);
