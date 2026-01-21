@@ -46,7 +46,7 @@ public class Vision extends SubsystemBase {
 				}
 			);
 		}
-		return instance; 
+		return instance;
 	}
 
 	private Vision(VisionIO... io) {
@@ -77,7 +77,6 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-
 		for (int i = 0; i < io.length; i++) {
 			io[i].updateInputs(inputs[i]);
 			Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -172,7 +171,6 @@ public class Vision extends SubsystemBase {
 	}
 
 	private boolean shouldBeRejected(PoseObservation observation) {
-
 		return (
 			observation.tagCount() == 0 || // Must have at least one tag
 			(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
