@@ -193,7 +193,7 @@ public class Vision extends SubsystemBase {
 		if (observation.tagCount() == 1) {
 			double poseDifference = observation.pose().getTranslation().toTranslation2d().getDistance(Drive.getInstance().getPose().getTranslation());
 			// 1 target with large area and close to estimated pose
-			else if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
+			if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
 				xyStds = 0.5;
 			}
 			// 1 target farther away and estimated pose is close
