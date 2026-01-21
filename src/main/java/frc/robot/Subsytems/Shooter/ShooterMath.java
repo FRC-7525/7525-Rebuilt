@@ -8,11 +8,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc.robot.Subsytems.Shooter.ShooterConstants.ShotSampleData;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import frc.robot.Subsytems.Shooter.ShooterConstants.ShotSampleData;
 
 public final class ShooterMath {
 
