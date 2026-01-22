@@ -6,9 +6,13 @@ public class HopperConstants {
 	public static final double SPIN_VELOCITY = -1;
 	public static final double OFF_VELOCITY = 0;
 
+
+	public static final double SPIN_KICK_VELOCITY = -0.7;
+
 	public static final String SUBSYSTEM_NAME = "Hopper";
 
 	public static final int SPINDEXER_MOTOR_ID = 0;
+	public static final int KICKER_MOTOR_ID = 1;
 
 	public static class Sim {
 

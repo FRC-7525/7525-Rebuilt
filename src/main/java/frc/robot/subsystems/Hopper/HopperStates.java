@@ -3,15 +3,17 @@ package frc.robot.Subsystems.Hopper;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum HopperStates implements SubsystemStates {
-	IDLE("Idle", HopperConstants.OFF_VELOCITY),
-	SPINDEXING("Expelling", HopperConstants.SPIN_VELOCITY);
+	IDLE("Idle", HopperConstants.OFF_VELOCITY, HopperConstants.OFF_VELOCITY),
+	SPINDEXING("Expelling", HopperConstants.SPIN_KICK_VELOCITY, HopperConstants.SPIN_VELOCITY);
 
 	private String stateString;
-	private double velocity;
+	private double spinVelocity;
+	private double kickVelocity;
 
-	HopperStates(String stateString, double velocity) {
+	HopperStates(String stateString, double spinVelocity, double kickVelocity) {
 		this.stateString = stateString;
-		this.velocity = velocity;
+		this.spinVelocity = spinVelocity;
+		this.kickVelocity = kickVelocity;
 	}
 
 	@Override
@@ -19,7 +21,11 @@ public enum HopperStates implements SubsystemStates {
 		return stateString;
 	}
 
-	public double getVelocity() {
-		return velocity;
+	public double getSpinVelocity() {
+		return spinVelocity;
+	}
+
+	public double getKickVelocity() {
+		return kickVelocity;
 	}
 }
