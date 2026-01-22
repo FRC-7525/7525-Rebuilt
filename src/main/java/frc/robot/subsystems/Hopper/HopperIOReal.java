@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class HopperIOReal implements HopperIO {
 
-	private final TalonFX spindexerMotor;
+	protected TalonFX spindexerMotor;
 	double targetVelocity;
 
 	public HopperIOReal() {
@@ -17,7 +17,6 @@ public class HopperIOReal implements HopperIO {
 
 	@Override
 	public void updateInput(HopperIOInputs inputs) {
-		inputs.inputVoltage = spindexerMotor.getMotorVoltage().getValueAsDouble();
 		inputs.motorVelocityRPS = spindexerMotor.getVelocity().getValue().in(RotationsPerSecond);
 		inputs.targetVelocity = targetVelocity;
 	}

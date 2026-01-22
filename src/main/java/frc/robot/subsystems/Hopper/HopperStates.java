@@ -5,8 +5,7 @@ import org.team7525.subsystem.SubsystemStates;
 
 public enum HopperStates implements SubsystemStates {
 	IDLE("Idle", HopperConstants.OFF_VELOCITY),
-	INTAKING("Intaking", HopperConstants.INTAKING_VELOCITY),
-	EXPELLING("Expelling", HopperConstants.EXPELLING_VELOCITY);
+	SPINDEXING("Expelling", HopperConstants.SPIN_VELOCITY);
 
 	private String stateString;
 	private double velocity;
