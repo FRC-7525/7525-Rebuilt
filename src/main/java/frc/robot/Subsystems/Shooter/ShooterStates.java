@@ -1,8 +1,8 @@
-package frc.robot.Subsytems.Shooter;
+package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Subsytems.Shooter.ShooterConstants.*;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

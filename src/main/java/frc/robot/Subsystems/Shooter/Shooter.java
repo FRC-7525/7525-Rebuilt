@@ -1,9 +1,10 @@
-package frc.robot.Subsytems.Shooter;
-
-import static frc.robot.Subsytems.Shooter.ShooterConstants.*;
+package frc.robot.Subsystems.Shooter;
 
 import frc.robot.GlobalConstants;
-import frc.robot.Subsytems.Shooter.ShooterIO.ShooterIOOutputs;
+import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
+
+import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
+
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
