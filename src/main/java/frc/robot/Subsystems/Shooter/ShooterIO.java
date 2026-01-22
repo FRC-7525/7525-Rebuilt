@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 public interface ShooterIO {
 	class ShooterIOOutputs {
+
 		public AngularVelocity leftWheelVelocity;
 		public AngularVelocity rightWheelVelocity;
 		public AngularVelocity wheelSetpoint;
