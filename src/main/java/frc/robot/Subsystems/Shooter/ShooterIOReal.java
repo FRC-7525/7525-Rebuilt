@@ -24,6 +24,8 @@ public class ShooterIOReal implements ShooterIO {
 	protected SimpleMotorFeedforward wheelFeedforward;
 
 	public ShooterIOReal() {
+		wheelSetpoint = RotationsPerSecond.zero();
+		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);
