@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Hopper;
 
 public interface HopperIO {
 	public class HopperIOOutputs {
+
 		double targetSpinVelocity;
 		double targetKickVelocity;
 		double spinVelocityRPS;
@@ -13,5 +14,4 @@ public interface HopperIO {
 	public void setTargetSpinVelocity(double velocity);
 
 	public void setTargetKickVelocity(double velocity);
-
 }

@@ -1,6 +1,7 @@
 package frc.robot.Subsystems.Hopper;
 
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -31,7 +32,6 @@ public class HopperIOSim extends HopperIOReal {
 		outputs.targetSpinVelocity = targetSpinVelocity;
 		outputs.targetKickVelocity = targetKickVelocity;
 		outputs.kickVelocityRPS = kickerSim.getAngularVelocity().in(RotationsPerSecond);
-
 
 		spindexerSimState.setRotorVelocity(spindexerSim.getAngularVelocity());
 		kickerSimState.setRotorVelocity(kickerSim.getAngularVelocity());

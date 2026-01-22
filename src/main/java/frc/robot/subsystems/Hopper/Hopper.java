@@ -2,10 +2,9 @@ package frc.robot.Subsystems.Hopper;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
+import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
-import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
 
 public class Hopper extends Subsystem<HopperStates> {
 
