@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.Subsystems.Shooter.ShooterConstants.ShotSampleData;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

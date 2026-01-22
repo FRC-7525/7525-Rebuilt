@@ -13,6 +13,7 @@ import org.team7525.CI.CrashCheck;
  * call.
  */
 public final class Main {
+
 	private Main() {}
 
 	/**
