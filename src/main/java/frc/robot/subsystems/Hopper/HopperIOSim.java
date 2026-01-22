@@ -1,14 +1,11 @@
-package frc.robot.subsystems.Hopper;
+package frc.robot.Subsystems.Hopper;
 
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.subsystems.Hopper.HopperConstants.*;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.Hopper.HopperConstants.Sim;
+import frc.robot.Subsystems.Hopper.HopperConstants.Sim;
 
 public class HopperIOSim extends HopperIOReal {
 
@@ -25,9 +22,9 @@ public class HopperIOSim extends HopperIOReal {
 	}
 
 	@Override
-	public void updateInput(HopperIOInputs inputs) {
-		inputs.motorVelocityRPS = spindexerSim.getAngularVelocity().in(RotationsPerSecond);
-		inputs.targetVelocity = targetVelocity;
+	public void updateOutputs(HopperIOOutputs outputs) {
+		outputs.motorVelocityRPS = spindexerSim.getAngularVelocity().in(RotationsPerSecond);
+		outputs.targetVelocity = targetVelocity;
 
 		spindexerSimState.setRotorVelocity(spindexerSim.getAngularVelocity());
 	}
