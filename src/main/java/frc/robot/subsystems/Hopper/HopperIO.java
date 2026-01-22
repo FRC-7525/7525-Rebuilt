@@ -1,15 +1,17 @@
 package frc.robot.subsystems.Hopper;
+
 import org.littletonrobotics.junction.AutoLog;
 
 public interface HopperIO {
-    @AutoLog
+	@AutoLog
+	public class HopperIOInputs {
 
-    public class HopperIOInputs {
-       double inputVoltage;
-	   double targetVelocity;
-       double motorVelocityRPS;
-    }
+		double inputVoltage;
+		double targetVelocity;
+		double motorVelocityRPS;
+	}
 
-    public void updateInput(HopperIOInputs inputs);
+	public void updateInput(HopperIOInputs inputs);
+
 	public void setTargetVelocity(double velocity);
 }
