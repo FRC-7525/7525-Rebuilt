@@ -10,28 +10,42 @@ import frc.robot.Subsystems.Hopper.HopperConstants.Sim;
 public class HopperIOSim extends HopperIOReal {
 
 	private final TalonFXSimState spindexerSimState;
+	private final TalonFXSimState kickerSimState;
 	private final DCMotorSim spindexerSim;
+	private final DCMotorSim kickerSim;
 
-	double targetVelocity;
+	double targetSpinVelocity;
+	double targetKickVelocity;
 
 	public HopperIOSim() {
 		spindexerSimState = new TalonFXSimState(spindexerMotor);
 		spindexerSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), Sim.MOTOR_MOI, 1), DCMotor.getFalcon500(1));
 
-		targetVelocity = 0.0;
+		kickerSimState = new TalonFXSimState(kickerMotor);
+		kickerSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), Sim.MOTOR_MOI, 1), DCMotor.getFalcon500(1));
 	}
 
 	@Override
 	public void updateOutputs(HopperIOOutputs outputs) {
-		outputs.motorVelocityRPS = spindexerSim.getAngularVelocity().in(RotationsPerSecond);
-		outputs.targetVelocity = targetVelocity;
+		outputs.spinVelocityRPS = spindexerSim.getAngularVelocity().in(RotationsPerSecond);
+		outputs.targetSpinVelocity = targetSpinVelocity;
+		outputs.targetKickVelocity = targetKickVelocity;
+		outputs.kickVelocityRPS = kickerSim.getAngularVelocity().in(RotationsPerSecond);
+
 
 		spindexerSimState.setRotorVelocity(spindexerSim.getAngularVelocity());
+		kickerSimState.setRotorVelocity(kickerSim.getAngularVelocity());
 	}
 
 	@Override
-	public void setTargetVelocity(double targetVelocity) {
-		this.targetVelocity = targetVelocity;
-		spindexerMotor.set(targetVelocity);
+	public void setTargetSpinVelocity(double targetSpinVelocity) {
+		this.targetSpinVelocity = targetSpinVelocity;
+		spindexerMotor.set(targetSpinVelocity);
+	}
+
+	@Override
+	public void setTargetKickVelocity(double targetKickVelocity) {
+		this.targetKickVelocity = targetKickVelocity;
+		kickerMotor.set(targetKickVelocity);
 	}
 }

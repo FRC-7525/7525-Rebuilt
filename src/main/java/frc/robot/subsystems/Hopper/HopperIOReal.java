@@ -8,22 +8,32 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class HopperIOReal implements HopperIO {
 
 	protected TalonFX spindexerMotor;
-	double targetVelocity;
+	protected TalonFX kickerMotor;
+	double targetSpinVelocity;
+	double targetKickerVelocity;
 
 	public HopperIOReal() {
 		spindexerMotor = new TalonFX(SPINDEXER_MOTOR_ID);
-		targetVelocity = 0.0;
+		kickerMotor = new TalonFX(KICKER_MOTOR_ID);
 	}
 
 	@Override
 	public void updateOutputs(HopperIOOutputs outputs) {
-		outputs.motorVelocityRPS = spindexerMotor.getVelocity().getValue().in(RotationsPerSecond);
-		outputs.targetVelocity = targetVelocity;
+		outputs.spinVelocityRPS = spindexerMotor.getVelocity().getValue().in(RotationsPerSecond);
+		outputs.targetSpinVelocity = targetSpinVelocity;
+		outputs.targetKickVelocity = targetKickerVelocity;
+		outputs.kickVelocityRPS = kickerMotor.getVelocity().getValue().in(RotationsPerSecond);
 	}
 
 	@Override
-	public void setTargetVelocity(double targetVelocity) {
-		this.targetVelocity = targetVelocity;
-		spindexerMotor.set(targetVelocity);
+	public void setTargetSpinVelocity(double targetSpinVelocity) {
+		this.targetSpinVelocity = targetSpinVelocity;
+		spindexerMotor.set(targetSpinVelocity);
+	}
+
+	@Override
+	public void setTargetKickVelocity(double targetKickVelocity) {
+		this.targetKickerVelocity = targetKickVelocity;
+		kickerMotor.set(targetKickVelocity);
 	}
 }

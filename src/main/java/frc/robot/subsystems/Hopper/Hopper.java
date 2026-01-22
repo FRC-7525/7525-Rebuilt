@@ -32,10 +32,13 @@ public class Hopper extends Subsystem<HopperStates> {
 
 	@Override
 	protected void runState() {
-		io.setTargetVelocity(getState().getVelocity());
+		io.setTargetSpinVelocity(getState().getSpinVelocity());
+		io.setTargetKickVelocity(getState().getKickVelocity());
 		io.updateOutputs(outputs);
 
-		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/MotorVelocityRPS", outputs.motorVelocityRPS);
-		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetVelocity", outputs.targetVelocity);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocityRPS);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/KickVelocityRPS", outputs.kickVelocityRPS);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetSpinVelocity", outputs.targetSpinVelocity);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetKickVelocity", outputs.targetKickVelocity);
 	}
 }
