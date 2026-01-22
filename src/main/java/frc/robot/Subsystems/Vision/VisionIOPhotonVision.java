@@ -116,7 +116,7 @@ public class VisionIOPhotonVision implements VisionIO {
 
 		// Save tag IDs to inputs objects
 		outputs.tagIds = new int[tagIds.size()];
-		int i = 0; // RAGE BAIT CODE 
+		int i = 0; // RAGE BAIT CODE
 		for (int id : tagIds) {
 			outputs.tagIds[i++] = id;
 		}
