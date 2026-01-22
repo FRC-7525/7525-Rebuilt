@@ -6,7 +6,6 @@ public interface HopperIO {
 	@AutoLog
 	public class HopperIOInputs {
 
-		double inputVoltage;
 		double targetVelocity;
 		double motorVelocityRPS;
 	}

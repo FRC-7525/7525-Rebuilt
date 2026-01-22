@@ -3,8 +3,7 @@ package frc.robot.subsystems.Hopper;
 public class HopperConstants {
 
 	//not real values atm
-	public static final double INTAKING_VELOCITY = 1;
-	public static final double EXPELLING_VELOCITY = -1;
+	public static final double SPIN_VELOCITY = -1;
 	public static final double OFF_VELOCITY = 0;
 
 	public static final String SUBSYSTEM_NAME = "Hopper";
