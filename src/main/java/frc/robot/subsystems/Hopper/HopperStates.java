@@ -1,6 +1,5 @@
-package frc.robot.subsystems.Hopper;
+package frc.robot.Subsystems.Hopper;
 
-import frc.robot.subsystems.Hopper.HopperConstants;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum HopperStates implements SubsystemStates {

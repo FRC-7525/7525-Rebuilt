@@ -1,19 +1,21 @@
-package frc.robot.subsystems.Hopper;
+package frc.robot.Subsystems.Hopper;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
+import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
+
 public class Hopper extends Subsystem<HopperStates> {
 
 	private static Hopper instance;
 	private final HopperIO io;
-	private final HopperIOInputsAutoLogged inputs;
+	private final HopperIOOutputs outputs;
 
 	private Hopper() {
 		super(HopperConstants.SUBSYSTEM_NAME, HopperStates.IDLE);
-		inputs = new HopperIOInputsAutoLogged();
+		outputs = new HopperIOOutputs();
 		this.io = switch (ROBOT_MODE) {
 			case REAL -> new HopperIOReal();
 			case SIM -> new HopperIOSim();
@@ -31,8 +33,9 @@ public class Hopper extends Subsystem<HopperStates> {
 	@Override
 	protected void runState() {
 		io.setTargetVelocity(getState().getVelocity());
-		io.updateInput(inputs);
+		io.updateOutputs(outputs);
 
-		Logger.processInputs(HopperConstants.SUBSYSTEM_NAME, inputs);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/MotorVelocityRPS", outputs.motorVelocityRPS);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetVelocity", outputs.targetVelocity);
 	}
 }

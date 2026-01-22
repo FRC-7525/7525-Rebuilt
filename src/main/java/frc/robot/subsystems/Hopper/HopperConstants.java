@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Hopper;
+package frc.robot.Subsystems.Hopper;
 
 public class HopperConstants {
 
