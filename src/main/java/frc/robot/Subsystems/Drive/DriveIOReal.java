@@ -65,11 +65,11 @@ public class DriveIOReal implements DriveIO {
 	 * Adds a vision measurement to the SwerveDrivetrain for localization.
 	 * @param pose The Pose2d object representing the measured pose.
 	 * @param timestamp The timestamp of the measurement.
-	 * @param standardDeviaton The standard deviation of the measurement.
+	 * @param standardDeviation The standard deviation of the measurement.
 	 */
 	@Override
-	public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviaton) {
-		drivetrain.addVisionMeasurement(pose, timestamp, standardDeviaton);
+	public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviation) {
+		drivetrain.addVisionMeasurement(pose, timestamp, standardDeviation);
 	}
 
 	/**
