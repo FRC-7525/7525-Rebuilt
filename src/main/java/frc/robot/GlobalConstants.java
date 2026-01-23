@@ -47,4 +47,4 @@ public class GlobalConstants {
 		public static final double DEADBAND = 0.01;
 		public static final double TRIGGERS_REGISTER_POINT = 0.5;
 	}
-}
+

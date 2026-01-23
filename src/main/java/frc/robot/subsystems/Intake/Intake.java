@@ -1,7 +1,7 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.Subsystems.Intake;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
-import static frc.robot.subsystems.Intake.IntakeConstants.*;
+import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 import static edu.wpi.first.units.Units.*;
 
 

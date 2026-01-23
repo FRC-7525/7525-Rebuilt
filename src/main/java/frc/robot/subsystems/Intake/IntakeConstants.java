@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.Subsystems.Intake;
 
 import com.ctre.phoenix6.configs.Slot0Configs; //need to add via phoenix tuner
 

@@ -1,7 +1,7 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.subsystems.Intake.IntakeConstants.*;
+import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -10,7 +10,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.GlobalConstants;
-import frc.robot.subsystems.Intake.IntakeConstants.Sim;
+import frc.robot.Subsystems.Intake.IntakeConstants.Sim;
 
 public class IntakeIOSim implements IntakeIO {
 
@@ -42,12 +42,12 @@ public class IntakeIOSim implements IntakeIO {
 		spinSimState.setSupplyVoltage(12.0);
 
 		linearSim.update(GlobalConstants.SIMULATION_PERIOD);
-		linearSimState.setRotorVelocity(linearSim.getAngularVelocityRPM() / 60);
-		linearSimState.setRawRotorPosition(linearSim.getAngularPositionRotations());
+		linearSimState.setRotorVelocity((linearSim.getAngularVelocityRPM() / 60) * LINEAR_GEARING);
+		linearSimState.setRawRotorPosition(linearSim.getAngularPositionRotations() * LINEAR_GEARING);
 		linearSimState.setSupplyVoltage(12.0);
 
 		inputs.spinVelocityRPS = spinMotor.getVelocity().getValue().in(RotationsPerSecond);
-		inputs.linearPositionMeters = linearMotor.getPosition().getValueAsDouble() * LINEAR_METERS_PER_ROTATION;
+		inputs.linearPositionMeters = linearSim.getAngularPositionRotations() * LINEAR_METERS_PER_ROTATION;
 	}
 
 	@Override

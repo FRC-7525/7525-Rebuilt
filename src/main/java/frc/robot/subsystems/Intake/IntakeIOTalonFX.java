@@ -1,15 +1,15 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.GlobalConstants.*;
-import static frc.robot.subsystems.Intake.IntakeConstants.*;
+import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.subsystems.Intake.IntakeConstants.Real;
+import frc.robot.Subsystems.Intake.IntakeConstants.Real;
 
 public class IntakeIOTalonFX implements IntakeIO {
 
