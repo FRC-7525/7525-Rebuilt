@@ -32,7 +32,7 @@ public class IntakeIOSim implements IntakeIO {
 		linearSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), Sim.MOTOR_MOI, LINEAR_GEARING), DCMotor.getFalcon500(1));
 		linearMotor = new TalonFX(Real.LINEAR_ACTUATOR_ID);
 		linearSimState = new TalonFXSimState(linearMotor);
-		linearController = new PIDController(Sim.LINEAR_KP, 0, 0);
+		linearController = new PIDController(Sim.LINEAR_PID.kP(), Sim.LINEAR_PID.kI(), Sim.LINEAR_PID.kD());
 	}
 
 	@Override
@@ -48,17 +48,17 @@ public class IntakeIOSim implements IntakeIO {
 		linearSimState.setSupplyVoltage(12.0);
 
 		inputs.spinVelocityRPS = spinMotor.getVelocity().getValue().in(RotationsPerSecond);
-		inputs.linearPositionRotations = linearMotor.getPosition().getValueAsDouble();
+		inputs.linearPositionMeters = linearMotor.getPosition().getValueAsDouble() * LINEAR_METERS_PER_ROTATION;
 	}
 
 	@Override
-	public void setSpinVoltage(double volts) {
-		spinSim.setInputVoltage(volts);
+	public void setSpinVelocity(double rps, double feedforward) {
+		spinSim.setInputVoltage(feedforward);
 	}
 
 	@Override
-	public void setLinearPosition(double rotations) {
-		linearSim.setInputVoltage(linearController.calculate(linearSim.getAngularPositionRotations(), rotations));
+	public void setLinearPosition(double meters) {
+		linearSim.setInputVoltage(linearController.calculate(linearSim.getAngularPositionRotations(), meters / LINEAR_METERS_PER_ROTATION));
 	} //pid only for sim, irl uses talon pid
 
 	@Override
