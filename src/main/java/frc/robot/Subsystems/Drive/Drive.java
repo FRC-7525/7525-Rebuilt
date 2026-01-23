@@ -114,8 +114,8 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void driveFieldRelative(double xVelocity, double yVelocity, double angularVelocity) {
 		driveIO.setControl(
-			new SwerveRequest.FieldCentric()
-				.withDeadband(DEADBAND)
+                new SwerveRequest.FieldCentric()
+                	.withDeadband(frc.robot.GlobalConstants.Controllers.DEADBAND)
 				.withVelocityX(xVelocity)
 				.withVelocityY(yVelocity)
 				.withRotationalRate(angularVelocity)
@@ -127,8 +127,8 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void driveRobotRelative(double xVelocity, double yVelocity, double angularVelocity) {
 		driveIO.setControl(
-			new SwerveRequest.RobotCentric()
-				.withDeadband(DEADBAND)
+                new SwerveRequest.RobotCentric()
+                	.withDeadband(frc.robot.GlobalConstants.Controllers.DEADBAND)
 				.withVelocityX(xVelocity)
 				.withVelocityY(yVelocity)
 				.withRotationalRate(angularVelocity)
