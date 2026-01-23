@@ -21,7 +21,7 @@ public class VisionIOPhotonVision implements VisionIO {
 	 * Creates a new VisionIOPhotonVision.
 	 *
 	 * @param name The configured name of the camera.
-	 * @param rotationSupplier The 3D position of the camera relative to the robot.
+	 * @param robotToCamera The 3D position of the camera relative to the robot.
 	 */
 	public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
 		camera = new PhotonCamera(name);
@@ -29,8 +29,8 @@ public class VisionIOPhotonVision implements VisionIO {
 	}
 
 	@Override
-	public void updateInputs(VisionIOInputs inputs) {
-		inputs.connected = camera.isConnected();
+	public void logOutputs(VisionIOOutputs outputs) {
+		outputs.connected = camera.isConnected();
 
 		// Read new camera observations
 		Set<Short> tagIds = new HashSet<>();
@@ -38,9 +38,9 @@ public class VisionIOPhotonVision implements VisionIO {
 		for (var result : camera.getAllUnreadResults()) {
 			// Update latest target observation
 			if (result.hasTargets()) {
-				inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(result.getBestTarget().getYaw()), Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
+				outputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(result.getBestTarget().getYaw()), Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
 			} else {
-				inputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
+				outputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
 			}
 
 			// Add pose observation
@@ -109,16 +109,16 @@ public class VisionIOPhotonVision implements VisionIO {
 		}
 
 		// Save pose observations to inputs object
-		inputs.poseObservations = new PoseObservation[poseObservations.size()];
+		outputs.poseObservations = new PoseObservation[poseObservations.size()];
 		for (int i = 0; i < poseObservations.size(); i++) {
-			inputs.poseObservations[i] = poseObservations.get(i);
+			outputs.poseObservations[i] = poseObservations.get(i);
 		}
 
 		// Save tag IDs to inputs objects
-		inputs.tagIds = new int[tagIds.size()];
-		int i = 0;
+		outputs.tagIds = new int[tagIds.size()];
+		int i = 0; // RAGE BAIT CODE
 		for (int id : tagIds) {
-			inputs.tagIds[i++] = id;
+			outputs.tagIds[i++] = id;
 		}
 	}
 }

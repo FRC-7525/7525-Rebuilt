@@ -1,8 +1,8 @@
-package frc.robot.Subsytems.Shooter;
+package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Subsytems.Shooter.ShooterConstants.*;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,6 +24,8 @@ public class ShooterIOReal implements ShooterIO {
 	protected SimpleMotorFeedforward wheelFeedforward;
 
 	public ShooterIOReal() {
+		wheelSetpoint = RotationsPerSecond.zero();
+		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);

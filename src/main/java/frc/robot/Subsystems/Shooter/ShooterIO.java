@@ -1,10 +1,10 @@
-package frc.robot.Subsytems.Shooter;
+package frc.robot.Subsystems.Shooter;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public interface ShooterIO {
-	class ShooterIOOutputs { // Don't think this is what you meant but idk
+	class ShooterIOOutputs {
 
 		public AngularVelocity leftWheelVelocity;
 		public AngularVelocity rightWheelVelocity;

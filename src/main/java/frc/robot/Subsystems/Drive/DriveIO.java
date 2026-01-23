@@ -62,9 +62,9 @@ public interface DriveIO {
 	 *
 	 * @param pose The Pose2d object representing the vision measurement.
 	 * @param timestamp The timestamp of the vision measurement.
-	 * @param standardDeviaton The standard deviation of the vision measurement.
+	 * @param standardDeviation The standard deviation of the vision measurement.
 	 */
-	public default void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviaton) {}
+	public default void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviation) {}
 
 	public TalonFX[] getDriveMotors();
 
