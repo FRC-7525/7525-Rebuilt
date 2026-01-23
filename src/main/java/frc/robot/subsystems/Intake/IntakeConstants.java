@@ -17,8 +17,8 @@ public class IntakeConstants {
 	public static final double SPIN_SPEED_INTAKE = 60.0; // RPS
 
 	public static final double SPIN_kS = 0.1; //tune
-	public static final double SPIN_kV = 0.12;  // 12v I think?
-	public static final double SPIN_kA = 0.0;  //tune
+	public static final double SPIN_kV = 0.12; // 12v I think?
+	public static final double SPIN_kA = 0.0; //tune
 
 	public static final Slot0Configs LINEAR_SLOT_0_CONFIGS = new Slot0Configs().withKP(0.5).withKI(0).withKD(0);
 	public static final Slot0Configs SPIN_SLOT_0_CONFIGS = new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKV(SPIN_kV);

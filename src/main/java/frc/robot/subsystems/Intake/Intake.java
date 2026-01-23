@@ -1,9 +1,8 @@
 package frc.robot.Subsystems.Intake;
 
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
-import static edu.wpi.first.units.Units.*;
-
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -35,16 +34,14 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-
 		//asking for units explicitly
 		double linearPos = getState().linearPos.in(Meters);
 		double spinSpeed = getState().spinSpeed.in(RotationsPerSecond);
 
-		
 		io.setLinearPosition(linearPos);
 		io.setSpinVelocity(spinSpeed, spinFF.calculate(spinSpeed));
 		io.updateInputs(inputs);
-		
+
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", inputs.spinVelocityRPS);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinAppliedVolts", inputs.spinAppliedVolts);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinCurrentAmps", inputs.spinCurrentAmps);

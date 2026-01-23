@@ -6,11 +6,11 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.ArrayList;
 import java.util.Arrays;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class GlobalConstants {
 
@@ -44,7 +44,7 @@ public class GlobalConstants {
 
 		public static final ArrayList<Integer> CANIVORE_DEVICE_ORDER = new ArrayList<Integer>(Arrays.asList(39, 56, 6, 4, 58, 9, 5, 11, 12, 2, 59, 3, 8));
 	}
-		public static final double DEADBAND = 0.01;
-		public static final double TRIGGERS_REGISTER_POINT = 0.5;
-	}
 
+	public static final double DEADBAND = 0.01;
+	public static final double TRIGGERS_REGISTER_POINT = 0.5;
+}
