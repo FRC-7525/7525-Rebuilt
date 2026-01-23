@@ -30,8 +30,8 @@ public class IntakeIOTalonFX implements IntakeIO {
 		linearMotor = new TalonFX(Real.LINEAR_ACTUATOR_ID);
 		linearMotor.setNeutralMode(NeutralModeValue.Brake);
 		var linearConfig = new TalonFXConfiguration();
-		linearConfig.Slot0 = LINEAR_SLOT_0_CONFIGS; 
-        //talon pid is at 1kHz, roborio at 50Hz so I think this is better for something linear?
+		linearConfig.Slot0 = LINEAR_SLOT_0_CONFIGS;
+		//talon pid is at 1kHz, roborio at 50Hz so I think this is better for something linear?
 		linearConfig.CurrentLimits.StatorCurrentLimit = 40; //change after testing
 		linearConfig.Feedback.SensorToMechanismRatio = LINEAR_GEARING; //1 spin of motor = some geared extension
 		linearMotor.getConfigurator().apply(linearConfig);
