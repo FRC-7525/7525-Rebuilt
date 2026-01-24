@@ -1,14 +1,12 @@
 {
-    "fileName": "Phoenix5-5.36.0.json",
+    "fileName": "Phoenix5-replay-5.36.0.json",
     "name": "CTRE-Phoenix (v5)",
     "version": "5.36.0",
     "frcYear": "2026",
-    "uuid": "ab676553-b602-441f-a38d-f1296eff6537",
+    "uuid": "fbc886a4-2cec-40c0-9835-71086a8cc3df",
     "mavenUrls": [
         "https://maven.ctr-electronics.com/release/"
     ],
-    "jsonUrl": "https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2026-latest.json",
-    
     "javaDependencies": [
         {
             "groupId": "com.ctre.phoenix",
@@ -29,10 +27,21 @@
             "isJar": false,
             "skipInvalidPlatforms": true,
             "validPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "cci-replay",
+            "version": "5.36.0",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
                 "windowsx86-64",
                 "linuxx86-64",
                 "linuxarm64",
-                "linuxathena"
+                "osxuniversal"
             ],
             "simMode": "hwsim"
         },
@@ -61,9 +70,6 @@
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,
             "binaryPlatforms": [
-                "windowsx86-64",
-                "linuxx86-64",
-                "linuxarm64",
                 "linuxathena"
             ],
             "simMode": "hwsim"
@@ -77,9 +83,6 @@
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,
             "binaryPlatforms": [
-                "windowsx86-64",
-                "linuxx86-64",
-                "linuxarm64",
                 "linuxathena"
             ],
             "simMode": "hwsim"
@@ -93,10 +96,55 @@
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,
             "binaryPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "wpiapi-cpp-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_Phoenix_WPIReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
                 "windowsx86-64",
                 "linuxx86-64",
                 "linuxarm64",
-                "linuxathena"
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "api-cpp-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "cci-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixCCIReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
             ],
             "simMode": "hwsim"
         },
