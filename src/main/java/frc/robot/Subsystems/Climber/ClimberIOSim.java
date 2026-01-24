@@ -3,7 +3,6 @@ package frc.robot.Subsystems.Climber;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -21,8 +20,6 @@ public class ClimberIOSim extends ClimberIOReal {
 	protected Angle positionSetpoint;
 
 	public ClimberIOSim() {
-		leftMotor = new TalonFX(ClimberConstants.LEFT_CLIMBER_MOTOR_ID);
-		rightMotor = new TalonFX(ClimberConstants.RIGHT_CLIMBER_MOTOR_ID);
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Aligned));
 
 		leftMotorSim = new TalonFXSimState(leftMotor);
@@ -60,10 +57,7 @@ public class ClimberIOSim extends ClimberIOReal {
 	@Override
 	public void setPosition(Angle position) {
 		this.positionSetpoint = position;
-		double currentRot = leftMotor.getPosition().getValue().in(Rotations);
-		double error = position.in(Rotations) - currentRot;
-		double effort = Math.max(-1.0, Math.min(1.0, 5.0 * error));
-		climbSim.setInputVoltage(effort * 12.0);
+		climbSim.setInput(pid.calculate(leftMotor.getPosition().getValue().in(Rotations), positionSetpoint.in(Rotations)));
 	}
 
 	@Override
