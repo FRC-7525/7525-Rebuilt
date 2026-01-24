@@ -4,16 +4,17 @@ import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.sim.TalonFXSimState;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.units.measure.Angle;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.GlobalConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ClimberIOSim extends ClimberIOReal {
+
 	protected TalonFXSimState leftMotorSim;
 	protected TalonFXSimState rightMotorSim;
 	protected ElevatorSim climbSim;
@@ -27,17 +28,12 @@ public class ClimberIOSim extends ClimberIOReal {
 		leftMotorSim = new TalonFXSimState(leftMotor);
 		rightMotorSim = new TalonFXSimState(rightMotor);
 		climbSim = new ElevatorSim(
-			LinearSystemId.createElevatorSystem(
-				DCMotor.getFalcon500(1),
-				ClimberConstants.CLIMBER_MASS,
-				ClimberConstants.CLIMBER_RADIUS,
-                ClimberConstants.CLIMBER_GEARING
-			),
+			LinearSystemId.createElevatorSystem(DCMotor.getFalcon500(1), ClimberConstants.CLIMBER_MASS, ClimberConstants.CLIMBER_RADIUS, ClimberConstants.CLIMBER_GEARING),
 			DCMotor.getFalcon500(1),
 			ClimberConstants.START_HEIGHT,
 			ClimberConstants.END_HEIGHT,
 			true,
-            ClimberConstants.START_HEIGHT
+			ClimberConstants.START_HEIGHT
 		);
 
 		positionSetpoint = ClimberConstants.IDLE_SETPOINT;
