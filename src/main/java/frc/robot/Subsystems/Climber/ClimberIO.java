@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.Angle;
 
 public interface ClimberIO {
 	class ClimberIOOutputs {
+
 		public Angle leftPosition = Rotations.of(0);
 		public Angle rightPosition = Rotations.of(0);
 		public Angle setpoint = Rotations.of(0);

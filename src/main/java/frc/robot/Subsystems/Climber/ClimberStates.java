@@ -1,7 +1,7 @@
 package frc.robot.Subsystems.Climber;
 
-import org.team7525.subsystem.SubsystemStates;
 import edu.wpi.first.units.measure.Angle;
+import org.team7525.subsystem.SubsystemStates;
 
 public enum ClimberStates implements SubsystemStates {
 	IDLE("IDLE", ClimberConstants.IDLE_SETPOINT),
