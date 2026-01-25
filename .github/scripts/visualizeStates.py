@@ -90,57 +90,45 @@ EDGE_COLORS = [
 def generate_graph(state_map):
     dot = Digraph("StateMachine", format="png", engine="dot")
 
-    # Graph-level styling
     dot.attr(
         rankdir="TB",
         bgcolor="#1e1e2f",
         fontname="Helvetica",
         nodesep="0.6",
         ranksep="0.9",
-        splines="ortho",          # ✅ 90-degree edges
-        concentrate="false",
+        splines="ortho",
     )
 
     dot.attr(
         "edge",
+        arrowsize="0.8",
         fontname="Helvetica",
         fontsize="9",
-        arrowsize="0.8",
     )
 
-    # Nodes with HTML labels
+    # Nodes (HTML labels MUST use plaintext)
     for state, info in state_map.items():
         label = f"""
-        <
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#2d2d3c">
-            <TR>
-                <TD COLSPAN="2" BGCOLOR="#3b3b4f">
-                    <B><FONT COLOR="white">{state}</FONT></B>
-                </TD>
-            </TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Intake</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Intake']}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Hopper</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Hopper']}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Shooter</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Shooter']}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Climber</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Climber']}</FONT></TD></TR>
-        </TABLE>
-        >
-        """
+<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#2d2d3c">
+    <TR>
+        <TD COLSPAN="2" BGCOLOR="#3b3b4f">
+            <B><FONT COLOR="white">{state}</FONT></B>
+        </TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Intake</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Intake']}</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Hopper</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Hopper']}</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Shooter</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Shooter']}</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Climber</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Climber']}</FONT></TD></TR>
+</TABLE>
+"""
 
-        if state == "IDLE":
-            dot.node(
-                node_id(state),
-                label=label,
-                shape="plaintext",
-                color="#f6ad55",
-            )
-        else:
-            dot.node(
-                node_id(state),
-                label=label,
-                shape="plaintext",
-            )
+        dot.node(
+            node_id(state),
+            label=label,
+            shape="plaintext",
+        )
 
-    # Edges (colored per source)
+    # Edges with boxed labels
     color_index = 0
     for state, info in state_map.items():
         if not info["connectionsTo"]:
@@ -150,13 +138,20 @@ def generate_graph(state_map):
         color_index += 1
 
         for c in info["connectionsTo"]:
+            edge_label = f"""
+<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#2d2d3c">
+    <TR>
+        <TD><FONT COLOR="white">{c['condition']}</FONT></TD>
+    </TR>
+</TABLE>
+"""
+
             dot.edge(
                 node_id(state),
                 node_id(c["to"]),
-                label=c["condition"],
                 color=color,
-                fontcolor=color,
                 penwidth="1.8",
+                xlabel=edge_label,  # ✅ boxed, floating label
             )
 
     dot.render("state_machine", cleanup=True)
