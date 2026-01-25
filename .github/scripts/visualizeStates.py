@@ -9,7 +9,6 @@ def get_states(path):
     text = Path(path).read_text(encoding="utf8")
     return re.findall(r"\w+\s*\((?:[\s\S]*?)\)[,;]", text)
 
-
 def parse_states(blocks):
     states = []
 
@@ -33,21 +32,26 @@ def parse_states(blocks):
 
     return states
 
-
 def get_triggers(path):
     text = Path(path).read_text(encoding="utf8")
     return re.findall(r"addTrigger\([\s\S]*?\);", text)
-
 
 def parse_triggers(triggers):
     parsed = []
 
     for t in triggers:
         m = re.search(
-            r"addTrigger\(\s*(?:\w+\.)?(\w+)\s*,\s*(?:\w+\.)?(\w+)\s*,\s*(.*)\);",
+            r"""
+            addTrigger\(
+                \s*(?:\w+\.)?(\w+)\s*,      # from
+                \s*(?:\w+\.)?(\w+)\s*,      # to
+                \s*(.+?)                    # condition
+            \)\s*;
+            """,
             t,
-            re.DOTALL,
+            re.VERBOSE | re.DOTALL,
         )
+
         if not m:
             continue
 
@@ -57,7 +61,8 @@ def parse_triggers(triggers):
         cond = re.sub(r"^\(\)\s*->\s*", "", cond)
 
         # Remove controller prefixes
-        cond = re.sub(r".*::get", "", cond)
+        cond = re.sub(r"(?:DRIVER|OPERATOR)_CONTROLLER::get", "", cond)
+        cond = cond.replace("()", "")
 
         parsed.append({
             "from": m.group(1),
@@ -67,13 +72,11 @@ def parse_triggers(triggers):
 
     return parsed
 
-
 def create_state_map(states, triggers):
     sm = {s["stateName"]: s for s in states}
     for t in triggers:
         sm[t["from"]].setdefault("connections", []).append(t)
     return sm
-
 
 # ---------- Graph ----------
 
@@ -82,24 +85,23 @@ EDGE_COLORS = [
     "#a78bfa", "#fb7185", "#22d3ee"
 ]
 
-
 def nid(name):
     return name.replace("-", "_")
-
 
 def generate_graph(state_map):
     dot = Digraph("StateMachine", engine="dot", format="png")
 
+    # Use strictly vertical + horizontal edges
     dot.attr(
         bgcolor="#020617",
         rankdir="TB",
-        splines="polyline",
+        splines="ortho",       # strictly orthogonal
         nodesep="0.8",
         ranksep="1.0",
         fontname="Helvetica"
     )
 
-    # Nodes (rounded, native)
+    # ---------- Nodes ----------
     for state, info in state_map.items():
         label = (
             f"{state}\n\n"
@@ -119,7 +121,7 @@ def generate_graph(state_map):
             fontcolor="white"
         )
 
-    # Edges
+    # ---------- Edges ----------
     color_i = 0
     for state, info in state_map.items():
         for c in info.get("connections", []):
@@ -132,12 +134,12 @@ def generate_graph(state_map):
                 label=c["condition"],
                 color=color,
                 fontcolor="white",
+                fontsize="8",       # half-size text (default ~10-12)
                 penwidth="1.4"
             )
 
     dot.render("state_machine", cleanup=True)
     print("✅ state_machine.png generated")
-
 
 # ---------- Main ----------
 
@@ -145,7 +147,6 @@ def main(states_path, triggers_path):
     states = parse_states(get_states(states_path))
     triggers = parse_triggers(get_triggers(triggers_path))
     generate_graph(create_state_map(states, triggers))
-
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])
