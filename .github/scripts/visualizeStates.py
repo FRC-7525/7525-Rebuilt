@@ -49,9 +49,7 @@ def parse_triggers(triggers):
         if not m:
             continue
         cond = m.group(3).strip()
-        # Remove lambda wrapper
         cond = re.sub(r"^\(\)\s*->\s*", "", cond)
-        # Remove controller prefixes
         cond = re.sub(r"(?:DRIVER|OPERATOR)_CONTROLLER::get", "", cond)
         cond = cond.replace("()", "")
         parsed.append({
@@ -77,20 +75,12 @@ EDGE_COLORS = [
 def nid(name):
     return name.replace("-", "_")
 
-def edge_label_box(cond_text, color):
-    """Return HTML table label for edge with background same as graph"""
-    return f"""<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2" BGCOLOR="#020617">
-        <TR><TD><FONT COLOR="{color}" POINT-SIZE="8">{cond_text}</FONT></TD></TR>
-    </TABLE>
-    >"""
-
 def generate_graph(state_map):
     dot = Digraph("StateMachine", engine="dot", format="png")
     dot.attr(
         bgcolor="#020617",
         rankdir="TB",
-        splines="ortho",   # strictly vertical+horizontal edges
+        splines="ortho",   # vertical + horizontal only
         nodesep="0.8",
         ranksep="1.0",
         fontname="Helvetica"
@@ -125,9 +115,11 @@ def generate_graph(state_map):
             dot.edge(
                 nid(state),
                 nid(c["to"]),
-                label=edge_label_box(c["condition"], color),
+                label=c["condition"],
                 color=color,
                 fontcolor=color,
+                fontsize="8",       # smaller font
+                labelfloat="true",  # label stays on edge
                 penwidth="1.4"
             )
 
