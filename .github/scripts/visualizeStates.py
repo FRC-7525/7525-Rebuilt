@@ -1,7 +1,9 @@
 import sys
 import re
 from pathlib import Path
-from graphviz import Digraph
+import networkx as nx
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyBboxPatch
 
 # ---------- Parsing ----------
 
@@ -65,76 +67,69 @@ def create_state_map(states, triggers):
         sm[t["from"]].setdefault("connections", []).append(t)
     return sm
 
-# ---------- Graph ----------
+# ---------- Visualization ----------
 
 EDGE_COLORS = [
     "#60a5fa", "#4ade80", "#facc15",
     "#a78bfa", "#fb7185", "#22d3ee"
 ]
 
-def nid(name):
-    return name.replace("-", "_")
+def draw_state_machine(state_map):
+    G = nx.DiGraph()
 
-def edge_label_box(cond_text, color):
-    """
-    Create an HTML-like edge label box with:
-    - Background same as graph
-    - Text color same as edge
-    - Small font
-    """
-    return f"""<
-    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" BGCOLOR="#020617" STYLE="ROUNDED">
-        <TR><TD><FONT COLOR="{color}" POINT-SIZE="8">{cond_text}</FONT></TD></TR>
-    </TABLE>
-    >"""
+    for s, info in state_map.items():
+        G.add_node(s, **info)
 
-def generate_graph(state_map):
-    dot = Digraph("StateMachine", engine="dot", format="png")
-    dot.attr(
-        bgcolor="#020617",
-        rankdir="TB",
-        splines="ortho",
-        nodesep="0.8",
-        ranksep="1.0",
-        fontname="Helvetica"
-    )
+    for s, info in state_map.items():
+        for i, c in enumerate(info.get("connections", [])):
+            G.add_edge(s, c["to"], condition=c["condition"], color=EDGE_COLORS[i % len(EDGE_COLORS)])
+
+    # ---------- Layout ----------
+    pos = nx.spring_layout(G, seed=42)  # initial positions
+
+    # Force orthogonal routing by snapping positions to grid
+    for k, v in pos.items():
+        pos[k] = (round(v[0]*10)/10, round(v[1]*10)/10)
+
+    fig, ax = plt.subplots(figsize=(16, 12))
+    ax.set_facecolor("#020617")
+    plt.axis('off')
 
     # ---------- Nodes ----------
-    for state, info in state_map.items():
-        label = (
-            f"{state}\n\n"
-            f"Intake: {info['Intake']}\n"
-            f"Hopper: {info['Hopper']}\n"
-            f"Shooter: {info['Shooter']}\n"
-            f"Climber: {info['Climber']}"
-        )
-        dot.node(
-            nid(state),
-            label=label,
-            shape="box",
-            style="rounded,filled",
-            fillcolor="#1e293b",
-            color="#64748b",
-            fontcolor="white"
-        )
+    for node, info in G.nodes(data=True):
+        x, y = pos[node]
+        label = f"{node}\nIntake: {info['Intake']}\nHopper: {info['Hopper']}\nShooter: {info['Shooter']}\nClimber: {info['Climber']}"
+        bbox = FancyBboxPatch((x-0.05, y-0.05), 0.1, 0.1,
+                              boxstyle="round,pad=0.02",
+                              facecolor="#1e293b",
+                              edgecolor="#64748b",
+                              linewidth=1.5)
+        ax.add_patch(bbox)
+        ax.text(x, y, label, fontsize=10, ha='center', va='center', color="white")
 
     # ---------- Edges ----------
-    color_i = 0
-    for state, info in state_map.items():
-        for c in info.get("connections", []):
-            color = EDGE_COLORS[color_i % len(EDGE_COLORS)]
-            color_i += 1
+    for u, v, data in G.edges(data=True):
+        x1, y1 = pos[u]
+        x2, y2 = pos[v]
+        # Draw horizontal then vertical (orthogonal)
+        mid_x, mid_y = x2, y1
+        ax.plot([x1, mid_x], [y1, mid_y], color=data['color'], linewidth=1.4)
+        ax.plot([mid_x, x2], [mid_y, y2], color=data['color'], linewidth=1.4)
+        # Arrowhead
+        ax.annotate("",
+                    xy=(x2, y2),
+                    xytext=(mid_x, mid_y),
+                    arrowprops=dict(arrowstyle="-|>", color=data['color'], lw=1.4))
+        # Draw condition label above middle segment
+        label_x = (x1 + mid_x)/2
+        label_y = y1 + 0.03  # slightly above horizontal
+        ax.text(label_x, label_y, data['condition'],
+                fontsize=8, color=data['color'], ha='center', va='bottom',
+                bbox=dict(boxstyle="round,pad=0.2", facecolor="#020617", edgecolor=data['color']))
 
-            dot.edge(
-                nid(state),
-                nid(c["to"]),
-                label=edge_label_box(c["condition"], color),
-                color=color,
-                penwidth="1.4",
-                fontsize="8"
-            )
-
-    dot.render("state_machine", cleanup=True)
+    plt.tight_layout()
+    plt.savefig("state_machine.png", dpi=300)
+    plt.show()
     print("✅ state_machine.png generated")
 
 # ---------- Main ----------
@@ -142,7 +137,7 @@ def generate_graph(state_map):
 def main(states_path, triggers_path):
     states = parse_states(get_states(states_path))
     triggers = parse_triggers(get_triggers(triggers_path))
-    generate_graph(create_state_map(states, triggers))
+    draw_state_machine(create_state_map(states, triggers))
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])
