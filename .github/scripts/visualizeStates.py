@@ -27,7 +27,7 @@ def get_triggers(manager_path):
 def parse_triggers(triggers):
     parsed = []
     for t in triggers:
-        # Improved regex: strips enum prefixes like ManagerStates.
+        # Strip enum prefixes for states
         m = re.search(
             r"""
             addTrigger\(
@@ -40,10 +40,14 @@ def parse_triggers(triggers):
             re.VERBOSE,
         )
         if m:
+            condition = m[3]
+            # Remove everything before 'get' or last :: for brevity
+            condition = re.sub(r".*::get", "", condition)
+            condition = re.sub(r".*::", "", condition)
             parsed.append({
                 "from": m[1],
                 "to": m[2],
-                "condition": m[3]
+                "condition": condition
             })
     return parsed
 
@@ -60,6 +64,12 @@ def node_id(name: str) -> str:
     """Sanitize node names for Graphviz IDs."""
     return re.sub(r"\W+", "_", name)
 
+# Generate a color for each node’s outgoing edges
+EDGE_COLORS = [
+    "#f6e05e", "#68d391", "#63b3ed", "#fc8181",
+    "#90cdf4", "#faf089", "#fbb6ce", "#9f7aea"
+]
+
 # ---------- Visualization ----------
 def generate_graph(state_map):
     dot = Digraph(
@@ -68,10 +78,10 @@ def generate_graph(state_map):
         engine="dot",
     )
 
-    # General graph styling
+    # General graph styling (dark mode)
     dot.attr(
         rankdir="TB",
-        bgcolor="#f8f9fb",
+        bgcolor="#1e1e2f",
         fontname="Helvetica",
     )
     dot.attr(
@@ -80,15 +90,16 @@ def generate_graph(state_map):
         style="filled",
         fontname="Helvetica-Bold",
         fontsize="11",
-        fillcolor="#cfe8ff",
-        color="#2b6cb0",
+        fillcolor="#2d2d3c",
+        color="#68d391",
+        fontcolor="white",
         penwidth="1.5",
     )
     dot.attr(
         "edge",
         fontname="Helvetica",
         fontsize="9",
-        color="#4a5568",
+        color="#ffffff",
         arrowsize="0.8",
     )
 
@@ -102,17 +113,30 @@ def generate_graph(state_map):
     for state in all_nodes:
         if state == "IDLE":
             dot.node(node_id(state), label=state,
-                     fillcolor="#ffe8cc",
-                     color="#c05621",
+                     fillcolor="#3e2c1c",
+                     color="#f6ad55",
+                     fontcolor="white",
                      penwidth="2.5")
         else:
             dot.node(node_id(state), label=state)
 
-    # Add edges
+    # Add edges, colored per source node
+    color_index = 0
     for state, info in state_map.items():
+        if not info.get("connectionsTo"):
+            continue
+        color = EDGE_COLORS[color_index % len(EDGE_COLORS)]
+        color_index += 1
         for c in info.get("connectionsTo", []):
-            label = c["condition"].replace("->", "→")
-            dot.edge(node_id(state), node_id(c["to"]), label=label)
+            dot.edge(
+                node_id(state),
+                node_id(c["to"]),
+                label=c["condition"],
+                color=color,
+                fontcolor=color,
+                penwidth="1.8",
+                constraint="false",  # makes arrows slightly curved, easier to follow
+            )
 
     # Render
     dot.render("state_machine", cleanup=True)
