@@ -14,18 +14,17 @@ def parse_states(blocks):
     states = []
 
     for block in blocks:
-        name_match = re.match(r"(\w+)\s*\(", block)
-        if not name_match:
+        name = re.match(r"(\w+)\s*\(", block)
+        if not name:
             continue
 
-        name = name_match.group(1)
         subs = dict(
             (k.replace("States", ""), v)
             for k, v in re.findall(r"(\w+States)\.(\w+)", block)
         )
 
         states.append({
-            "stateName": name,
+            "stateName": name.group(1),
             "Intake": subs.get("Intake", "—"),
             "Hopper": subs.get("Hopper", "—"),
             "Shooter": subs.get("Shooter", "—"),
@@ -45,27 +44,20 @@ def parse_triggers(triggers):
 
     for t in triggers:
         m = re.search(
-            r"""
-            addTrigger\(
-                \s*(?:\w+\.)?(\w+)\s*,       # from
-                \s*(?:\w+\.)?(\w+)\s*,       # to
-                \s*(.+?)                     # condition (full)
-            \)
-            """,
+            r"addTrigger\(\s*(?:\w+\.)?(\w+)\s*,\s*(?:\w+\.)?(\w+)\s*,\s*(.*)\);",
             t,
-            re.VERBOSE | re.DOTALL,
+            re.DOTALL,
         )
-
         if not m:
             continue
 
         cond = m.group(3).strip()
 
-        # Clean lambda syntax
+        # Remove lambda wrapper
         cond = re.sub(r"^\(\)\s*->\s*", "", cond)
 
-        # Remove trailing semicolon if present
-        cond = cond.rstrip(";")
+        # Remove controller prefixes
+        cond = re.sub(r".*::get", "", cond)
 
         parsed.append({
             "from": m.group(1),
@@ -86,37 +78,13 @@ def create_state_map(states, triggers):
 # ---------- Graph ----------
 
 EDGE_COLORS = [
-    "#38bdf8", "#4ade80", "#f472b6",
-    "#facc15", "#a78bfa", "#fb7185"
+    "#60a5fa", "#4ade80", "#facc15",
+    "#a78bfa", "#fb7185", "#22d3ee"
 ]
 
 
 def nid(name):
     return name.replace("-", "_")
-
-
-def state_label(state, info):
-    return f"""<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1e293b">
-        <TR>
-            <TD ALIGN="CENTER">
-                <B><FONT COLOR="white">{state}</FONT></B><BR/>
-                <FONT COLOR="#cbd5e1" POINT-SIZE="10">
-                    Intake: {info["Intake"]}<BR/>
-                    Hopper: {info["Hopper"]}<BR/>
-                    Shooter: {info["Shooter"]}<BR/>
-                    Climber: {info["Climber"]}
-                </FONT>
-            </TD>
-        </TR>
-    </TABLE>>"""
-
-
-def edge_label(text):
-    return f"""<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#020617">
-        <TR>
-            <TD><FONT COLOR="white" POINT-SIZE="10">{text}</FONT></TD>
-        </TR>
-    </TABLE>>"""
 
 
 def generate_graph(state_map):
@@ -126,37 +94,45 @@ def generate_graph(state_map):
         bgcolor="#020617",
         rankdir="TB",
         splines="polyline",
-        nodesep="0.6",
-        ranksep="0.9",
+        nodesep="0.8",
+        ranksep="1.0",
         fontname="Helvetica"
     )
 
-    # Nodes
+    # Nodes (rounded, native)
     for state, info in state_map.items():
+        label = (
+            f"{state}\n\n"
+            f"Intake: {info['Intake']}\n"
+            f"Hopper: {info['Hopper']}\n"
+            f"Shooter: {info['Shooter']}\n"
+            f"Climber: {info['Climber']}"
+        )
+
         dot.node(
             nid(state),
-            label=state_label(state, info),
-            shape="plaintext"
+            label=label,
+            shape="box",
+            style="rounded,filled",
+            fillcolor="#1e293b",
+            color="#64748b",
+            fontcolor="white"
         )
 
     # Edges
     color_i = 0
     for state, info in state_map.items():
-        connections = info.get("connections", [])
-        if not connections:
-            continue
+        for c in info.get("connections", []):
+            color = EDGE_COLORS[color_i % len(EDGE_COLORS)]
+            color_i += 1
 
-        color = EDGE_COLORS[color_i % len(EDGE_COLORS)]
-        color_i += 1
-
-        for c in connections:
             dot.edge(
                 nid(state),
                 nid(c["to"]),
-                label=edge_label(c["condition"]),
+                label=c["condition"],
                 color=color,
-                penwidth="1.6",
-                fontcolor="white"
+                fontcolor="white",
+                penwidth="1.4"
             )
 
     dot.render("state_machine", cleanup=True)
@@ -168,8 +144,7 @@ def generate_graph(state_map):
 def main(states_path, triggers_path):
     states = parse_states(get_states(states_path))
     triggers = parse_triggers(get_triggers(triggers_path))
-    state_map = create_state_map(states, triggers)
-    generate_graph(state_map)
+    generate_graph(create_state_map(states, triggers))
 
 
 if __name__ == "__main__":
