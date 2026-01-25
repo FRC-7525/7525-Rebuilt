@@ -166,4 +166,12 @@ public class Drive extends Subsystem<DriveStates> {
 			driveIO.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
 		}
 	}
+
+	public boolean isAtAllianceShootingPosition() {
+		if (DriverStation.getAlliance().get() == Alliance.Red) {
+			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
+		} else {
+			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
+		}
+	}
 }

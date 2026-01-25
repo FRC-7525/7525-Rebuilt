@@ -40,6 +40,10 @@ public class DriveConstants {
 	public static final Rotation2d BLUE_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(0);
 	public static final Rotation2d RED_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(180);
 
+	// Alliance shooting position thresholds
+	public static final Distance ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE = Meters.of(4.5);
+	public static final Distance ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED = Meters.of(7.8);
+
 	// Weird syntax because we have our own PIDConstants class (literally just the PP one :skull: copy pasted) so we can use it without installing PP Lib
 	public static final PPHolonomicDriveController PATH_PLANNER_PID = new PPHolonomicDriveController(new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0), new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0));
 

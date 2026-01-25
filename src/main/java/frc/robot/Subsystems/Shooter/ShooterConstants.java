@@ -16,7 +16,10 @@ public final class ShooterConstants {
 	public static final String SUBSYSTEM_NAME = "Shooter";
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45); //TODO: get good value
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(1000); //TODO: get good value
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(100); //TODO: get good value
+
+	public static final Angle STANDBY_ANGLE = Degrees.of(45); //TODO: get good value
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(500); //TODO: get good value
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;

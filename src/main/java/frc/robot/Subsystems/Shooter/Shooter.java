@@ -25,7 +25,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	}
 
 	private Shooter(ShooterIO io) {
-		super(SUBSYSTEM_NAME, ShooterStates.OFF);
+		super(SUBSYSTEM_NAME, ShooterStates.IDLE);
 		this.io = io;
 		outputs = new ShooterIOOutputs();
 	}

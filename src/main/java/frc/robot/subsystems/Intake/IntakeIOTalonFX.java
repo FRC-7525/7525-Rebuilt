@@ -1,7 +1,6 @@
 package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
