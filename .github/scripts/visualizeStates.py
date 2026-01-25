@@ -1,11 +1,10 @@
 import sys
 import re
 from pathlib import Path
-import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from graphviz import Digraph
 
 # ---------- Parsing ----------
+
 def get_states(path):
     text = Path(path).read_text(encoding="utf8")
     return re.findall(r"\w+\s*\((?:[\s\S]*?)\)[,;]", text)
@@ -66,95 +65,66 @@ def create_state_map(states, triggers):
         sm[t["from"]].setdefault("connections", []).append(t)
     return sm
 
-# ---------- Visualization ----------
+# ---------- Graphviz ----------
+
 EDGE_COLORS = [
     "#60a5fa", "#4ade80", "#facc15",
     "#a78bfa", "#fb7185", "#22d3ee"
 ]
 
-def draw_state_machine(state_map):
-    G = nx.DiGraph()
-    for s, info in state_map.items():
-        G.add_node(s, **info)
-    for s, info in state_map.items():
-        for i, c in enumerate(info.get("connections", [])):
-            G.add_edge(s, c["to"], condition=c["condition"], color=EDGE_COLORS[i % len(EDGE_COLORS)])
+NODE_COLORS = [
+    "#1f2937", "#334155", "#475569", "#64748b", "#7f9cf5", "#a78bfa"
+]
 
-    # ---------- Layout ----------
-    pos = nx.spring_layout(G, seed=42, k=3.5)
-    scale = 10
-    pos = {k: (v[0]*scale, v[1]*scale) for k, v in pos.items()}
+def generate_graph(state_map):
+    dot = Digraph("StateMachine", format="png", engine="dot")
+    dot.attr(
+        bgcolor="#020617",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="1.2",
+        ranksep="1.5",
+        fontname="Helvetica"
+    )
 
-    fig, ax = plt.subplots(figsize=(20, 16))
-    fig.patch.set_facecolor("#020617")
-    ax.set_facecolor("#020617")
-    plt.axis('off')
+    # ---------- Nodes ----------
+    for i, (state, info) in enumerate(state_map.items()):
+        label = f"{state}\nIntake: {info['Intake']}\nHopper: {info['Hopper']}\nShooter: {info['Shooter']}\nClimber: {info['Climber']}"
+        dot.node(
+            state,
+            label=label,
+            shape="box",
+            style="rounded,filled",
+            fillcolor=NODE_COLORS[i % len(NODE_COLORS)],
+            fontcolor="white",
+            color="#ffffff",
+        )
 
-    # ---------- Draw edges first ----------
-    for u, v, data in G.edges(data=True):
-        x1, y1 = pos[u]
-        x2, y2 = pos[v]
-        mid_x, mid_y = x2, y1
+    # ---------- Edges ----------
+    color_i = 0
+    for state, info in state_map.items():
+        for c in info.get("connections", []):
+            color = EDGE_COLORS[color_i % len(EDGE_COLORS)]
+            color_i += 1
+            dot.edge(
+                state,
+                c["to"],
+                label=c["condition"],
+                fontcolor=color,
+                fontsize="10",
+                color=color,
+                arrowsize="1.2",
+                penwidth="1.5",
+            )
 
-        # Orthogonal lines
-        ax.plot([x1, mid_x], [y1, mid_y], color=data['color'], linewidth=1.5)
-        ax.plot([mid_x, x2], [mid_y, y2], color=data['color'], linewidth=1.5)
-
-        # Arrowhead
-        arrow = FancyArrowPatch((mid_x, mid_y), (x2, y2),
-                                arrowstyle="-|>", color=data['color'], linewidth=1.5)
-        ax.add_patch(arrow)
-
-        # Label above horizontal segment
-        label_x = (x1 + mid_x)/2
-        label_y = y1 + 0.03
-        ax.text(label_x, label_y, data['condition'],
-                fontsize=8, color=data['color'], ha='center', va='bottom',
-                bbox=dict(boxstyle="round,pad=0.2", facecolor="#020617", edgecolor=data['color']))
-
-    # ---------- Draw nodes on top ----------
-    for node, info in G.nodes(data=True):
-        x, y = pos[node]
-        lines = [
-            node,
-            f"Intake: {info['Intake']}",
-            f"Hopper: {info['Hopper']}",
-            f"Shooter: {info['Shooter']}",
-            f"Climber: {info['Climber']}"
-        ]
-        text_obj = ax.text(x, y, "\n".join(lines), fontsize=10, ha='center', va='center', color="white")
-        fig.canvas.draw()  # Needed to compute text bounding box
-        renderer = fig.canvas.get_renderer()
-        bbox = text_obj.get_window_extent(renderer=renderer)
-        bbox_data = bbox.transformed(ax.transData.inverted())
-        width = bbox_data.width + 0.2
-        height = bbox_data.height + 0.2
-
-        # Draw rounded box behind text
-        rect = FancyBboxPatch((x - width/2, y - height/2), width, height,
-                              boxstyle="round,pad=0.02",
-                              facecolor="#1e293b",
-                              edgecolor="#64748b",
-                              linewidth=1.5, zorder=2)
-        ax.add_patch(rect)
-        text_obj.set_zorder(3)  # Ensure text is above the box
-
-    # ---------- Expand plot limits ----------
-    all_x = [v[0] for v in pos.values()]
-    all_y = [v[1] for v in pos.values()]
-    ax.set_xlim(min(all_x)-2, max(all_x)+2)
-    ax.set_ylim(min(all_y)-2, max(all_y)+2)
-
-    plt.tight_layout()
-    plt.savefig("state_machine.png", dpi=300)
-    plt.show()
+    dot.render("state_machine", cleanup=True)
     print("✅ state_machine.png generated")
 
 # ---------- Main ----------
 def main(states_path, triggers_path):
     states = parse_states(get_states(states_path))
-    triggers = parse_triggers(get_triggers(states_path))
-    draw_state_machine(create_state_map(states, triggers))
+    triggers = parse_triggers(get_triggers(triggers_path))
+    generate_graph(create_state_map(states, triggers))
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])
