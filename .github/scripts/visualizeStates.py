@@ -1,98 +1,120 @@
-from matplotlib.patches import FancyArrowPatch
+import sys
+import re
+from pathlib import Path
+from graphviz import Digraph
 
-def generate_graph(state_map):
-    G = nx.DiGraph()
+EXCLUDED_STATES = []
 
-    for state, info in state_map.items():
-        G.add_node(state)
-        for c in info.get("connectionsTo", []):
-            G.add_edge(state, c["to"], label=c["condition"])
+# ---------- Parsing ----------
+def get_states(manager_states_path):
+    file = Path(manager_states_path).read_text(encoding="utf8")
+    return re.findall(r"\s*(?:\w+)\s*\((?:[\s\S]*?)\)[,;]", file)
 
-    # Layout
-    pos = nx.spring_layout(G, seed=42, k=1.0)
-    if "IDLE" in pos:
-        pos["IDLE"] = (0, 0)
+def parse_states(states):
+    parsed = []
+    for state in states:
+        name = re.match(r"^\s*(\w+)\s*\(", state)
+        parsed.append({
+            "stateName": name[1] if name else None,
+            "subStates": re.findall(r"\b(?:\w+\.)+\w+\b", state)
+        })
+    return parsed
 
-    # Figure
-    fig, ax = plt.subplots(figsize=(20, 20))
-    ax.set_facecolor("#f9fafb")
-    ax.axis("off")
+def get_triggers(manager_path):
+    file = Path(manager_path).read_text(encoding="utf8")
+    return re.findall(r"addTrigger\(.+?\)", file)
 
-    # ---- Nodes ----
-    idle_nodes = ["IDLE"] if "IDLE" in G else []
-    normal_nodes = [n for n in G.nodes if n != "IDLE"]
-
-    nx.draw_networkx_nodes(
-        G, pos,
-        nodelist=normal_nodes,
-        node_size=2800,
-        node_color="#e0f2ff",
-        edgecolors="#2563eb",
-        linewidths=2,
-        ax=ax
-    )
-
-    nx.draw_networkx_nodes(
-        G, pos,
-        nodelist=idle_nodes,
-        node_size=3600,
-        node_color="#ffedd5",
-        edgecolors="#c2410c",
-        linewidths=3,
-        ax=ax
-    )
-
-    nx.draw_networkx_labels(
-        G, pos,
-        font_size=11,
-        font_weight="bold",
-        font_family="DejaVu Sans",
-        ax=ax
-    )
-
-    # ---- Edges (manual arrows) ----
-    for (src, dst, data) in G.edges(data=True):
-        x1, y1 = pos[src]
-        x2, y2 = pos[dst]
-
-        arrow = FancyArrowPatch(
-            (x1, y1),
-            (x2, y2),
-            arrowstyle="-|>",
-            mutation_scale=18,
-            linewidth=1.6,
-            color="#475569",
-            connectionstyle="arc3,rad=0.15",
-            zorder=1
+def parse_triggers(triggers):
+    parsed = []
+    for t in triggers:
+        m = re.search(
+            r"\s*(\w+)\s*,\s*(\w+)\s*,\s*((?:[\w:]+)|(?:\(\)\s*->\s*[\w.]+\(\)))\s*\)",
+            t,
         )
-        ax.add_patch(arrow)
+        if m:
+            parsed.append({
+                "from": m[1],
+                "to": m[2],
+                "condition": m[3]
+            })
+    return parsed
 
-        # Edge label
-        if "label" in data:
-            mx, my = (x1 + x2) / 2, (y1 + y2) / 2
-            ax.text(
-                mx, my,
-                data["label"],
-                fontsize=8,
-                color="#1f2937",
-                ha="center",
-                va="center",
-                bbox=dict(
-                    boxstyle="round,pad=0.25",
-                    fc="white",
-                    ec="none",
-                    alpha=0.9
-                ),
-                zorder=3
+def create_state_map(states, triggers):
+    state_map = {s["stateName"]: s for s in states}
+    for t in triggers:
+        state = state_map.get(t["from"])
+        if state is not None:
+            state.setdefault("connectionsTo", []).append(t)
+    return state_map
+
+# ---------- Visualization (Graphviz) ----------
+def generate_graph(state_map):
+    dot = Digraph(
+        "StateMachine",
+        format="png",
+        engine="dot",
+    )
+
+    dot.attr(
+        rankdir="TB",
+        bgcolor="#f8f9fb",
+        fontname="Helvetica",
+    )
+
+    # Default node style
+    dot.attr(
+        "node",
+        shape="rounded,filled",
+        style="rounded,filled",
+        fontname="Helvetica-Bold",
+        fontsize="11",
+        fillcolor="#cfe8ff",
+        color="#2b6cb0",
+        penwidth="1.5",
+    )
+
+    # Default edge style
+    dot.attr(
+        "edge",
+        fontname="Helvetica",
+        fontsize="9",
+        color="#4a5568",
+        arrowsize="0.8",
+    )
+
+    # Nodes
+    for state in state_map:
+        if state == "IDLE":
+            dot.node(
+                state,
+                state,
+                fillcolor="#ffe8cc",
+                color="#c05621",
+                penwidth="2.5",
+            )
+        else:
+            dot.node(state, state)
+
+    # Edges
+    for state, info in state_map.items():
+        for c in info.get("connectionsTo", []):
+            label = c["condition"].replace("->", "→")
+            dot.edge(
+                state,
+                c["to"],
+                label=label,
             )
 
-    plt.title(
-        "State Machine",
-        fontsize=22,
-        fontweight="bold",
-        pad=24
-    )
+    dot.render("state_machine", cleanup=True)
+    print("Rendered state_machine.png")
 
-    plt.tight_layout()
-    plt.savefig("state_machine.png", dpi=300)
-    plt.show()
+# ---------- Main ----------
+def main(managerStatesPath, managerPath):
+    states = parse_states(get_states(managerStatesPath))
+    triggers = parse_triggers(get_triggers(managerPath))
+    state_map = create_state_map(states, triggers)
+    generate_graph(state_map)
+    print("Success!")
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
