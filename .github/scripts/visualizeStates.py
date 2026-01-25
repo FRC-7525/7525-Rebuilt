@@ -80,9 +80,11 @@ def generate_graph(state_map):
 
     # General graph styling (dark mode)
     dot.attr(
-        rankdir="TB",
+        rankdir="TB",            # Top -> Bottom
         bgcolor="#1e1e2f",
         fontname="Helvetica",
+        nodesep="0.6",
+        ranksep="0.8"
     )
     dot.attr(
         "node",
@@ -135,7 +137,7 @@ def generate_graph(state_map):
                 color=color,
                 fontcolor=color,
                 penwidth="1.8",
-                constraint="false",  # makes arrows slightly curved, easier to follow
+                # No constraint=False → allows proper vertical ranking
             )
 
     # Render
