@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 import networkx as nx
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 # ---------- Parsing ----------
 def get_states(path):
@@ -81,12 +81,11 @@ def draw_state_machine(state_map):
             G.add_edge(s, c["to"], condition=c["condition"], color=EDGE_COLORS[i % len(EDGE_COLORS)])
 
     # ---------- Layout ----------
-    pos = nx.spring_layout(G, seed=42, k=3.5)  # larger k → more spacing
-    # Scale layout to fill figure
+    pos = nx.spring_layout(G, seed=42, k=3.5)
     scale = 10
     pos = {k: (v[0]*scale, v[1]*scale) for k, v in pos.items()}
 
-    fig, ax = plt.subplots(figsize=(18, 14))
+    fig, ax = plt.subplots(figsize=(20, 16))
     fig.patch.set_facecolor("#020617")
     ax.set_facecolor("#020617")
     plt.axis('off')
@@ -96,13 +95,17 @@ def draw_state_machine(state_map):
         x1, y1 = pos[u]
         x2, y2 = pos[v]
         mid_x, mid_y = x2, y1
-        # horizontal then vertical
+
+        # Orthogonal lines
         ax.plot([x1, mid_x], [y1, mid_y], color=data['color'], linewidth=1.5)
         ax.plot([mid_x, x2], [mid_y, y2], color=data['color'], linewidth=1.5)
-        ax.annotate("",
-                    xy=(x2, y2),
-                    xytext=(mid_x, mid_y),
-                    arrowprops=dict(arrowstyle="-|>", color=data['color'], lw=1.5))
+
+        # Arrowhead
+        arrow = FancyArrowPatch((mid_x, mid_y), (x2, y2),
+                                arrowstyle="-|>", color=data['color'], linewidth=1.5)
+        ax.add_patch(arrow)
+
+        # Label above horizontal segment
         label_x = (x1 + mid_x)/2
         label_y = y1 + 0.03
         ax.text(label_x, label_y, data['condition'],
@@ -119,23 +122,28 @@ def draw_state_machine(state_map):
             f"Shooter: {info['Shooter']}",
             f"Climber: {info['Climber']}"
         ]
-        max_line_len = max(len(line) for line in lines)
-        width = max_line_len * 0.02 + 0.15
-        height = len(lines) * 0.05 + 0.1
+        text_obj = ax.text(x, y, "\n".join(lines), fontsize=10, ha='center', va='center', color="white")
+        fig.canvas.draw()  # Needed to compute text bounding box
+        renderer = fig.canvas.get_renderer()
+        bbox = text_obj.get_window_extent(renderer=renderer)
+        bbox_data = bbox.transformed(ax.transData.inverted())
+        width = bbox_data.width + 0.2
+        height = bbox_data.height + 0.2
 
-        bbox = FancyBboxPatch((x - width/2, y - height/2), width, height,
+        # Draw rounded box behind text
+        rect = FancyBboxPatch((x - width/2, y - height/2), width, height,
                               boxstyle="round,pad=0.02",
                               facecolor="#1e293b",
                               edgecolor="#64748b",
-                              linewidth=1.5)
-        ax.add_patch(bbox)
-        ax.text(x, y, "\n".join(lines), fontsize=10, ha='center', va='center', color="white")
+                              linewidth=1.5, zorder=2)
+        ax.add_patch(rect)
+        text_obj.set_zorder(3)  # Ensure text is above the box
 
     # ---------- Expand plot limits ----------
     all_x = [v[0] for v in pos.values()]
     all_y = [v[1] for v in pos.values()]
-    ax.set_xlim(min(all_x)-1, max(all_x)+1)
-    ax.set_ylim(min(all_y)-1, max(all_y)+1)
+    ax.set_xlim(min(all_x)-2, max(all_x)+2)
+    ax.set_ylim(min(all_y)-2, max(all_y)+2)
 
     plt.tight_layout()
     plt.savefig("state_machine.png", dpi=300)
