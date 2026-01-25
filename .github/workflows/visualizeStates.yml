@@ -14,11 +14,6 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Install system dependencies
-      run: |
-          sudo apt-get update
-          sudo apt-get install -y graphviz
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -26,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install graphviz
+        pip install networkx matplotlib
 
     - name: Run graph generation
       id: run-script
