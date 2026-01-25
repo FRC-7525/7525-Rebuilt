@@ -2,7 +2,10 @@ name: Visualize States
 
 on:
   pull_request:
-    types: [opened]
+    types:
+      - reopened
+      - opened
+      - synchronize
 
 jobs:
   generate-graph:
