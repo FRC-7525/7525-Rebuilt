@@ -76,53 +76,57 @@ EDGE_COLORS = [
 
 def draw_state_machine(state_map):
     G = nx.DiGraph()
-
     for s, info in state_map.items():
         G.add_node(s, **info)
-
     for s, info in state_map.items():
         for i, c in enumerate(info.get("connections", [])):
             G.add_edge(s, c["to"], condition=c["condition"], color=EDGE_COLORS[i % len(EDGE_COLORS)])
 
     # ---------- Layout ----------
-    pos = nx.spring_layout(G, seed=42)  # initial positions
-
-    # Force orthogonal routing by snapping positions to grid
-    for k, v in pos.items():
-        pos[k] = (round(v[0]*10)/10, round(v[1]*10)/10)
-
-    fig, ax = plt.subplots(figsize=(16, 12))
-    ax.set_facecolor("#020617")
+    pos = nx.spring_layout(G, seed=42, k=2.5)  # more spacing
+    fig, ax = plt.subplots(figsize=(18, 14))
+    fig.patch.set_facecolor("#020617")  # Figure background dark
+    ax.set_facecolor("#020617")         # Axes background dark
     plt.axis('off')
 
     # ---------- Nodes ----------
     for node, info in G.nodes(data=True):
         x, y = pos[node]
-        label = f"{node}\nIntake: {info['Intake']}\nHopper: {info['Hopper']}\nShooter: {info['Shooter']}\nClimber: {info['Climber']}"
-        bbox = FancyBboxPatch((x-0.05, y-0.05), 0.1, 0.1,
+        lines = [
+            node,
+            f"Intake: {info['Intake']}",
+            f"Hopper: {info['Hopper']}",
+            f"Shooter: {info['Shooter']}",
+            f"Climber: {info['Climber']}"
+        ]
+        max_line_len = max(len(line) for line in lines)
+        width = max_line_len * 0.02 + 0.15
+        height = len(lines) * 0.05 + 0.1
+
+        bbox = FancyBboxPatch((x - width/2, y - height/2), width, height,
                               boxstyle="round,pad=0.02",
                               facecolor="#1e293b",
                               edgecolor="#64748b",
                               linewidth=1.5)
         ax.add_patch(bbox)
-        ax.text(x, y, label, fontsize=10, ha='center', va='center', color="white")
+        ax.text(x, y, "\n".join(lines), fontsize=10, ha='center', va='center', color="white")
 
     # ---------- Edges ----------
     for u, v, data in G.edges(data=True):
         x1, y1 = pos[u]
         x2, y2 = pos[v]
-        # Draw horizontal then vertical (orthogonal)
-        mid_x, mid_y = x2, y1
-        ax.plot([x1, mid_x], [y1, mid_y], color=data['color'], linewidth=1.4)
-        ax.plot([mid_x, x2], [mid_y, y2], color=data['color'], linewidth=1.4)
-        # Arrowhead
+        mid_x, mid_y = x2, y1  # orthogonal
+
+        ax.plot([x1, mid_x], [y1, mid_y], color=data['color'], linewidth=1.5)
+        ax.plot([mid_x, x2], [mid_y, y2], color=data['color'], linewidth=1.5)
+
         ax.annotate("",
                     xy=(x2, y2),
                     xytext=(mid_x, mid_y),
-                    arrowprops=dict(arrowstyle="-|>", color=data['color'], lw=1.4))
-        # Draw condition label above middle segment
+                    arrowprops=dict(arrowstyle="-|>", color=data['color'], lw=1.5))
+
         label_x = (x1 + mid_x)/2
-        label_y = y1 + 0.03  # slightly above horizontal
+        label_y = y1 + 0.03
         ax.text(label_x, label_y, data['condition'],
                 fontsize=8, color=data['color'], ha='center', va='bottom',
                 bbox=dict(boxstyle="round,pad=0.2", facecolor="#020617", edgecolor=data['color']))
@@ -136,7 +140,7 @@ def draw_state_machine(state_map):
 
 def main(states_path, triggers_path):
     states = parse_states(get_states(states_path))
-    triggers = parse_triggers(get_triggers(triggers_path))
+    triggers = parse_triggers(get_triggers(states_path))
     draw_state_machine(create_state_map(states, triggers))
 
 if __name__ == "__main__":
