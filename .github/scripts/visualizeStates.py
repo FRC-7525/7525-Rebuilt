@@ -75,12 +75,25 @@ EDGE_COLORS = [
 def nid(name):
     return name.replace("-", "_")
 
+def edge_label_box(cond_text, color):
+    """
+    Create an HTML-like edge label box with:
+    - Background same as graph
+    - Text color same as edge
+    - Small font
+    """
+    return f"""<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" BGCOLOR="#020617" STYLE="ROUNDED">
+        <TR><TD><FONT COLOR="{color}" POINT-SIZE="8">{cond_text}</FONT></TD></TR>
+    </TABLE>
+    >"""
+
 def generate_graph(state_map):
     dot = Digraph("StateMachine", engine="dot", format="png")
     dot.attr(
         bgcolor="#020617",
         rankdir="TB",
-        splines="ortho",   # vertical + horizontal only
+        splines="ortho",
         nodesep="0.8",
         ranksep="1.0",
         fontname="Helvetica"
@@ -115,12 +128,10 @@ def generate_graph(state_map):
             dot.edge(
                 nid(state),
                 nid(c["to"]),
-                label=c["condition"],
+                label=edge_label_box(c["condition"], color),
                 color=color,
-                fontcolor=color,
-                fontsize="8",       # smaller font
-                labelfloat="true",  # label stays on edge
-                penwidth="1.4"
+                penwidth="1.4",
+                fontsize="8"
             )
 
     dot.render("state_machine", cleanup=True)
