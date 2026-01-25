@@ -27,9 +27,17 @@ def get_triggers(manager_path):
 def parse_triggers(triggers):
     parsed = []
     for t in triggers:
+        # Improved regex: strips enum prefixes like ManagerStates.
         m = re.search(
-            r"\s*(\w+)\s*,\s*(\w+)\s*,\s*((?:[\w:]+)|(?:\(\)\s*->\s*[\w.]+\(\)))\s*\)",
+            r"""
+            addTrigger\(
+                \s*(?:\w+\.)?(\w+)\s*,      # from
+                \s*(?:\w+\.)?(\w+)\s*,      # to
+                \s*([^)\s]+)                # condition
+            \)
+            """,
             t,
+            re.VERBOSE,
         )
         if m:
             parsed.append({
@@ -47,7 +55,12 @@ def create_state_map(states, triggers):
             state.setdefault("connectionsTo", []).append(t)
     return state_map
 
-# ---------- Visualization (Graphviz) ----------
+# ---------- Graphviz helpers ----------
+def node_id(name: str) -> str:
+    """Sanitize node names for Graphviz IDs."""
+    return re.sub(r"\W+", "_", name)
+
+# ---------- Visualization ----------
 def generate_graph(state_map):
     dot = Digraph(
         "StateMachine",
@@ -55,25 +68,22 @@ def generate_graph(state_map):
         engine="dot",
     )
 
+    # General graph styling
     dot.attr(
         rankdir="TB",
         bgcolor="#f8f9fb",
         fontname="Helvetica",
     )
-
-    # Default node style
     dot.attr(
         "node",
-        shape="rounded,filled",
-        style="rounded,filled",
+        shape="rounded",
+        style="filled",
         fontname="Helvetica-Bold",
         fontsize="11",
         fillcolor="#cfe8ff",
         color="#2b6cb0",
         penwidth="1.5",
     )
-
-    # Default edge style
     dot.attr(
         "edge",
         fontname="Helvetica",
@@ -82,29 +92,29 @@ def generate_graph(state_map):
         arrowsize="0.8",
     )
 
-    # Nodes
-    for state in state_map:
-        if state == "IDLE":
-            dot.node(
-                state,
-                state,
-                fillcolor="#ffe8cc",
-                color="#c05621",
-                penwidth="2.5",
-            )
-        else:
-            dot.node(state, state)
+    # Collect all nodes: states + any targets from triggers
+    all_nodes = set(state_map.keys())
+    for info in state_map.values():
+        for c in info.get("connectionsTo", []):
+            all_nodes.add(c["to"])
 
-    # Edges
+    # Add nodes
+    for state in all_nodes:
+        if state == "IDLE":
+            dot.node(node_id(state), label=state,
+                     fillcolor="#ffe8cc",
+                     color="#c05621",
+                     penwidth="2.5")
+        else:
+            dot.node(node_id(state), label=state)
+
+    # Add edges
     for state, info in state_map.items():
         for c in info.get("connectionsTo", []):
             label = c["condition"].replace("->", "→")
-            dot.edge(
-                state,
-                c["to"],
-                label=label,
-            )
+            dot.edge(node_id(state), node_id(c["to"]), label=label)
 
+    # Render
     dot.render("state_machine", cleanup=True)
     print("Rendered state_machine.png")
 
@@ -113,6 +123,12 @@ def main(managerStatesPath, managerPath):
     states = parse_states(get_states(managerStatesPath))
     triggers = parse_triggers(get_triggers(managerPath))
     state_map = create_state_map(states, triggers)
+
+    # Debug: show parsed triggers
+    print("Triggers found:")
+    for t in triggers:
+        print(f"{t['from']} -> {t['to']} [{t['condition']}]")
+
     generate_graph(state_map)
     print("Success!")
 
