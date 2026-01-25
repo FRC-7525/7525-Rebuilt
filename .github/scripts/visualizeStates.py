@@ -11,17 +11,14 @@ def get_states(path):
 
 def parse_states(blocks):
     states = []
-
     for block in blocks:
         name = re.match(r"(\w+)\s*\(", block)
         if not name:
             continue
-
         subs = dict(
             (k.replace("States", ""), v)
             for k, v in re.findall(r"(\w+States)\.(\w+)", block)
         )
-
         states.append({
             "stateName": name.group(1),
             "Intake": subs.get("Intake", "—"),
@@ -29,7 +26,6 @@ def parse_states(blocks):
             "Shooter": subs.get("Shooter", "—"),
             "Climber": subs.get("Climber", "—"),
         })
-
     return states
 
 def get_triggers(path):
@@ -38,7 +34,6 @@ def get_triggers(path):
 
 def parse_triggers(triggers):
     parsed = []
-
     for t in triggers:
         m = re.search(
             r"""
@@ -51,25 +46,19 @@ def parse_triggers(triggers):
             t,
             re.VERBOSE | re.DOTALL,
         )
-
         if not m:
             continue
-
         cond = m.group(3).strip()
-
         # Remove lambda wrapper
         cond = re.sub(r"^\(\)\s*->\s*", "", cond)
-
         # Remove controller prefixes
         cond = re.sub(r"(?:DRIVER|OPERATOR)_CONTROLLER::get", "", cond)
         cond = cond.replace("()", "")
-
         parsed.append({
             "from": m.group(1),
             "to": m.group(2),
             "condition": cond,
         })
-
     return parsed
 
 def create_state_map(states, triggers):
@@ -88,14 +77,20 @@ EDGE_COLORS = [
 def nid(name):
     return name.replace("-", "_")
 
+def edge_label_box(cond_text, color):
+    """Return HTML table label for edge with background same as graph"""
+    return f"""<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2" BGCOLOR="#020617">
+        <TR><TD><FONT COLOR="{color}" POINT-SIZE="8">{cond_text}</FONT></TD></TR>
+    </TABLE>
+    >"""
+
 def generate_graph(state_map):
     dot = Digraph("StateMachine", engine="dot", format="png")
-
-    # Use strictly vertical + horizontal edges
     dot.attr(
         bgcolor="#020617",
         rankdir="TB",
-        splines="ortho",       # strictly orthogonal
+        splines="ortho",   # strictly vertical+horizontal edges
         nodesep="0.8",
         ranksep="1.0",
         fontname="Helvetica"
@@ -110,7 +105,6 @@ def generate_graph(state_map):
             f"Shooter: {info['Shooter']}\n"
             f"Climber: {info['Climber']}"
         )
-
         dot.node(
             nid(state),
             label=label,
@@ -131,10 +125,9 @@ def generate_graph(state_map):
             dot.edge(
                 nid(state),
                 nid(c["to"]),
-                label=c["condition"],
+                label=edge_label_box(c["condition"], color),
                 color=color,
-                fontcolor="white",
-                fontsize="8",       # half-size text (default ~10-12)
+                fontcolor=color,
                 penwidth="1.4"
             )
 
