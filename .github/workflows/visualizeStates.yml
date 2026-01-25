@@ -26,7 +26,7 @@ jobs:
     - name: Run graph generation
       id: run-script
       run: |
-        python3 .github/scripts/visualizeStates.py ./src/main/java/frc/robot/Subsystems/Manager/ManagerStates.java ./src/main/java/frc/robot/Manager/Manager.java
+        python3 .github/scripts/visualizeStates.py ./src/main/java/frc/robot/Subsystems/Manager/ManagerStates.java ./src/main/java/frc/robot/Subsystems/Manager/Manager.java
         echo "exit_code=$?" >> $GITHUB_OUTPUT
       continue-on-error: true
 
