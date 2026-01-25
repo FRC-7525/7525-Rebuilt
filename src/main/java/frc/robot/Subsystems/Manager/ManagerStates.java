@@ -1,122 +1,63 @@
 package frc.robot.Subsystems.Manager;
 
-import org.team7525.subsystem.SubsystemStates;
 import frc.robot.Subsystems.Climber.ClimberStates;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.HopperStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Shooter.ShooterStates;
+import org.team7525.subsystem.SubsystemStates;
 
-public enum ManagerStates implements SubsystemStates{
-    IDLE(
-        "IDLE",
-        IntakeStates.IN,
-        HopperStates.IDLE,
-        ShooterStates.IDLE,
-        ClimberStates.IDLE
-    ),
-    EXTENDED_IDLE(
-        "EXTENDED_IDLE",
-        IntakeStates.OUT,
-        HopperStates.IDLE,
-        ShooterStates.IDLE,
-        ClimberStates.IDLE
-    ),
-    INTAKING(
-        "INTAKING",
-        IntakeStates.INTAKE,
-        HopperStates.SPINDEXING,
-        ShooterStates.STANDBY,
-        ClimberStates.IDLE
-    ),
-    WINDING_UP(
-        "WINDING_UP",
-        IntakeStates.IN,
-        HopperStates.IDLE,
-        Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB,
-        ClimberStates.IDLE
-    ),
-    WINDING_UP_FIXED_SHOT( // FALLBACK STATE for if bad stuff happens
-        "WINDING_UP_FIXED_SHOT",
-        IntakeStates.IN,
-        HopperStates.IDLE,
-        ShooterStates.SHOOT_FIXED,
-        ClimberStates.IDLE
-    ),
-    SHUTTLING(
-        "SHUTTLING",
-        IntakeStates.IN,
-        HopperStates.SPINDEXING,
-        ShooterStates.SHOOT_ALLIANCE,
-        ClimberStates.IDLE
-    ),
-    SHOOTING_HUB(
-        "SHOOTING_HUB",
-        IntakeStates.IN,
-        HopperStates.SPINDEXING,
-        ShooterStates.SHOOT_HUB,
-        ClimberStates.IDLE
-    ),
-    SHOOTING_FIXED(
-        "SHOOTING_FIXED",
-        IntakeStates.IN,
-        HopperStates.SPINDEXING,
-        ShooterStates.SHOOT_FIXED,
-        ClimberStates.IDLE
-    ),
-    EXTENDING_CLIMBER(
-        "EXTENDING_CLIMBER",
-        IntakeStates.IN,
-        HopperStates.IDLE,
-        ShooterStates.IDLE,
-        ClimberStates.EXTEND
-    ),
-    RETRACTING_CLIMBER(
-        "RETRACTING_CLIMBER",
-        IntakeStates.IN,
-        HopperStates.IDLE,
-        ShooterStates.IDLE,
-        ClimberStates.RETRACT
-    );
+public enum ManagerStates implements SubsystemStates {
+	IDLE("IDLE", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
+	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
+	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.STANDBY, ClimberStates.IDLE),
+	WINDING_UP("WINDING_UP", IntakeStates.IN, HopperStates.IDLE, Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
+	WINDING_UP_FIXED_SHOT(
+		// FALLBACK STATE for if bad stuff happens
+		"WINDING_UP_FIXED_SHOT",
+		IntakeStates.IN,
+		HopperStates.IDLE,
+		ShooterStates.SHOOT_FIXED,
+		ClimberStates.IDLE
+	),
+	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),
+	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
+	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE),
+	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND),
+	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT);
 
-    private final String stateString;
-    private final IntakeStates intakeState;
-    private final HopperStates hopperState;
-    private final ShooterStates shooterState;
-    private final ClimberStates climberState;
-    
-    ManagerStates(
-        String stateString,
-        IntakeStates intakeState,
-        HopperStates hopperState,
-        ShooterStates shooterState,
-        ClimberStates climberState
-    ) {
-        this.stateString = stateString;
-        this.intakeState = intakeState;
-        this.hopperState = hopperState;
-        this.shooterState = shooterState;
-        this.climberState = climberState;
-    }
+	private final String stateString;
+	private final IntakeStates intakeState;
+	private final HopperStates hopperState;
+	private final ShooterStates shooterState;
+	private final ClimberStates climberState;
 
-    @Override
-    public String getStateString() {
-        return stateString;
-    }
+	ManagerStates(String stateString, IntakeStates intakeState, HopperStates hopperState, ShooterStates shooterState, ClimberStates climberState) {
+		this.stateString = stateString;
+		this.intakeState = intakeState;
+		this.hopperState = hopperState;
+		this.shooterState = shooterState;
+		this.climberState = climberState;
+	}
 
-    public IntakeStates getIntakeState() {
-        return intakeState;
-    }
+	@Override
+	public String getStateString() {
+		return stateString;
+	}
 
-    public HopperStates getHopperState() {
-        return hopperState;
-    }
+	public IntakeStates getIntakeState() {
+		return intakeState;
+	}
 
-    public ShooterStates getShooterState() {
-        return shooterState;
-    }
+	public HopperStates getHopperState() {
+		return hopperState;
+	}
 
-    public ClimberStates getClimberState() {
-        return climberState;
-    }
+	public ShooterStates getShooterState() {
+		return shooterState;
+	}
+
+	public ClimberStates getClimberState() {
+		return climberState;
+	}
 }

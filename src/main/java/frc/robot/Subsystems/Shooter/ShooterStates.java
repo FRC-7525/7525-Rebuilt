@@ -30,7 +30,6 @@ public enum ShooterStates implements SubsystemStates {
 	SHOOT_FIXED("SHOOT FIXED", () -> FIXED_SHOT_ANGLE, () -> FIXED_SHOT_SPEED),
 	STANDBY("STANDBY", () -> STANDBY_ANGLE, () -> STANDBY_SPEED);
 
-
 	private String stateString;
 	private Supplier<Angle> hoodAngleSupplier;
 	private Supplier<AngularVelocity> wheelVelocitySupplier;
