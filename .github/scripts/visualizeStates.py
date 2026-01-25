@@ -5,107 +5,95 @@ from graphviz import Digraph
 
 # ---------- Parsing ----------
 
-def get_states(manager_states_path):
-    file = Path(manager_states_path).read_text(encoding="utf8")
-    return re.findall(r"\w+\s*\((?:[\s\S]*?)\)[,;]", file)
+def get_states(path):
+    return re.findall(
+        r"\w+\s*\((?:[\s\S]*?)\)[,;]",
+        Path(path).read_text(encoding="utf8")
+    )
 
 
-def parse_states(states):
-    parsed = []
-
-    for block in states:
-        name_match = re.match(r"(\w+)\s*\(", block)
-        if not name_match:
+def parse_states(blocks):
+    states = []
+    for b in blocks:
+        name = re.match(r"(\w+)\s*\(", b)
+        if not name:
             continue
 
-        name = name_match.group(1)
+        subs = dict(
+            (k.replace("States", ""), v)
+            for k, v in re.findall(r"(\w+States)\.(\w+)", b)
+        )
 
-        subs = re.findall(r"(\w+States)\.(\w+)", block)
-        sub_map = {k.replace("States", ""): v for k, v in subs}
-
-        parsed.append({
-            "stateName": name,
-            "Intake": sub_map.get("Intake", "—"),
-            "Hopper": sub_map.get("Hopper", "—"),
-            "Shooter": sub_map.get("Shooter", "—"),
-            "Climber": sub_map.get("Climber", "—"),
+        states.append({
+            "stateName": name.group(1),
+            **subs
         })
 
-    return parsed
+    return states
 
 
-def get_triggers(manager_path):
-    file = Path(manager_path).read_text(encoding="utf8")
-    return re.findall(r"addTrigger\([\s\S]*?\)", file)
+def get_triggers(path):
+    return re.findall(
+        r"addTrigger\([\s\S]*?\)",
+        Path(path).read_text(encoding="utf8")
+    )
 
 
 def parse_triggers(triggers):
     parsed = []
-
     for t in triggers:
         m = re.search(
-            r"""
-            addTrigger\(
-                \s*(?:\w+\.)?(\w+)\s*,      # from
-                \s*(?:\w+\.)?(\w+)\s*,      # to
-                \s*([^)\s]+)                # condition
-            \)
-            """,
-            t,
-            re.VERBOSE,
+            r"addTrigger\(\s*(?:\w+\.)?(\w+)\s*,\s*(?:\w+\.)?(\w+)\s*,\s*([^)]+)\)",
+            t
         )
         if not m:
             continue
 
-        condition = m.group(3)
-        condition = re.sub(r".*::get", "", condition)
-        condition = re.sub(r"\(\)", "", condition)
+        cond = m.group(3)
+        cond = re.sub(r".*::get", "", cond)
+        cond = cond.replace("()", "")
 
         parsed.append({
             "from": m.group(1),
             "to": m.group(2),
-            "condition": condition,
+            "condition": cond
         })
 
     return parsed
 
 
 def create_state_map(states, triggers):
-    state_map = {s["stateName"]: s for s in states}
+    sm = {s["stateName"]: s for s in states}
     for t in triggers:
-        state_map.setdefault(t["from"], {}).setdefault("connectionsTo", []).append(t)
-    return state_map
+        sm[t["from"]].setdefault("connections", []).append(t)
+    return sm
 
 
-# ---------- GraphViz ----------
+# ---------- Graph ----------
 
 EDGE_COLORS = [
-    "#60a5fa", "#34d399", "#f472b6",
-    "#fbbf24", "#a78bfa", "#fb7185"
+    "#38bdf8", "#4ade80", "#f472b6",
+    "#facc15", "#a78bfa", "#fb7185"
 ]
 
 
-def node_id(name):
-    return name.replace("-", "_")
+def nid(s):
+    return s.replace("-", "_")
 
 
 def generate_graph(state_map):
-    dot = Digraph(
-        "StateMachine",
-        engine="dot",
-        format="png",
-    )
+    dot = Digraph("StateMachine", engine="dot", format="png")
 
     dot.attr(
-        bgcolor="#0f172a",
+        bgcolor="#020617",
         rankdir="TB",
-        splines="ortho",
+        splines="polyline",   # IMPORTANT
         nodesep="0.6",
         ranksep="0.8",
         fontname="Helvetica"
     )
 
-    # ----- Nodes -----
+    # Nodes
     for state, info in state_map.items():
         label = f"""<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1e293b">
             <TR>
@@ -113,29 +101,24 @@ def generate_graph(state_map):
                     <B><FONT COLOR="white">{state}</FONT></B>
                 </TD>
             </TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e1">Intake</FONT></TD><TD><FONT COLOR="white">{info.get("Intake","—")}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e1">Hopper</FONT></TD><TD><FONT COLOR="white">{info.get("Hopper","—")}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e1">Shooter</FONT></TD><TD><FONT COLOR="white">{info.get("Shooter","—")}</FONT></TD></TR>
-            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e1">Climber</FONT></TD><TD><FONT COLOR="white">{info.get("Climber","—")}</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#cbd5e1">Intake</FONT></TD><TD><FONT COLOR="white">{info.get("Intake","—")}</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#cbd5e1">Hopper</FONT></TD><TD><FONT COLOR="white">{info.get("Hopper","—")}</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#cbd5e1">Shooter</FONT></TD><TD><FONT COLOR="white">{info.get("Shooter","—")}</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#cbd5e1">Climber</FONT></TD><TD><FONT COLOR="white">{info.get("Climber","—")}</FONT></TD></TR>
         </TABLE>>"""
 
-        dot.node(
-            node_id(state),
-            label=label,
-            shape="plaintext"
-        )
+        dot.node(nid(state), label=label, shape="plaintext")
 
-    # ----- Edges -----
-    color_index = 0
-    for state, info in state_map.items():
-        connections = info.get("connectionsTo", [])
-        if not connections:
+    # Edges
+    color_i = 0
+    for s, info in state_map.items():
+        if "connections" not in info:
             continue
 
-        color = EDGE_COLORS[color_index % len(EDGE_COLORS)]
-        color_index += 1
+        color = EDGE_COLORS[color_i % len(EDGE_COLORS)]
+        color_i += 1
 
-        for c in connections:
+        for c in info["connections"]:
             edge_label = f"""<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#020617">
                 <TR>
                     <TD><FONT COLOR="white">{c["condition"]}</FONT></TD>
@@ -143,11 +126,12 @@ def generate_graph(state_map):
             </TABLE>>"""
 
             dot.edge(
-                node_id(state),
-                node_id(c["to"]),
+                nid(s),
+                nid(c["to"]),
+                label=edge_label,   # NOT xlabel
                 color=color,
-                penwidth="1.8",
-                xlabel=edge_label,
+                fontcolor="white",
+                penwidth="1.6"
             )
 
     dot.render("state_machine", cleanup=True)
@@ -156,11 +140,10 @@ def generate_graph(state_map):
 
 # ---------- Main ----------
 
-def main(managerStatesPath, managerPath):
-    states = parse_states(get_states(managerStatesPath))
-    triggers = parse_triggers(get_triggers(managerPath))
-    state_map = create_state_map(states, triggers)
-    generate_graph(state_map)
+def main(states_path, triggers_path):
+    states = parse_states(get_states(states_path))
+    triggers = parse_triggers(get_triggers(triggers_path))
+    generate_graph(create_state_map(states, triggers))
 
 
 if __name__ == "__main__":
