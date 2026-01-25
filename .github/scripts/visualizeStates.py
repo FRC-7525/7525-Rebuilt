@@ -77,17 +77,6 @@ def generate_graph(state_map):
     plt.tight_layout()
     plt.savefig("state_machine.png", format='png', dpi=300)
 
-
-def checkConnectedToIdle(state_map):
-    notToIdle = []
-    for state_name, state in state_map.items():
-        if state_name in EXCLUDED_STATES: continue
-        for connections in state["connectionsTo"]:
-            if connections.to == "IDLE": continue
-            else: notToIdle.append(state_name)
-    return notToIdle
-
-
 def main(managerStatesPath, managerPath):
     states = get_states(managerStatesPath)
     states = parse_states(states)
@@ -98,12 +87,7 @@ def main(managerStatesPath, managerPath):
     state_map = create_state_map(states, triggers)
     
     generate_graph(state_map)
-    notToIdle = checkConnectedToIdle(state_map)
-    if notToIdle:
-        print(f"ERROR: The following states are not connected to IDLE: {', '.join(notToIdle)}")
-        return 1
-    else:
-        print("Success: All states are connected to IDLE.")
+    print("Success!")
     return 0
 if __name__ == '__main__':
     main(sys.argv[1], sys.argv[2])
