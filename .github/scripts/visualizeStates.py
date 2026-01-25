@@ -7,17 +7,15 @@ from graphviz import Digraph
 def get_manager_states(manager_states_path):
     text = Path(manager_states_path).read_text(encoding="utf8")
 
-    # Match enum entries like:
-    # NAME("NAME", IntakeStates.X, HopperStates.Y, ShooterStates.Z, ClimberStates.W)
     pattern = re.compile(
         r"""
-        (\w+)\s*                     # Enum name
+        (\w+)\s*
         \(\s*
-            "(.*?)"\s*,\s*           # stateString
-            ([^,]+)\s*,\s*           # Intake
-            ([^,]+)\s*,\s*           # Hopper
-            ([^,]+)\s*,\s*           # Shooter
-            ([^)]+)                  # Climber
+            "(.*?)"\s*,\s*
+            ([^,]+)\s*,\s*
+            ([^,]+)\s*,\s*
+            ([^,]+)\s*,\s*
+            ([^)]+)
         \)
         """,
         re.VERBOSE | re.DOTALL,
@@ -30,8 +28,8 @@ def get_manager_states(manager_states_path):
 
         def clean(x: str) -> str:
             x = x.strip()
-            x = re.sub(r".*?\.", "", x)   # Remove enum prefix
-            x = re.sub(r"\(.*\)", "", x)  # Remove method calls / ternaries
+            x = re.sub(r".*?\.", "", x)
+            x = re.sub(r"\(.*\)", "", x)
             return x
 
         states[name] = {
@@ -55,9 +53,9 @@ def parse_triggers(triggers):
         m = re.search(
             r"""
             addTrigger\(
-                \s*(?:\w+\.)?(\w+)\s*,      # from
-                \s*(?:\w+\.)?(\w+)\s*,      # to
-                \s*([^)\s]+)                # condition
+                \s*(?:\w+\.)?(\w+)\s*,
+                \s*(?:\w+\.)?(\w+)\s*,
+                \s*([^)\s]+)
             \)
             """,
             t,
@@ -79,7 +77,7 @@ def attach_triggers(state_map, triggers):
         if t["from"] in state_map:
             state_map[t["from"]]["connectionsTo"].append(t)
 
-# ---------- Graphviz helpers ----------
+# ---------- Helpers ----------
 def node_id(name: str) -> str:
     return re.sub(r"\W+", "_", name)
 
@@ -92,24 +90,15 @@ EDGE_COLORS = [
 def generate_graph(state_map):
     dot = Digraph("StateMachine", format="png", engine="dot")
 
+    # Graph-level styling
     dot.attr(
         rankdir="TB",
         bgcolor="#1e1e2f",
         fontname="Helvetica",
         nodesep="0.6",
         ranksep="0.9",
-    )
-
-    dot.attr(
-        "node",
-        shape="box",
-        style="rounded,filled",
-        fillcolor="#2d2d3c",
-        color="#68d391",
-        fontcolor="white",
-        fontname="Helvetica-Bold",
-        fontsize="11",
-        penwidth="1.4",
+        splines="ortho",          # ✅ 90-degree edges
+        concentrate="false",
     )
 
     dot.attr(
@@ -119,36 +108,47 @@ def generate_graph(state_map):
         arrowsize="0.8",
     )
 
-    # Nodes with multiline labels
+    # Nodes with HTML labels
     for state, info in state_map.items():
-        lines = [
-            f"{state}",
-            "────────────",
-            f"Intake   → {info['Intake']}",
-            f"Hopper   → {info['Hopper']}",
-            f"Shooter  → {info['Shooter']}",
-            f"Climber  → {info['Climber']}",
-        ]
-        label = "\n".join(lines)
+        label = f"""
+        <
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#2d2d3c">
+            <TR>
+                <TD COLSPAN="2" BGCOLOR="#3b3b4f">
+                    <B><FONT COLOR="white">{state}</FONT></B>
+                </TD>
+            </TR>
+            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Intake</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Intake']}</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Hopper</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Hopper']}</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Shooter</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Shooter']}</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT COLOR="#cbd5e0">Climber</FONT></TD><TD ALIGN="LEFT"><FONT COLOR="white">{info['Climber']}</FONT></TD></TR>
+        </TABLE>
+        >
+        """
 
         if state == "IDLE":
             dot.node(
                 node_id(state),
                 label=label,
-                fillcolor="#3e2c1c",
+                shape="plaintext",
                 color="#f6ad55",
-                penwidth="2.5",
             )
         else:
-            dot.node(node_id(state), label=label)
+            dot.node(
+                node_id(state),
+                label=label,
+                shape="plaintext",
+            )
 
-    # Edges (colored per source state)
+    # Edges (colored per source)
     color_index = 0
     for state, info in state_map.items():
         if not info["connectionsTo"]:
             continue
+
         color = EDGE_COLORS[color_index % len(EDGE_COLORS)]
         color_index += 1
+
         for c in info["connectionsTo"]:
             dot.edge(
                 node_id(state),
@@ -167,10 +167,6 @@ def main(managerStatesPath, managerPath):
     state_map = get_manager_states(managerStatesPath)
     triggers = parse_triggers(get_triggers(managerPath))
     attach_triggers(state_map, triggers)
-
-    print("States parsed:")
-    for s in state_map:
-        print(" ", s)
 
     generate_graph(state_map)
     print("Success!")

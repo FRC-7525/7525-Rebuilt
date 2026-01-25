@@ -13,7 +13,6 @@ public enum ManagerStates implements SubsystemStates {
 	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.STANDBY, ClimberStates.IDLE),
 	WINDING_UP("WINDING_UP", IntakeStates.IN, HopperStates.IDLE, Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
 	WINDING_UP_FIXED_SHOT(
-		// FALLBACK STATE for if bad stuff happens
 		"WINDING_UP_FIXED_SHOT",
 		IntakeStates.IN,
 		HopperStates.IDLE,
