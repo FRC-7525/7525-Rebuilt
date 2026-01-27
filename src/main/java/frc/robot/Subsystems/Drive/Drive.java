@@ -73,7 +73,7 @@ public class Drive extends Subsystem<DriveStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Chassis Speeds", inputs.speeds);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Set Points", inputs.setPoints);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Odometry Frequency", inputs.odometryFrequency);
-		
+
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Zero on init/when first disabled
@@ -122,7 +122,7 @@ public class Drive extends Subsystem<DriveStates> {
 	public void zeroGyro() {
 		driveIO.zeroGyro();
 	}
-	
+
 	public boolean isAtAllianceShootingPosition() {
 		return true;
 		// var allianceOpt = DriverStation.getAlliance();

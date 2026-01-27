@@ -6,8 +6,8 @@ import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.*;
 
 import org.team7525.subsystem.SubsystemStates;
-public enum DriveStates implements SubsystemStates {
 
+public enum DriveStates implements SubsystemStates {
 	FIELD_RELATIVE("Field Relative", () -> {
 		Drive.getInstance().driveFieldRelative(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1);
 	}),

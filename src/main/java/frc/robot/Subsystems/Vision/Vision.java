@@ -19,13 +19,13 @@ import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
+
 	private final VisionIO[] io;
 	private final VisionIOOutputs[] outputs;
 	private final Alert[] disconnectedAlerts;
@@ -43,10 +43,7 @@ public class Vision extends SubsystemBase {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] {
-						new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1),
-						new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2),
-					};
+					case REAL -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
 					case SIM -> new VisionIO[] {
 						new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose),
 						// new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose),

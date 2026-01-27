@@ -13,6 +13,7 @@ import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 
 public interface DriveIO {
 	public class DriveIOOutputs {
+
 		ChassisSpeeds speeds = new ChassisSpeeds();
 		SwerveModuleState[] setPoints = new SwerveModuleState[4];
 		Rotation3d fullRobotRotation = new Rotation3d();
