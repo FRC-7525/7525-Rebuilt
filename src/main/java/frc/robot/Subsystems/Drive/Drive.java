@@ -88,7 +88,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		// Otherwise it will try to force wheels to stop in auto
 		//if (AutoAlign.getInstance().getState() == AutoAlignStates.OFF) {
-			getState().driveRobot();
+		getState().driveRobot();
 		//}
 
 		field.setRobotPose(getPose());

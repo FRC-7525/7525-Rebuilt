@@ -85,3 +85,4 @@ public class Robot extends LoggedRobot {
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 	}
 }
+
