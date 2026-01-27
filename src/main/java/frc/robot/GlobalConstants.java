@@ -41,5 +41,6 @@ public class GlobalConstants {
 
 		public static final ArrayList<Integer> CANIVORE_DEVICE_ORDER = new ArrayList<Integer>(Arrays.asList(39, 56, 6, 4, 58, 9, 5, 11, 12, 2, 59, 3, 8));
 	}
+
 	public static final double TRIGGERS_REGISTER_POINT = 0.5;
 }

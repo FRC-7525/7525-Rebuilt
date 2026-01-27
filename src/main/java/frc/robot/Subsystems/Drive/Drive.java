@@ -5,6 +5,7 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -84,7 +85,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		// Otherwise it will try to force wheels to stop in auto
 		//if (AutoAlign.getInstance().getState() == AutoAlignStates.OFF) {
-			getState().driveRobot();
+		getState().driveRobot();
 		//}
 
 		field.setRobotPose(getPose());

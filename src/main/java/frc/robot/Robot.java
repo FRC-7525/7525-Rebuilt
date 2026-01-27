@@ -1,11 +1,11 @@
 package frc.robot;
 
+import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Manager.Manager;
-import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
