@@ -81,7 +81,11 @@ public class Manager extends Subsystem<ManagerStates> {
 
 	@Override
 	public void runState() {
-		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+		var allianceOpt = DriverStation.getAlliance();
+		if (allianceOpt.isEmpty()) {
+			// Alliance not yet known (early init); record as UNKNOWN instead of calling get().
+			Logger.recordOutput(SUBSYSTEM_NAME + "/ALLIANCE COLOR", "UNKNOWN");
+		} else if (allianceOpt.get() == DriverStation.Alliance.Red) {
 			Logger.recordOutput(SUBSYSTEM_NAME + "/ALLIANCE COLOR", "RED");
 		} else {
 			Logger.recordOutput(SUBSYSTEM_NAME + "/ALLIANCE COLOR", "BLUE");

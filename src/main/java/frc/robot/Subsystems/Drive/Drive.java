@@ -5,7 +5,6 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -21,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
@@ -58,11 +58,6 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 	}
 
-	/**
-	 * Returns the singleton instance of the Drive subsystem.
-	 *
-	 * @return The Drive Instance.
-	 */
 	public static Drive getInstance() {
 		if (instance == null) {
 			instance = new Drive();
@@ -86,6 +81,11 @@ public class Drive extends Subsystem<DriveStates> {
 				});
 		}
 		logOutputs(driveIO.getDrive().getState());
+
+		// Otherwise it will try to force wheels to stop in auto
+		//if (AutoAlign.getInstance().getState() == AutoAlignStates.OFF) {
+			getState().driveRobot();
+		//}
 
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
@@ -113,33 +113,29 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public void driveFieldRelative(double xVelocity, double yVelocity, double angularVelocity) {
-		driveIO.setControl(
-			new SwerveRequest.FieldCentric()
-				.withDeadband(frc.robot.GlobalConstants.Controllers.DEADBAND)
-				.withVelocityX(xVelocity)
-				.withVelocityY(yVelocity)
-				.withRotationalRate(angularVelocity)
-				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-				.withRotationalDeadband(1)
-		);
+		driveIO.setControl(new SwerveRequest.FieldCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 	}
 
 	public void driveRobotRelative(double xVelocity, double yVelocity, double angularVelocity) {
-		driveIO.setControl(
-			new SwerveRequest.RobotCentric()
-				.withDeadband(frc.robot.GlobalConstants.Controllers.DEADBAND)
-				.withVelocityX(xVelocity)
-				.withVelocityY(yVelocity)
-				.withRotationalRate(angularVelocity)
-				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-				.withRotationalDeadband(1)
-		);
+		driveIO.setControl(new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 	}
 
 	public void zeroGyro() {
 		driveIO.zeroGyro();
+	}
+
+	public boolean isAtAllianceShootingPosition() {
+		var allianceOpt = DriverStation.getAlliance();
+		if (allianceOpt.isEmpty()) {
+			// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+			return false;
+		}
+		Alliance alliance = allianceOpt.get();
+		if (alliance == Alliance.Red) {
+			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
+		} else {
+			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
+		}
 	}
 
 	// Util
@@ -164,14 +160,6 @@ public class Drive extends Subsystem<DriveStates> {
 			driveIO.addVisionMeasurement(visionPose, Utils.fpgaToCurrentTime(timestamp), visionMeasurementStdDevs);
 		} else {
 			driveIO.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
-		}
-	}
-
-	public boolean isAtAllianceShootingPosition() {
-		if (DriverStation.getAlliance().get() == Alliance.Red) {
-			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
-		} else {
-			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
 		}
 	}
 }

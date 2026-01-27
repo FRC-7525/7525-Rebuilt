@@ -23,11 +23,7 @@ public class VisionConstants {
 		NORMAL,
 	}
 
-	// INSANE skill issue from First
-	// This is comp dependent
-	public static final boolean USE_WELDED_FIELD = true;
-
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(USE_WELDED_FIELD ? AprilTagFields.k2025ReefscapeWelded : AprilTagFields.k2025ReefscapeAndyMark);
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
 	public record VisionMeasurment(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 

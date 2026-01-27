@@ -11,7 +11,7 @@ public enum ManagerStates implements SubsystemStates {
 	IDLE("IDLE", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
 	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
 	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.STANDBY, ClimberStates.IDLE),
-	WINDING_UP("WINDING_UP", IntakeStates.IN, HopperStates.IDLE, Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
+	WINDING_UP("WINDING_UP", IntakeStates.IN, HopperStates.IDLE, null, ClimberStates.IDLE),
 	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.IN, HopperStates.IDLE, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE),
 	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),
 	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
@@ -47,6 +47,12 @@ public enum ManagerStates implements SubsystemStates {
 	}
 
 	public ShooterStates getShooterState() {
+		// The WINDING_UP state's shooter target depends on the alliance at runtime. We
+		// intentionally left the stored shooterState as null for WINDING_UP to avoid
+		// resolving Drive/DriverStation during enum initialization. Compute it now.
+		if (this == WINDING_UP && shooterState == null) {
+			return Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB;
+		}
 		return shooterState;
 	}
 
