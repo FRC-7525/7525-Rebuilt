@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 public class ClimberConstants {
 
 	public static final String SUBSYSTEM_NAME = "Climber";
-	public static final int LEFT_CLIMBER_MOTOR_ID = 20;
-	public static final int RIGHT_CLIMBER_MOTOR_ID = 21;
+	public static final int LEFT_CLIMBER_MOTOR_ID = 30;
+	public static final int RIGHT_CLIMBER_MOTOR_ID = 31;
 	public static final Supplier<PIDController> CLIMB_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(1.0, 0.0, 0.0);

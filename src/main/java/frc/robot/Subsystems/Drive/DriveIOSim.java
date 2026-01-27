@@ -6,19 +6,11 @@ import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 
-/**
- * This class represents the simulated input/output for the drive subsystem.
- * It extends the DriveIOReal class and provides additional functionality for simulation.
- */
 public class DriveIOSim extends DriveIOReal {
 
 	private double lastSimTime;
 	private Notifier simNotifier;
 
-	/**
-	 * Constructs a new DriveIOSim object.
-	 * It initializes the superclass and starts the simulation thread.
-	 */
 	public DriveIOSim() {
 		startSimThread();
 	}

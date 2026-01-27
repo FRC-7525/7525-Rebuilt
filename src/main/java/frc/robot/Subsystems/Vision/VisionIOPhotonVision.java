@@ -21,7 +21,7 @@ public class VisionIOPhotonVision implements VisionIO {
 	 * Creates a new VisionIOPhotonVision.
 	 *
 	 * @param name The configured name of the camera.
-	 * @param robotToCamera The 3D position of the camera relative to the robot.
+	 * @param rotationSupplier The 3D position of the camera relative to the robot.
 	 */
 	public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
 		camera = new PhotonCamera(name);
@@ -46,6 +46,9 @@ public class VisionIOPhotonVision implements VisionIO {
 			// Add pose observation
 			if (result.multitagResult.isPresent()) { // Multitag result
 				var multitagResult = result.multitagResult.get();
+
+				// Skips whenever a camera only sees barge tags
+				if (multitagResult.fiducialIDsUsed.size() == 1 && APRIL_TAG_IGNORE.contains(multitagResult.fiducialIDsUsed.get(0))) continue;
 
 				// Calculate robot pose
 				Transform3d fieldToCamera = multitagResult.estimatedPose.best;
@@ -116,7 +119,7 @@ public class VisionIOPhotonVision implements VisionIO {
 
 		// Save tag IDs to inputs objects
 		outputs.tagIds = new int[tagIds.size()];
-		int i = 0; // RAGE BAIT CODE
+		int i = 0;
 		for (int id : tagIds) {
 			outputs.tagIds[i++] = id;
 		}

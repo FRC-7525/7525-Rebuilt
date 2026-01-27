@@ -39,9 +39,9 @@ public final class ShooterConstants {
 	// State defaults
 	public static final AngularVelocity REVERSE_WHEEL_SPEED = RotationsPerSecond.of(-100);
 
-	public static final int LEFT_SHOOTER_MOTOR_ID = 10;
-	public static final int RIGHT_SHOOTER_MOTOR_ID = 11;
-	public static final int HOOD_MOTOR_ID = 12;
+	public static final int LEFT_SHOOTER_MOTOR_ID = 37;
+	public static final int RIGHT_SHOOTER_MOTOR_ID = 38;
+	public static final int HOOD_MOTOR_ID = 39;
 
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {

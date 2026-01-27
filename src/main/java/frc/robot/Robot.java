@@ -1,11 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Subsystems.Drive.Drive;
-import frc.robot.Subsystems.Manager.Manager;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Manager.Manager;
+import frc.robot.Subsystems.Drive.Drive;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -16,6 +16,8 @@ import org.team7525.misc.Tracer;
 public class Robot extends LoggedRobot {
 
 	private final Manager manager = Manager.getInstance();
+
+	public static boolean isRedAlliance = true;
 
 	@Override
 	public void robotInit() {
@@ -74,8 +76,12 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
 
 	@Override
-	public void disabledExit() {}
+	public void disabledExit() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
 }

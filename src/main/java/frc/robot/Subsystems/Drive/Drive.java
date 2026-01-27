@@ -5,6 +5,7 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.RobotMode;
+import frc.robot.Subsystems.Drive.DriveIO.DriveIOOutputs;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
@@ -30,17 +32,12 @@ public class Drive extends Subsystem<DriveStates> {
 	private static Drive instance;
 
 	private DriveIO driveIO;
-	private DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
+	private DriveIOOutputs inputs = new DriveIOOutputs();
 	private boolean robotMirrored = false;
 	private Pose2d lastPose = new Pose2d();
 	private double lastTime = 0;
 	private final Field2d field = new Field2d();
 
-	/**
-	 * Constructs a new Drive subsystem with the given DriveIO.
-	 *
-	 * @param driveIO The DriveIO object used for controlling the drive system.
-	 */
 	private Drive() {
 		super("Drive", DriveStates.FIELD_RELATIVE);
 		this.driveIO = switch (ROBOT_MODE) {
@@ -67,9 +64,16 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
-		driveIO.updateInputs(inputs);
-		Logger.processInputs("Drive", inputs);
-
+		driveIO.logOutputs(inputs);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Gyro Angle Deg", inputs.gyroAngleDeg);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Robot Angle Deg", inputs.robotAngleDeg);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Full Robot Rotation", inputs.fullRobotRotation);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Failed Data Acquisitions", inputs.failedDataAquisitions);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Timestamp", inputs.timestamp);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Chassis Speeds", inputs.speeds);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Set Points", inputs.setPoints);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Odometry Frequency", inputs.odometryFrequency);
+		
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Zero on init/when first disabled
@@ -91,11 +95,6 @@ public class Drive extends Subsystem<DriveStates> {
 		SmartDashboard.putData("Field", field);
 	}
 
-	/**
-	 * Logs the outputs of the drive system.
-	 *
-	 * @param state The current state of the SwerveDrive.
-	 */
 	public void logOutputs(SwerveDriveState state) {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Robot Pose", state.Pose);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Current Time", Utils.getSystemTimeSeconds());
@@ -123,19 +122,20 @@ public class Drive extends Subsystem<DriveStates> {
 	public void zeroGyro() {
 		driveIO.zeroGyro();
 	}
-
+	
 	public boolean isAtAllianceShootingPosition() {
-		var allianceOpt = DriverStation.getAlliance();
-		if (allianceOpt.isEmpty()) {
-			// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-			return false;
-		}
-		Alliance alliance = allianceOpt.get();
-		if (alliance == Alliance.Red) {
-			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
-		} else {
-			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
-		}
+		return true;
+		// var allianceOpt = DriverStation.getAlliance();
+		// if (allianceOpt.isEmpty()) {
+		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+		// 	return false;
+		// }
+		// Alliance alliance = allianceOpt.get();
+		// if (alliance == Alliance.Red) {
+		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
+		// } else {
+		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
+		// }
 	}
 
 	// Util

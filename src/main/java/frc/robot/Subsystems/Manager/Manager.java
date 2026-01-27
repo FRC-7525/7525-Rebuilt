@@ -12,6 +12,7 @@ import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
 import org.littletonrobotics.junction.Logger;
+import org.team7525.misc.Tracer;
 import org.team7525.subsystem.Subsystem;
 
 public class Manager extends Subsystem<ManagerStates> {
@@ -102,13 +103,12 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake.setState(getState().getIntakeState());
 		climber.setState(getState().getClimberState());
 
-		shooter.periodic(); // SHould these be used with Tracer? idk what that does fr
-		hopper.periodic();
-		intake.periodic();
-		climber.periodic();
-		drive.periodic();
-		vision.periodic();
-
+		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
+		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
+		Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+		Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButtonPressed()) {
 			setState(ManagerStates.IDLE);

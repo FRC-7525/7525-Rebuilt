@@ -6,7 +6,6 @@ import java.util.Set;
 
 public interface VisionIO {
 	public static class VisionIOOutputs {
-
 		public boolean connected = false;
 		public TargetObservation latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
 		public PoseObservation[] poseObservations = new PoseObservation[0];

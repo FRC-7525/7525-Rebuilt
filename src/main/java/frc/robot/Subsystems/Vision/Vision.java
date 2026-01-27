@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Vision;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
+import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
 import static frc.robot.Subsystems.Vision.VisionConstants.*;
 
 import edu.wpi.first.math.Matrix;
@@ -14,16 +15,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
-
-	// Akit my savior
 	private final VisionIO[] io;
 	private final VisionIOOutputs[] outputs;
 	private final Alert[] disconnectedAlerts;
@@ -33,15 +35,23 @@ public class Vision extends SubsystemBase {
 	List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
 	List<Pose3d> allRobotPosesRejected = new LinkedList<>();
 
+	Set<Short> allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+
 	private static Vision instance;
 
 	public static Vision getInstance() {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] { new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1), new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2) };
-					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(CAM_1_NAME, ROBOT_TO_CAM1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(CAM_2_NAME, ROBOT_TO_CAM2, Drive.getInstance()::getPose) };
-					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(CAM_2_NAME, ROBOT_TO_CAM2), new VisionIOPhotonVision(CAM_1_NAME, ROBOT_TO_CAM1) };
+					case REAL -> new VisionIO[] {
+						new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1),
+						new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2),
+					};
+					case SIM -> new VisionIO[] {
+						new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose),
+						// new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose),
+					};
+					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
 				}
 			);
 		}
@@ -51,7 +61,7 @@ public class Vision extends SubsystemBase {
 	private Vision(VisionIO... io) {
 		this.io = io;
 
-		// Initialize inputs
+		// Initialize outputs
 		this.outputs = new VisionIOOutputs[io.length];
 		for (int i = 0; i < outputs.length; i++) {
 			outputs[i] = new VisionIOOutputs();
@@ -76,12 +86,15 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+
 		for (int i = 0; i < io.length; i++) {
 			io[i].logOutputs(outputs[i]);
-			Logger.recordOutput("Vision/Camera" + Integer.toString(i) + "/Connected", outputs[i].connected);
-			Logger.recordOutput("Vision/Camera" + Integer.toString(i) + "/LatestTarget", outputs[i].latestTargetObservation);
-			Logger.recordOutput("Vision/Camera" + Integer.toString(i) + "/PoseObservations", outputs[i].poseObservations);
-			Logger.recordOutput("Vision/Camera" + Integer.toString(i) + "/TagIds", outputs[i].tagIds);
+			Logger.recordOutput(SUBSYSTEM_NAME + "/Camera " + Integer.toString(i) + "/Connected", outputs[i].connected);
+			Logger.recordOutput(SUBSYSTEM_NAME + "/Camera " + Integer.toString(i) + "/Latest Target X Deg", outputs[i].latestTargetObservation.tx().getDegrees());
+			Logger.recordOutput(SUBSYSTEM_NAME + "/Camera " + Integer.toString(i) + "/Latest Target Y Deg", outputs[i].latestTargetObservation.ty().getDegrees());
+			Logger.recordOutput(SUBSYSTEM_NAME + "/Camera " + Integer.toString(i) + "/Pose Observations Count", outputs[i].poseObservations.length);
+			Logger.recordOutput(SUBSYSTEM_NAME + "/Camera " + Integer.toString(i) + "/Tag IDs", outputs[i].tagIds);
 		}
 
 		// Initialize logging values
@@ -139,19 +152,6 @@ public class Vision extends SubsystemBase {
 				// Skip if rejected
 				if (rejectPose) continue;
 
-				// Calculate standard deviations
-				// double stdDevFactor = Math.pow(observation.averageTagDistance(), 2.0) / observation.tagCount();
-				// double linearStdDev = linearStdDevBaseline * stdDevFactor;
-				// double angularStdDev = angularStdDevBaseline * stdDevFactor;
-				// if (observation.type() == PoseObservationType.MEGATAG_2) {
-				// 	linearStdDev *= linearStdDevMegatag2Factor;
-				// 	angularStdDev *= angularStdDevMegatag2Factor;
-				// }
-				// if (cameraIndex < cameraStdDevFactors.length) {
-				// 	linearStdDev *= cameraStdDevFactors[cameraIndex];
-				// 	angularStdDev *= cameraStdDevFactors[cameraIndex];
-				// }
-
 				//254 standard dev
 				Matrix<N3, N1> visionStandardDev = calculateStandardDev(observation);
 
@@ -159,7 +159,7 @@ public class Vision extends SubsystemBase {
 				Drive.getInstance().addVisionMeasurement(observation.pose().toPose2d(), observation.timestamp(), visionStandardDev);
 			}
 
-			// Log camera data
+			// Log camera datadata
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses", tagPoses.toArray(new Pose3d[tagPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted", robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
@@ -173,6 +173,25 @@ public class Vision extends SubsystemBase {
 	}
 
 	private boolean shouldBeRejected(PoseObservation observation) {
+		boolean observedLadder = false;
+		boolean observedOutpost = false;
+
+		for (Short tagObserved : observation.tagsObserved()) {
+			if (APRIL_TAG_IGNORE.contains(tagObserved)) {
+				observedLadder = true;
+				break;
+			}
+			if (observedLadder) break;
+		}
+
+		for (Short tagObserved : observation.tagsObserved()) {
+			if (HUMAN_TAGS.contains(tagObserved)) {
+				observedOutpost = true;
+				break;
+			}
+			if (observedOutpost) break;
+		}
+
 		return (
 			observation.tagCount() == 0 || // Must have at least one tag
 			(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
@@ -192,8 +211,11 @@ public class Vision extends SubsystemBase {
 		double degStds;
 		if (observation.tagCount() == 1) {
 			double poseDifference = observation.pose().getTranslation().toTranslation2d().getDistance(Drive.getInstance().getPose().getTranslation());
+			if (seenReefTags(observation) && observation.avgTagArea() > 0.2) {
+				xyStds = 0.5;
+			}
 			// 1 target with large area and close to estimated pose
-			if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
+			else if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
 				xyStds = 0.5;
 			}
 			// 1 target farther away and estimated pose is close
@@ -208,5 +230,9 @@ public class Vision extends SubsystemBase {
 			degStds = 6;
 			return VecBuilder.fill(xyStds, xyStds, degStds);
 		}
+	}
+
+	private boolean seenReefTags(PoseObservation observation) {
+		return allianceHubTags.contains(observation.tagsObserved().toArray()[0]);
 	}
 }

@@ -25,8 +25,8 @@ public class IntakeConstants {
 
 	public static class Real {
 
-		public static final int SPIN_MOTOR_ID = 20; //make real
-		public static final int LINEAR_ACTUATOR_ID = 21;
+		public static final int SPIN_MOTOR_ID = 35; //make real
+		public static final int LINEAR_ACTUATOR_ID = 36;
 	}
 
 	public record PIDConstants(double kP, double kI, double kD) {}
