@@ -47,9 +47,8 @@ public enum ManagerStates implements SubsystemStates {
 	}
 
 	public ShooterStates getShooterState() {
-		// The WINDING_UP state's shooter target depends on the alliance at runtime. We
-		// intentionally left the stored shooterState as null for WINDING_UP to avoid
-		// resolving Drive/DriverStation during enum initialization. Compute it now.
+		// Could be in shooter but would lead to wierd states i think
+		// shhoter doesn't change between winding up and shooting only hopper does
 		if (this == WINDING_UP && shooterState == null) {
 			return Drive.getInstance().isAtAllianceShootingPosition() ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB;
 		}
