@@ -124,57 +124,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	@Override
 	public void periodic() {
 		super.periodic();
-		clearButtonPressCache();
+		WiltingRoseControllerUtils.resetWiltingRoseControllers();
 	}
-
-	public void clearButtonPressCache() {
-		// Read each controller press once (this clears the internal "pressed" cache).
-		// Only print when the result is true; print nothing for false values.
-		boolean dA = DRIVER_CONTROLLER.getAButtonPressed();
-		boolean dB = DRIVER_CONTROLLER.getBButtonPressed();
-		boolean dX = DRIVER_CONTROLLER.getXButtonPressed();
-		boolean dY = DRIVER_CONTROLLER.getYButtonPressed();
-		boolean dBack = DRIVER_CONTROLLER.getBackButtonPressed();
-		boolean dStart = DRIVER_CONTROLLER.getStartButtonPressed();
-		boolean dLB = DRIVER_CONTROLLER.getLeftBumperButtonPressed();
-		boolean dRB = DRIVER_CONTROLLER.getRightBumperButtonPressed();
-		boolean dLS = DRIVER_CONTROLLER.getLeftStickButtonPressed();
-		boolean dRS = DRIVER_CONTROLLER.getRightStickButtonPressed();
-
-		if (dA) System.out.println("DRIVER A pressed");
-		if (dB) System.out.println("DRIVER B pressed");
-		if (dX) System.out.println("DRIVER X pressed");
-		if (dY) System.out.println("DRIVER Y pressed");
-		if (dBack) System.out.println("DRIVER BACK pressed");
-		if (dStart) System.out.println("DRIVER START pressed");
-		if (dLB) System.out.println("DRIVER LEFT BUMPER pressed");
-		if (dRB) System.out.println("DRIVER RIGHT BUMPER pressed");
-		if (dLS) System.out.println("DRIVER LEFT STICK pressed");
-		if (dRS) System.out.println("DRIVER RIGHT STICK pressed");
-
-		boolean oA = OPERATOR_CONTROLLER.getAButtonPressed();
-		boolean oB = OPERATOR_CONTROLLER.getBButtonPressed();
-		boolean oX = OPERATOR_CONTROLLER.getXButtonPressed();
-		boolean oY = OPERATOR_CONTROLLER.getYButtonPressed();
-		boolean oBack = OPERATOR_CONTROLLER.getBackButtonPressed();
-		boolean oStart = OPERATOR_CONTROLLER.getStartButtonPressed();
-		boolean oLB = OPERATOR_CONTROLLER.getLeftBumperButtonPressed();
-		boolean oRB = OPERATOR_CONTROLLER.getRightBumperButtonPressed();
-		boolean oLS = OPERATOR_CONTROLLER.getLeftStickButtonPressed();
-		boolean oRS = OPERATOR_CONTROLLER.getRightStickButtonPressed();
-
-		if (oA) System.out.println("OPERATOR A pressed");
-		if (oB) System.out.println("OPERATOR B pressed");
-		if (oX) System.out.println("OPERATOR X pressed");
-		if (oY) System.out.println("OPERATOR Y pressed");
-		if (oBack) System.out.println("OPERATOR BACK pressed");
-		if (oStart) System.out.println("OPERATOR START pressed");
-		if (oLB) System.out.println("OPERATOR LEFT BUMPER pressed");
-		if (oRB) System.out.println("OPERATOR RIGHT BUMPER pressed");
-		if (oLS) System.out.println("OPERATOR LEFT STICK pressed");
-		if (oRS) System.out.println("OPERATOR RIGHT STICK pressed");
-	}
-
-	@Override
-	protected void stateExit() {}
 }
