@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static frc.robot.GlobalConstants.VOLTS;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -66,7 +67,7 @@ public class ShooterIOSim extends ShooterIOReal {
 		leftMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
 		rightMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
 		hoodMotorSim.setRawRotorPosition(Units.radiansToRotations(hoodSim.getAngleRads()));
-		hoodMotorSim.setSupplyVoltage(12.0);
+		hoodMotorSim.setSupplyVoltage(VOLTS);
 		hoodMotorSim.setRotorVelocity(Units.radiansToRotations(hoodSim.getVelocityRadPerSec()));
 		wheelSim.update(GlobalConstants.SIMULATION_PERIOD);
 		hoodSim.update(GlobalConstants.SIMULATION_PERIOD);
@@ -83,7 +84,7 @@ public class ShooterIOSim extends ShooterIOReal {
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
 		SmartDashboard.putNumber("Wheel Setpoint (Radians per Second)", wheelSetpoint.in(RadiansPerSecond));
-		wheelSim.setInputVoltage(12 * (wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSetpoint.in(RadiansPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RadiansPerSecond))));
+		wheelSim.setInputVoltage(VOLTS * (wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSetpoint.in(RadiansPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RadiansPerSecond))));
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public class ShooterIOSim extends ShooterIOReal {
 		hoodSetpoint = angle;
 		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), hoodSetpoint.in(Radians));
 		SmartDashboard.putNumber("Hood PID Output", pid_calc);
-		hoodSim.setInputVoltage(pid_calc * 12);
+		hoodSim.setInputVoltage(pid_calc * VOLTS);
 	}
 
 	@Override

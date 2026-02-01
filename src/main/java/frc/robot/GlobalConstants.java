@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GlobalConstants {
+	public static final int VOLTS = 12;
 
 	public static final LinearAcceleration GRAVITY = MetersPerSecondPerSecond.of(9.81);
 	public static final double SIMULATION_PERIOD = 0.02;
