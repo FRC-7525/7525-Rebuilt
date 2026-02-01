@@ -14,6 +14,10 @@ import java.util.function.Supplier;
 public final class ShooterConstants {
 
 	public static final String SUBSYSTEM_NAME = "Shooter";
+	// Preset positions
+	public static final double HOOD_MIN_ANGLE_RADS = 0.0; // TODO: get real value
+	public static final double HOOD_MAX_ANGLE_RADS = Math.toRadians(60); // TODO: get real value
+
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45); //TODO: get good value
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(150); //TODO: get good value

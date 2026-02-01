@@ -51,17 +51,18 @@ public class ShooterIOSim extends ShooterIOReal {
 				HOOD_GEARING // Gearing
 			),
 			DCMotor.getFalcon500(1),
-			1,
-			0.01,
-			0,
-			3.14,
+			HOOD_GEARING,
+			HOOD_ARM_LENGTH_METERS,
+			HOOD_MIN_ANGLE_RADS,
+			HOOD_MAX_ANGLE_RADS,
 			false, // this be ragebait
-			0
+			HOOD_MIN_ANGLE_RADS
 		);
 	}
 
 	@Override
 	public void logOutputs(ShooterIOOutputs outputs) {
+
 		// Sim update
 		leftMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
 		rightMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
