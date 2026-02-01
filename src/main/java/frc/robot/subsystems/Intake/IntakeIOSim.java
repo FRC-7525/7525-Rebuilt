@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.controller.PIDController;

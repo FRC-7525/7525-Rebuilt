@@ -7,7 +7,6 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -16,6 +15,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public interface IntakeIO {
 	public static class IntakeIOOutputs {
+
 		public AngularVelocity spinVelocity = RotationsPerSecond.of(0);
 		public AngularVelocity spinSetpoint = RotationsPerSecond.of(0);
 		public Voltage spinAppliedVolts = Volts.of(0);

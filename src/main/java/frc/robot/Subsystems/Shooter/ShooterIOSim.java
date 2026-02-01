@@ -62,7 +62,6 @@ public class ShooterIOSim extends ShooterIOReal {
 
 	@Override
 	public void logOutputs(ShooterIOOutputs outputs) {
-
 		// Sim update
 		leftMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
 		rightMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));

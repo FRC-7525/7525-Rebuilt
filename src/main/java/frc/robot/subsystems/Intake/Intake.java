@@ -10,6 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 public class Intake extends Subsystem<IntakeStates> {
+
 	private static Intake instance;
 	private final IntakeIO io;
 	private final IntakeIO.IntakeIOOutputs outputs = new IntakeIO.IntakeIOOutputs();

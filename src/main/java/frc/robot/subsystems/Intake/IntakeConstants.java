@@ -1,8 +1,7 @@
 package frc.robot.Subsystems.Intake;
 
-import org.team7525.controlConstants.PIDConstants;
-
 import com.ctre.phoenix6.configs.Slot0Configs; //need to add via phoenix tuner
+import org.team7525.controlConstants.PIDConstants;
 
 public class IntakeConstants {
 
@@ -17,8 +16,6 @@ public class IntakeConstants {
 	public static final double INTAKE_OUT_POS = 0.2; // Meters
 
 	public static final double SPIN_SPEED_INTAKE = 60.0; // RPS
-
-
 
 	public static final double SPIN_kS = 0.0003; // Sim tuned
 	public static final double SPIN_kV = 0.00934498; // Sim tuned
