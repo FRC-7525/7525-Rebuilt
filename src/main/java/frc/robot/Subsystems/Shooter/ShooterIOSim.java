@@ -1,6 +1,8 @@
 package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
@@ -8,13 +10,14 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants;
 
 public class ShooterIOSim extends ShooterIOReal {
@@ -22,21 +25,15 @@ public class ShooterIOSim extends ShooterIOReal {
 	private TalonFXSimState leftMotorSim;
 	private TalonFXSimState rightMotorSim;
 	private TalonFXSimState hoodMotorSim;
-	private SimpleMotorFeedforward wheelFeedforward;
 	private FlywheelSim wheelSim;
 	private SingleJointedArmSim hoodSim;
 
 	public ShooterIOSim() {
-		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
-		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
+		super();
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Aligned)); // Might need to be inverted
-		hoodPID = HOOD_PID.get();
-		wheelPID = WHEEL_PID.get();
-		wheelFeedforward = WHEEL_FEEDFORWARD.get();
-
-		leftMotorSim = new TalonFXSimState(leftMotor);
 		rightMotorSim = new TalonFXSimState(rightMotor);
+		leftMotorSim = new TalonFXSimState(leftMotor);
 		hoodMotorSim = new TalonFXSimState(hoodMotor);
 
 		wheelSim = new FlywheelSim(
@@ -54,42 +51,48 @@ public class ShooterIOSim extends ShooterIOReal {
 				HOOD_GEARING // Gearing
 			),
 			DCMotor.getFalcon500(1),
-			HOOD_ARM_LENGTH_METERS, // Arm length
+			1,
+			0.01,
 			0,
-			0,
-			0,
-			true,
+			3.14,
+			false, // this be ragebait
 			0
 		);
 	}
 
 	@Override
 	public void logOutputs(ShooterIOOutputs outputs) {
+
+		// Sim update
+		leftMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
+		rightMotorSim.setRotorVelocity(Units.radiansToRotations(wheelSim.getAngularVelocityRadPerSec()));
+		hoodMotorSim.setRawRotorPosition(Units.radiansToRotations(hoodSim.getAngleRads()));
+		hoodMotorSim.setSupplyVoltage(12.0);
+		hoodMotorSim.setRotorVelocity(Units.radiansToRotations(hoodSim.getVelocityRadPerSec()));
+		wheelSim.update(GlobalConstants.SIMULATION_PERIOD);
+		hoodSim.update(GlobalConstants.SIMULATION_PERIOD);
+
 		outputs.leftWheelVelocity = leftMotor.getVelocity().getValue();
 		outputs.rightWheelVelocity = rightMotor.getVelocity().getValue();
 		outputs.wheelSetpoint = wheelSetpoint;
-		outputs.hoodAngle = hoodMotor.getPosition().getValue();
+		outputs.hoodAngle = Radians.of(hoodSim.getAngleRads());
 		outputs.hoodSetpoint = hoodSetpoint;
-		// Sim update
-		wheelSim.update(GlobalConstants.SIMULATION_PERIOD);
-		hoodSim.update(GlobalConstants.SIMULATION_PERIOD);
-		leftMotorSim.setRotorVelocity(wheelSim.getAngularVelocityRadPerSec());
-		rightMotorSim.setRotorVelocity(wheelSim.getAngularVelocityRadPerSec());
-		hoodMotorSim.setRawRotorPosition(hoodSim.getAngleRads());
-		hoodMotorSim.setRotorVelocity(hoodSim.getVelocityRadPerSec());
 		// Throw some stuff here for 3D sim later
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
-		leftMotor.set(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		SmartDashboard.putNumber("Wheel Setpoint (Radians per Second)", wheelSetpoint.in(RadiansPerSecond));
+		wheelSim.setInputVoltage(12 * (wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSetpoint.in(RadiansPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RadiansPerSecond))));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().in(Degrees), hoodSetpoint.in(Degrees)));
+		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), hoodSetpoint.in(Radians));
+		SmartDashboard.putNumber("Hood PID Output", pid_calc);
+		hoodSim.setInputVoltage(pid_calc * 12);
 	}
 
 	@Override

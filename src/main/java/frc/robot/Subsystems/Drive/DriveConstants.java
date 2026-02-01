@@ -35,7 +35,7 @@ public class DriveConstants {
 	// Weird syntax because we have our own PIDConstants class (literally just the PP one :skull: copy pasted) so we can use it without installing PP Lib
 	public static final PPHolonomicDriveController PATH_PLANNER_PID = new PPHolonomicDriveController(new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0), new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0));
 
-	public static RobotConfig geRobotConfig() {
+	public static RobotConfig getRobotConfig() {
 		try {
 			return RobotConfig.fromGUISettings();
 		} catch (Exception e) {
@@ -45,5 +45,5 @@ public class DriveConstants {
 		}
 	}
 
-	public static final RobotConfig ROBOT_CONFIG = geRobotConfig();
+	public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
 }

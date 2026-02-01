@@ -9,10 +9,16 @@ import org.team7525.subsystem.SubsystemStates;
 
 public enum DriveStates implements SubsystemStates {
 	FIELD_RELATIVE("Field Relative", () -> {
-		Drive.getInstance().driveFieldRelative(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1);
+		double forward = -applyDeadband(DRIVER_CONTROLLER.getLeftY()) * kSpeedAt12Volts.in(MetersPerSecond);
+		double strafe = -applyDeadband(DRIVER_CONTROLLER.getLeftX()) * kSpeedAt12Volts.in(MetersPerSecond);
+		double rot = -applyDeadband(DRIVER_CONTROLLER.getRightX()) * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1;
+		Drive.getInstance().driveFieldRelative(forward, strafe, rot);
 	}),
 	ROBOT_RELATIVE("Robot Relative", () -> {
-		Drive.getInstance().driveRobotRelative(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond));
+		double forward = applyDeadband(DRIVER_CONTROLLER.getLeftY()) * kSpeedAt12Volts.in(MetersPerSecond);
+		double strafe = applyDeadband(DRIVER_CONTROLLER.getLeftX()) * kSpeedAt12Volts.in(MetersPerSecond);
+		double rot = applyDeadband(DRIVER_CONTROLLER.getRightX()) * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond);
+		Drive.getInstance().driveRobotRelative(forward, strafe, rot);
 	});
 
 	private String stateString;

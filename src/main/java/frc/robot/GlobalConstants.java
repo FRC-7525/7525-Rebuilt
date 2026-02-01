@@ -33,8 +33,19 @@ public class GlobalConstants {
 		public static final XboxController TEST_CONTROLLER = new XboxController(4);
 
 		// NOTE: Set to 0.1 on trash controllers
-		public static final double DEADBAND = 0.01;
+		public static final double DEADBAND = 0.15;
 		public static final double TRIGGERS_REGISTER_POINT = 0.5;
+
+		/**
+		 * Apply the configured deadband to a controller axis value.
+		 * Returns 0.0 when the absolute value is below DEADBAND, otherwise returns the original value.
+		 *
+		 * @param value axis value in range [-1, 1]
+		 * @return value with deadband applied
+		 */
+		public static double applyDeadband(double value) {
+			return Math.abs(value) < DEADBAND ? 0.0 : value;
+		}
 	}
 
 	public static class FaultManagerConstants {
