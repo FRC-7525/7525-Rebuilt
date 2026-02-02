@@ -4,10 +4,10 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.GlobalConstants.Controllers.DEADBAND;
-import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.FIELD;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
+import static frc.robot.GlobalConstants.Controllers.DEADBAND;
+import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.ANGULAR_VELOCITY_LIMIT;
 import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIVE_ROTATION;
@@ -16,11 +16,16 @@ import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
-import choreo.trajectory.SwerveSample;
+import org.littletonrobotics.junction.Logger;
+import org.team7525.autoAlign.RepulsorFieldPlanner;
+import org.team7525.subsystem.Subsystem;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -39,21 +44,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
-import frc.robot.Subsystems.Drive.DriveIO.DriveIOOutputs;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import kotlin.Pair;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.autoAlign.RepulsorFieldPlanner;
-import org.team7525.subsystem.Subsystem;
 
 public class Drive extends Subsystem<DriveStates> {
 
 	private static Drive instance;
 
 	private DriveIO driveIO;
-	private DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
 	private boolean isFieldRelative;
 	private Pair<Translation2d, Translation2d> allianceZone;
@@ -116,6 +116,11 @@ public class Drive extends Subsystem<DriveStates> {
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 	}
 
+	/**
+	 * Returns the singleton instance of the Drive subsystem.
+	 *
+	 * @return The Drive Instance.
+	 */
 	public static Drive getInstance() {
 		if (instance == null) {
 			instance = new Drive();
@@ -125,15 +130,6 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
-		driveIO.logOutputs(inputs);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Gyro Angle Deg", inputs.gyroAngleDeg);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Robot Angle Deg", inputs.robotAngleDeg);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Full Robot Rotation", inputs.fullRobotRotation);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Failed Data Acquisitions", inputs.failedDataAquisitions);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Timestamp", inputs.timestamp);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Chassis Speeds", inputs.speeds);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Set Points", inputs.setPoints);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Odometry Frequency", inputs.odometryFrequency);
 
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
@@ -149,7 +145,10 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
+					-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
+					isFieldRelative);
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
@@ -159,16 +158,20 @@ public class Drive extends Subsystem<DriveStates> {
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d target = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
-				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), rotationController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), 0), true);
+				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
+					rotationController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), 0),
+				 	true);
 				break;
 			case AA_NEUTRAL:
 			case AA_TOWER_LEFT:
 			case AA_TOWER_RIGHT:
-				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
+				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose() ;
 				if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
 					executeRepulsorAutoAlign();
 					usedRepulsor = true;
-				} else {
+				}
+				else {
 					if (usedRepulsor) {
 						resetPID();
 						usedRepulsor = false;
@@ -191,25 +194,25 @@ public class Drive extends Subsystem<DriveStates> {
 		if (fieldRelative) {
 			driveIO.setControl(
 				new SwerveRequest.FieldCentric()
-					.withDeadband(DEADBAND)
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withRotationalRate(angularVelocity)
-					.withRotationalRate(angularVelocity)
-					.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-					.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-					.withRotationalDeadband(1)
+				.withDeadband(DEADBAND)
+				.withVelocityX(xVelocity)
+				.withVelocityY(yVelocity)
+				.withRotationalRate(angularVelocity)
+				.withRotationalRate(angularVelocity)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				.withRotationalDeadband(1)
 			);
 		} else {
 			driveIO.setControl(
 				new SwerveRequest.RobotCentric()
-					.withDeadband(DEADBAND)
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withRotationalRate(angularVelocity)
-					.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-					.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-					.withRotationalDeadband(1)
+				.withDeadband(DEADBAND)
+				.withVelocityX(xVelocity)
+				.withVelocityY(yVelocity)
+				.withRotationalRate(angularVelocity)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				.withRotationalDeadband(1)
 			);
 		}
 	}
@@ -293,21 +296,6 @@ public class Drive extends Subsystem<DriveStates> {
 		driveIO.zeroGyro();
 	}
 
-	public boolean isAtAllianceShootingPosition() {
-		return true;
-		// var allianceOpt = DriverStation.getAlliance();
-		// if (allianceOpt.isEmpty()) {
-		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-		// 	return false;
-		// }
-		// Alliance alliance = allianceOpt.get();
-		// if (alliance == Alliance.Red) {
-		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
-		// } else {
-		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
-		// }
-	}
-
 	// Util
 	public Pose2d getPose() {
 		return driveIO.getDrive().getState().Pose;
@@ -346,9 +334,23 @@ public class Drive extends Subsystem<DriveStates> {
 		ChassisSpeeds currentSpeed = ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeSpeeds(), currentPose.getRotation());
 		translationalController.reset(currentPose.getTranslation().getDistance(currentPose.getTranslation()), Math.min(0.0, -new Translation2d(currentSpeed.vxMetersPerSecond, currentSpeed.vyMetersPerSecond).rotateBy(currentPose.getTranslation().getAngle().unaryMinus()).getX()));
 	}
-
 	@Override
 	protected void stateExit() {
 		resetPID();
+	}
+
+	public boolean isAtAllianceShootingPosition() {
+		return true;
+		// var allianceOpt = DriverStation.getAlliance();
+		// if (allianceOpt.isEmpty()) {
+		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+		// 	return false;
+		// }
+		// Alliance alliance = allianceOpt.get();
+		// if (alliance == Alliance.Red) {
+		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
+		// } else {
+		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
+		// }
 	}
 }
