@@ -2,7 +2,7 @@ package frc.robot.Subsystems.Manager;
 
 import static frc.robot.GlobalConstants.Controllers.*;
 
-class WiltingRoseControllerUtils {
+class WiltingRoseControllerUtility {
 
 	public static void resetWiltingRoseControllers() {
 		// Read each controller press once (this clears the internal "pressed" cache).		DRIVER_CONTROLLER.getAButtonPressed();

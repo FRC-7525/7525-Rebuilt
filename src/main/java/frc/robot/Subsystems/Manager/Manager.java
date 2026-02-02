@@ -124,6 +124,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	@Override
 	public void periodic() {
 		super.periodic();
-		WiltingRoseControllerUtils.resetWiltingRoseControllers();
+		WiltingRoseControllerUtility.resetWiltingRoseControllers();
 	}
 }
