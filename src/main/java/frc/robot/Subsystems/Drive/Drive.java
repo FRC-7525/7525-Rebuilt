@@ -58,6 +58,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private boolean robotMirrored = false;
 	private Pose2d lastPose = new Pose2d();
 	private Pose2d targetPose = Pose2d.kZero;
+	private Pose2d sotmTarget = Pose2d.kZero;
 	private double lastTime = 0;
 
 	private boolean usedRepulsor = false;
@@ -149,8 +150,8 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
+				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
-				Pose2d target = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
 				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), rotationController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), 0), true);
 				break;
@@ -328,6 +329,10 @@ public class Drive extends Subsystem<DriveStates> {
 	@Override
 	protected void stateExit() {
 		resetPID();
+	}
+
+	public void setSOTMTarget(Pose2d targetPose) {
+		sotmTarget = targetPose;
 	}
 
 	public boolean isAtAllianceShootingPosition() {
