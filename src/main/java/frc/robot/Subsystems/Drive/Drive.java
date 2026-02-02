@@ -61,9 +61,6 @@ public class Drive extends Subsystem<DriveStates> {
 			DRIVER_CONTROLLER::getStartButtonPressed
 		);
 
-
-
-
     try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
@@ -125,9 +122,9 @@ public class Drive extends Subsystem<DriveStates> {
 		logOutputs(driveIO.getDrive().getState());
 
 		// Otherwise it will try to force wheels to stop in auto
-		//if (AutoAlign.getInstance().getState() == AutoAlignStates.OFF) {
-		getState().driveRobot();
-		//}
+		if (!DriverStation.isAutonomous()) {
+			getState().driveRobot();
+		}
 
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
