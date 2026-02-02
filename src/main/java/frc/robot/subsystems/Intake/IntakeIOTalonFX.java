@@ -1,7 +1,6 @@
 package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,12 +8,14 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.Subsystems.Intake.IntakeConstants.Real;
 
 public class IntakeIOTalonFX implements IntakeIO {
 
-	private final TalonFX spinMotor;
-	private final TalonFX linearMotor; // idk what to call it but the linear actuator?
+	protected final TalonFX spinMotor;
+	protected final TalonFX linearMotor; // idk what to call it but the linear actuator?
 
 	private final PositionVoltage linearRequest = new PositionVoltage(0); //talon pid cool
 	private final VelocityVoltage spinRequest = new VelocityVoltage(0);
@@ -38,25 +39,25 @@ public class IntakeIOTalonFX implements IntakeIO {
 	}
 
 	@Override
-	public void updateInputs(IntakeIOInputs inputs) {
-		inputs.spinVelocityRPS = spinMotor.getVelocity().getValue().in(RotationsPerSecond);
-		inputs.spinAppliedVolts = spinMotor.getMotorVoltage().getValueAsDouble();
-		inputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValueAsDouble();
+	public void logOutputs(IntakeIOOutputs outputs) {
+		outputs.spinVelocity = spinMotor.getVelocity().getValue();
+		outputs.spinAppliedVolts = spinMotor.getMotorVoltage().getValue();
+		outputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValue();
 
-		inputs.linearPositionMeters = linearMotor.getPosition().getValueAsDouble() * LINEAR_METERS_PER_ROTATION;
-		inputs.linearVelocityMetersPerSec = linearMotor.getVelocity().getValueAsDouble() * LINEAR_METERS_PER_ROTATION;
-		inputs.linearAppliedVolts = linearMotor.getMotorVoltage().getValueAsDouble();
-		inputs.linearCurrentAmps = linearMotor.getStatorCurrent().getValueAsDouble();
+		outputs.linearPosition = Meters.of(linearMotor.getPosition().getValueAsDouble() * LINEAR_METERS_PER_ROTATION);
+		outputs.linearVelocity = MetersPerSecond.of(linearMotor.getVelocity().getValueAsDouble() * LINEAR_METERS_PER_ROTATION);
+		outputs.linearAppliedVolts = linearMotor.getMotorVoltage().getValue();
+		outputs.linearCurrentAmps = linearMotor.getStatorCurrent().getValue();
 	}
 
 	@Override
-	public void setSpinVelocity(double rps, double feedforward) {
-		spinMotor.setControl(spinRequest.withVelocity(rps).withFeedForward(feedforward));
+	public void setSpinVelocity(AngularVelocity speed, double feedforward) {
+		spinMotor.setControl(spinRequest.withVelocity(speed.in(RotationsPerSecond)).withFeedForward(feedforward));
 	}
 
 	@Override
-	public void setLinearPosition(double meters) {
-		linearMotor.setControl(linearRequest.withPosition(meters / LINEAR_METERS_PER_ROTATION));
+	public void setLinearPosition(Distance setpoint) {
+		linearMotor.setControl(linearRequest.withPosition(setpoint.in(Meters) / LINEAR_METERS_PER_ROTATION));
 	}
 
 	@Override

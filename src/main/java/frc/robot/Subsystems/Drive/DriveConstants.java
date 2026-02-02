@@ -10,7 +10,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
-import edu.wpi.first.units.measure.LinearVelocity;
 
 public class DriveConstants {
 
@@ -19,20 +18,13 @@ public class DriveConstants {
 	public static final Distance WHEEL_BASE = Meters.of(0.5);
 
 	public static final double MIN_SCALE_FACTOR = 0.1;
-	//This changes how fast/how slow the angular velocity scales down as height increases
-	public static final double ANGULAR_VELOCITY_SCALE_FACTOR = 1.0;
 
-	// TODO: Change based on PP constants
 	public static final LinearAcceleration MAX_LINEAR_ACCELERATION = MetersPerSecondPerSecond.of(11.7);
 
 	public static final AngularVelocity ANGULAR_VELOCITY_LIMIT = AngularVelocity.ofBaseUnits(180, DegreesPerSecond);
 
 	public static final LinearAcceleration MAX_LINEAR_DECELERATION = MetersPerSecondPerSecond.of(11);
 	public static final LinearAcceleration MAX_LINEAR_STOPPING_ACCELERATION = MetersPerSecondPerSecond.of(10);
-
-	public static final LinearAcceleration MAX_ELEVATOR_UP_ACCEL = MetersPerSecondPerSecond.of(2);
-
-	public static final LinearVelocity TIPPING_LIMITER_THRESHOLD = MetersPerSecond.of(3);
 
 	public static final String SUBSYSTEM_NAME = "Drive";
 

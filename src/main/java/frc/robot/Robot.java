@@ -1,26 +1,56 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
-public class Robot extends TimedRobot {
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Manager.Manager;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.team7525.misc.CommandsUtil;
+import org.team7525.misc.Tracer;
 
-	/**
-	 * This function is run when the robot is first started up and should be used for any
-	 * initialization code.
-	 */
-	public Robot() {}
+public class Robot extends LoggedRobot {
+
+	private final Manager manager = Manager.getInstance();
+
+	public static boolean isRedAlliance = true;
 
 	@Override
-	public void robotPeriodic() {}
+	public void robotInit() {
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL:
+				Logger.addDataReceiver(new NT4Publisher());
+				Logger.addDataReceiver(new WPILOGWriter());
+				break;
+			case SIM:
+				Logger.addDataReceiver(new NT4Publisher());
+				break;
+			case TESTING:
+				Logger.addDataReceiver(new NT4Publisher());
+				break;
+		}
+
+		// Lots and lots of trolling
+		Logger.start();
+		CommandsUtil.logCommands();
+		DriverStation.silenceJoystickConnectionWarning(true);
+		CommandScheduler.getInstance().unregisterAllSubsystems();
+		System.gc();
+		Drive.getInstance().zeroGyro();
+	}
+
+	@Override
+	public void robotPeriodic() {
+		Tracer.startTrace("RobotPeriodic");
+		CommandScheduler.getInstance().run();
+		Tracer.traceFunc("SubsystemManager", manager::periodic);
+		Tracer.endTrace();
+	}
 
 	@Override
 	public void autonomousInit() {}
@@ -29,26 +59,30 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {}
 
 	@Override
-	public void teleopInit() {}
+	public void autonomousExit() {
+		CommandScheduler.getInstance().cancelAll();
+	}
+
+	@Override
+	public void teleopInit() {
+		manager.setState(IDLE);
+	}
 
 	@Override
 	public void teleopPeriodic() {}
 
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+		System.gc();
+	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
 
 	@Override
-	public void testInit() {}
-
-	@Override
-	public void testPeriodic() {}
-
-	@Override
-	public void simulationInit() {}
-
-	@Override
-	public void simulationPeriodic() {}
+	public void disabledExit() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
 }

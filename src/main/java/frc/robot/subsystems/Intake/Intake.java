@@ -13,7 +13,7 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	private static Intake instance;
 	private final IntakeIO io;
-	private final IntakeIO.IntakeIOInputs inputs = new IntakeIO.IntakeIOInputs();
+	private final IntakeIO.IntakeIOOutputs outputs = new IntakeIO.IntakeIOOutputs();
 	private final SimpleMotorFeedforward spinFF = new SimpleMotorFeedforward(SPIN_kS, SPIN_kV, SPIN_kA);
 
 	private Intake() {
@@ -34,21 +34,18 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-		//asking for units explicitly
-		double linearPos = getState().linearPos.in(Meters);
-		double spinSpeed = getState().spinSpeed.in(RotationsPerSecond);
-
-		io.setLinearPosition(linearPos);
-		io.setSpinVelocity(spinSpeed, spinFF.calculate(spinSpeed));
-		io.updateInputs(inputs);
-
-		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", inputs.spinVelocityRPS);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinAppliedVolts", inputs.spinAppliedVolts);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinCurrentAmps", inputs.spinCurrentAmps);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearPositionMeters", inputs.linearPositionMeters);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearVelocityMetersPerSec", inputs.linearVelocityMetersPerSec);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearAppliedVolts", inputs.linearAppliedVolts);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearCurrentAmps", inputs.linearCurrentAmps);
+		io.setLinearPosition(getState().getLinearPos());
+		io.setSpinVelocity(getState().getSpinSpeed(), spinFF.calculate(getState().getSpinSpeed().in(RotationsPerSecond)));
+		io.logOutputs(outputs);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocity.in(RotationsPerSecond));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinSetpointRPS", outputs.spinSetpoint.in(RotationsPerSecond));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinAppliedVolts", outputs.spinAppliedVolts);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinCurrentAmps", outputs.spinCurrentAmps);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearPositionMeters", outputs.linearPosition.in(Meters));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearSetpointMeters", outputs.linearSetpoint.in(Meters));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearVelocityMetersPerSec", outputs.linearVelocity.in(MetersPerSecond));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearAppliedVolts", outputs.linearAppliedVolts);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LinearCurrentAmps", outputs.linearCurrentAmps);
 	}
 
 	public TalonFX getSpinMotor() {

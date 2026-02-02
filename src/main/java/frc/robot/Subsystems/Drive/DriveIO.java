@@ -10,14 +10,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface DriveIO {
-	/**
-	 * Represents the inputs for the DriveIO.
-	 */
-	@AutoLog
-	public class DriveIOInputs {
+	public class DriveIOOutputs {
 
 		ChassisSpeeds speeds = new ChassisSpeeds();
 		SwerveModuleState[] setPoints = new SwerveModuleState[4];
@@ -29,42 +24,17 @@ public interface DriveIO {
 		double gyroAngleDeg = 0;
 	}
 
-	/**
-	 * Updates the inputs for the DriveIO.
-	 *
-	 * @param inputs The DriveIOInputs object containing the updated inputs.
-	 */
-	public default void updateInputs(DriveIOInputs inputs) {}
+	public default void logOutputs(DriveIOOutputs outputs) {}
 
-	/**
-	 * Gets the SwerveDrivetrain associated with the DriveIO.
-	 *
-	 * @return The SwerveDrivetrain object.
-	 */
 	public default TunerSwerveDrivetrain getDrive() {
 		return null;
 	}
 
-	/**
-	 * Resets the gyro to zero.
-	 */
 	public default void zeroGyro() {}
 
-	/**
-	 * Sets the control for the SwerveRequest.
-	 *
-	 * @param request The SwerveRequest object containing the control information.
-	 */
 	public default void setControl(SwerveRequest request) {}
 
-	/**
-	 * Adds a vision measurement to the DriveIO.
-	 *
-	 * @param pose The Pose2d object representing the vision measurement.
-	 * @param timestamp The timestamp of the vision measurement.
-	 * @param standardDeviation The standard deviation of the vision measurement.
-	 */
-	public default void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviation) {}
+	public default void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDeviaton) {}
 
 	public TalonFX[] getDriveMotors();
 

@@ -26,4 +26,12 @@ public enum IntakeStates implements SubsystemStates {
 	public String getStateString() {
 		return stateString;
 	}
+
+	public Distance getLinearPos() {
+		return linearPos;
+	}
+
+	public AngularVelocity getSpinSpeed() {
+		return spinSpeed;
+	}
 }

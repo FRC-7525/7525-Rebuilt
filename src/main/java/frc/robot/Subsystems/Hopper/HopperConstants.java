@@ -10,8 +10,8 @@ public class HopperConstants {
 
 	public static final String SUBSYSTEM_NAME = "Hopper";
 
-	public static final int SPINDEXER_MOTOR_ID = 0;
-	public static final int KICKER_MOTOR_ID = 1;
+	public static final int SPINDEXER_MOTOR_ID = 33;
+	public static final int KICKER_MOTOR_ID = 34;
 
 	public static class Sim {
 
