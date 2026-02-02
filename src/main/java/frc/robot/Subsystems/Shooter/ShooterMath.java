@@ -30,11 +30,11 @@ public final class ShooterMath {
 	}
 
 	public static Optional<ShotSolution> solveHubShot(Pose2d robotPose, Translation2d robotVelocity) {
-		return solveMovingShot(robotPose, HUB_POSITION, robotVelocity, HUB_TABLE);
+		return solveMovingShot(robotPose, BLUE_HUB_POSE, robotVelocity, HUB_TABLE);
 	}
 
 	public static Optional<ShotSolution> solveAllianceShot(Pose2d robotPose, Translation2d robotVelocity) {
-		return solveMovingShot(robotPose, ALLIANCE_BASKET_POSITION, robotVelocity, ALLIANCE_TABLE);
+		return solveMovingShot(robotPose, BLUE_HUB_POSE, robotVelocity, ALLIANCE_TABLE);
 	}
 
 	// Stolen Maths fr

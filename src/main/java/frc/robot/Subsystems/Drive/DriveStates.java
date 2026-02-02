@@ -1,32 +1,32 @@
 package frc.robot.Subsystems.Drive;
 
-import static edu.wpi.first.units.Units.*;
-import static frc.robot.GlobalConstants.Controllers.*;
-import static frc.robot.Subsystems.Drive.DriveConstants.*;
-import static frc.robot.Subsystems.Drive.TunerConstants.*;
+import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
 
 import org.team7525.subsystem.SubsystemStates;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.Subsystems.Drive.AutoAlign.PosePair;
 
 /**
  * An enumeration representing different drive states for a robot's drive subsystem.
  */
 public enum DriveStates implements SubsystemStates {
-	/**
-	 * The robot's drive is in field-relative mode.
-	 */
-	FIELD_RELATIVE("Field Relative", () -> {
-		Drive.getInstance().driveFieldRelative(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * 0.4, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * 0.4, -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1 * 0.5);
-	}),
 
-	/**
-	 * The robot's drive is in robot-relative mode.
-	 */
-	ROBOT_RELATIVE("Robot Relative", () -> {
-		Drive.getInstance().driveRobotRelative(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond));
-	});
+	NORMAL("Driving Normally", new PosePair(Pose2d.kZero, Pose2d.kZero)),
+	AIMLOCK_HUB("Locking Aim To Hub", new PosePair(RED_HUB_POSE, BLUE_HUB_POSE)),
+	AIMLOCK_ALLIANCE_LEFT_DEEP("Locking Aim To deep left side of alliance station", AIMLOCK_LEFT_DEEP_POSES),
+	AIMLOCK_ALLIANCE_LEFT_SHALLOW("Locking Aim To shallow left side of alliance station", AIMLOCK_LEFT_SHALLOW_POSES),
+	AIMLOCK_ALLIANCE_RIGHT_DEEP("Locking Aim To deep right side of alliance station", AIMLOCK_RIGHT_DEEP_POSES),
+	AIMLOCK_ALLIANCE_RIGHT_SHALLOW("Locking Aim To shallow right side of alliance station", AIMLOCK_RIGHT_SHALLOW_POSES),
+	AA_TOWER_LEFT("Going to left side of tower", TOWER_LEFT),
+	AA_TOWER_RIGHT("Going to right side of tower", TOWER_RIGHT),
+	AA_NEUTRAL("Going to neutral zone", NEUTRAL_POSES );
+	
 
 	private String stateString;
-	private Runnable driveControl;
+	private PosePair targetPosePair;
 
 	/**
 	 * Constructs a DriveStates enum value with the specified state string and field-relative flag.
@@ -34,9 +34,9 @@ public enum DriveStates implements SubsystemStates {
 	 * @param stateString    the string representation of the drive state
 	 * @param Runnable  runnable that gets called to drive the robot
 	 */
-	DriveStates(String stateString, Runnable driveControl) {
+	DriveStates(String stateString, PosePair targetPosePair) {
 		this.stateString = stateString;
-		this.driveControl = driveControl;
+		this.targetPosePair = targetPosePair;
 	}
 
 	/**
@@ -49,10 +49,7 @@ public enum DriveStates implements SubsystemStates {
 		return stateString;
 	}
 
-	/**
-	 * Drives the robot in the current state.
-	 */
-	public void driveRobot() {
-		driveControl.run();
+	public PosePair getTargetPosePair() {
+		return targetPosePair;
 	}
 }
