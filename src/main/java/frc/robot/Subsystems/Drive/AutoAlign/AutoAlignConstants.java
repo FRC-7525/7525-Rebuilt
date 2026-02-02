@@ -6,15 +6,6 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.team7525.autoAlign.RepulsorFieldPlanner.GuidedObstacle;
-import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
-import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
-import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
-import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,6 +19,13 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.GlobalConstants;
+import java.util.List;
+import java.util.function.Supplier;
+import org.team7525.autoAlign.RepulsorFieldPlanner.GuidedObstacle;
+import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
+import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
+import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
+import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
 
 public final class AutoAlignConstants {
 
@@ -90,59 +88,36 @@ public final class AutoAlignConstants {
 		};
 
 	// Aliance zones
-	public static final PosePair BLUE_ALLIANCE_ZONE = new PosePair(
-		new Pose2d(0,0, Rotation2d.kZero),
-		new Pose2d(4.625, FIELD_WIDTH, Rotation2d.kZero));
+	public static final PosePair BLUE_ALLIANCE_ZONE = new PosePair(new Pose2d(0, 0, Rotation2d.kZero), new Pose2d(4.625, FIELD_WIDTH, Rotation2d.kZero));
 
-	public static final PosePair RED_ALLIANCE_ZONE = new PosePair(
-		new Pose2d(11.92, 0, Rotation2d.kZero),
-		new Pose2d(FIELD_LENGTH, FIELD_WIDTH, Rotation2d.kZero));
+	public static final PosePair RED_ALLIANCE_ZONE = new PosePair(new Pose2d(11.92, 0, Rotation2d.kZero), new Pose2d(FIELD_LENGTH, FIELD_WIDTH, Rotation2d.kZero));
 
 	// Aimlock Positions
-	public static final PosePair AIMLOCK_LEFT_DEEP_POSES = new PosePair(
-		new Pose2d(15.5, 2.000, Rotation2d.kZero),
-		new Pose2d(1, 6, Rotation2d.kZero));
+	public static final PosePair AIMLOCK_LEFT_DEEP_POSES = new PosePair(new Pose2d(15.5, 2.000, Rotation2d.kZero), new Pose2d(1, 6, Rotation2d.kZero));
 
-	public static final PosePair AIMLOCK_LEFT_SHALLOW_POSES = new PosePair(
-		new Pose2d(13.5, 2.000, Rotation2d.kZero),
-		new Pose2d(3, 6, Rotation2d.kZero));
+	public static final PosePair AIMLOCK_LEFT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 2.000, Rotation2d.kZero), new Pose2d(3, 6, Rotation2d.kZero));
 
-	public static final PosePair AIMLOCK_RIGHT_DEEP_POSES = new PosePair(
-		new Pose2d(15.5, 6.000, Rotation2d.kZero),
-		new Pose2d(1, 2, Rotation2d.kZero));
+	public static final PosePair AIMLOCK_RIGHT_DEEP_POSES = new PosePair(new Pose2d(15.5, 6.000, Rotation2d.kZero), new Pose2d(1, 2, Rotation2d.kZero));
 
-	public static final PosePair AIMLOCK_RIGHT_SHALLOW_POSES = new PosePair(
-		new Pose2d(13.5, 6.000, Rotation2d.kZero),
-		new Pose2d(3, 2, Rotation2d.kZero));
+	public static final PosePair AIMLOCK_RIGHT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 6.000, Rotation2d.kZero), new Pose2d(3, 2, Rotation2d.kZero));
 
-		public static final PosePair NEUTRAL_POSES = new PosePair(
-		new Pose2d(9.5, 4.08, Rotation2d.kZero),
-		new Pose2d(7, 2, Rotation2d.kZero));
+	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 
 	// AA Poses
-	public static final PosePair TOWER_LEFT = new PosePair(
-		new Pose2d(14.946, 4.898, new Rotation2d(180)),
-		new Pose2d(1.554, 3.102, new Rotation2d(0))
-	);
+	public static final PosePair TOWER_LEFT = new PosePair(new Pose2d(14.946, 4.898, new Rotation2d(180)), new Pose2d(1.554, 3.102, new Rotation2d(0)));
 
-	public static final PosePair TOWER_RIGHT = new PosePair(
-		new Pose2d(14.946, 4.119, new Rotation2d(180)),
-		new Pose2d(1.554, 3.881, new Rotation2d(0))
-	);
+	public static final PosePair TOWER_RIGHT = new PosePair(new Pose2d(14.946, 4.119, new Rotation2d(180)), new Pose2d(1.554, 3.881, new Rotation2d(0)));
 
-    public static final class Obstacles {
-        public static final List<Obstacle> FIELD_OBSTACLES = List.of(
-			new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 2.625)),
-			new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 4)),
-			new PointObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6,5.375) )
-			);
+	public static final class Obstacles {
 
-	    public static final List<Obstacle> WALLS = List.of(
+		public static final List<Obstacle> FIELD_OBSTACLES = List.of(new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 2.625)), new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 4)), new PointObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 5.375)));
+
+		public static final List<Obstacle> WALLS = List.of(
 			new HorizontalObstacle(0.5, true, 0, Meters.of(1)),
 			new HorizontalObstacle(0.5, true, FIELD_WIDTH, Meters.of(1)),
 			new VerticalObstacle(0.5, true, 0, Meters.of(1)),
 			new VerticalObstacle(0.5, true, FIELD_LENGTH, Meters.of(1)),
 			new VerticalObstacle(0.5, true, FIELD_LENGTH, Meters.of(FIELD_LENGTH))
-	    );
-    }
+		);
+	}
 }
