@@ -39,11 +39,6 @@ public enum DriveStates implements SubsystemStates {
 		this.targetPosePair = targetPosePair;
 	}
 
-	/**
-	 * Returns the string representation of the drive state.
-	 *
-	 * @return the string representation of the drive state
-	 */
 	@Override
 	public String getStateString() {
 		return stateString;

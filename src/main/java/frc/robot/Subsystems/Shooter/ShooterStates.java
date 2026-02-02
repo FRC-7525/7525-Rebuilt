@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum ShooterStates implements SubsystemStates {
-	OFF("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
+	IDLE("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
 	REVERSE("REVERSE", () -> Degrees.of(0), () -> REVERSE_WHEEL_SPEED), // TODO: get good value
 	// Use placeholder Pose2d and zero velocity for now; replace with real robot pose/velocity when available.
 	SHOOT_HUB(
@@ -27,7 +27,8 @@ public enum ShooterStates implements SubsystemStates {
 		() -> ShooterMath.solveAllianceShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.hoodAngle()).orElse(FIXED_SHOT_ANGLE),
 		() -> ShooterMath.solveAllianceShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.flywheelSpeed()).orElse(FIXED_SHOT_SPEED)
 	),
-	SHOOT_FIXED("SHOOT FIXED", () -> FIXED_SHOT_ANGLE, () -> FIXED_SHOT_SPEED);
+	SHOOT_FIXED("SHOOT FIXED", () -> FIXED_SHOT_ANGLE, () -> FIXED_SHOT_SPEED),
+	STANDBY("STANDBY", () -> STANDBY_ANGLE, () -> STANDBY_SPEED);
 
 	private String stateString;
 	private Supplier<Angle> hoodAngleSupplier;

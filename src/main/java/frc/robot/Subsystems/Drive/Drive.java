@@ -46,6 +46,7 @@ import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
+import frc.robot.Subsystems.Drive.DriveIO.DriveIOOutputs;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import kotlin.Pair;
 
@@ -117,11 +118,6 @@ public class Drive extends Subsystem<DriveStates> {
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 	}
 
-	/**
-	 * Returns the singleton instance of the Drive subsystem.
-	 *
-	 * @return The Drive Instance.
-	 */
 	public static Drive getInstance() {
 		if (instance == null) {
 			instance = new Drive();
@@ -131,8 +127,15 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
-		driveIO.updateInputs(inputs);
-		Logger.processInputs("Drive", inputs);
+		driveIO.logOutputs(inputs);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Gyro Angle Deg", inputs.gyroAngleDeg);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Robot Angle Deg", inputs.robotAngleDeg);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Full Robot Rotation", inputs.fullRobotRotation);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Failed Data Acquisitions", inputs.failedDataAquisitions);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Timestamp", inputs.timestamp);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Chassis Speeds", inputs.speeds);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Set Points", inputs.setPoints);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Odometry Frequency", inputs.odometryFrequency);
 
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
@@ -297,6 +300,21 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void zeroGyro() {
 		driveIO.zeroGyro();
+	}
+
+	public boolean isAtAllianceShootingPosition() {
+		return true;
+		// var allianceOpt = DriverStation.getAlliance();
+		// if (allianceOpt.isEmpty()) {
+		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+		// 	return false;
+		// }
+		// Alliance alliance = allianceOpt.get();
+		// if (alliance == Alliance.Red) {
+		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
+		// } else {
+		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
+		// }
 	}
 
 	// Util
