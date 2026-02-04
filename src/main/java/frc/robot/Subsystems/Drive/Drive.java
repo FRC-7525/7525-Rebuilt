@@ -26,6 +26,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -87,7 +88,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
-
+		this.isFieldRelative = true;
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
 		this.translationalController = SCALED_FF_TRANSLATIONAL_CONTROLLER.get();
@@ -112,7 +113,7 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getStartButtonPressed
 		);
-		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
+		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);		
 	}
 
 	/**
@@ -129,6 +130,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
+		getDriveTrain().resetPose(new Pose2d(3.5, 4, Rotation2d.fromDegrees(-90)));
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Zero on init/when first disabled
@@ -296,8 +298,18 @@ public class Drive extends Subsystem<DriveStates> {
 		return driveIO.getDrive().getState().Speeds;
 	}
 
+	public ChassisSpeeds getFieldCentricSpeeds() {
+		Pose2d pose = driveIO.getDrive().getState().Pose;
+		return ChassisSpeeds.fromFieldRelativeSpeeds(driveIO.getDrive().getState().Speeds, pose.getRotation());
+	}
+
 	public LinearVelocity getVelocity() {
 		return MetersPerSecond.of(Math.hypot(driveIO.getDrive().getState().Speeds.vxMetersPerSecond, driveIO.getDrive().getState().Speeds.vyMetersPerSecond));
+	}
+
+	public Translation2d getVelocityTranslationFieldRelative() {
+		ChassisSpeeds speeds = getFieldCentricSpeeds();
+		return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
 	}
 
 	public TunerSwerveDrivetrain getDriveTrain() {

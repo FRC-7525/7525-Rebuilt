@@ -11,6 +11,10 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -20,6 +24,10 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants;
+import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Shooter.ShotSolver.ShooterMath;
+import frc.robot.Subsystems.Shooter.ShotSolver.FuelSim.FuelSim;
+import frc.robot.Subsystems.Shooter.ShotSolver.FuelSim.FuelSimSetup;
 
 public class ShooterIOSim extends ShooterIOReal {
 
@@ -31,6 +39,7 @@ public class ShooterIOSim extends ShooterIOReal {
 
 	public ShooterIOSim() {
 		super();
+		FuelSimSetup.setup();
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Aligned)); // Might need to be inverted
 		rightMotorSim = new TalonFXSimState(rightMotor);
@@ -54,10 +63,10 @@ public class ShooterIOSim extends ShooterIOReal {
 			DCMotor.getFalcon500(1),
 			HOOD_GEARING,
 			HOOD_ARM_LENGTH_METERS,
-			HOOD_MIN_ANGLE_RADS,
-			HOOD_MAX_ANGLE_RADS,
+			HOOD_MIN_ANGLE.in(Radians),
+			HOOD_MAX_ANGLE.in(Radians),
 			false, // this be ragebait
-			HOOD_MIN_ANGLE_RADS
+			HOOD_MIN_ANGLE.in(Radians)
 		);
 	}
 
@@ -78,20 +87,28 @@ public class ShooterIOSim extends ShooterIOReal {
 		outputs.hoodAngle = Radians.of(hoodSim.getAngleRads());
 		outputs.hoodSetpoint = hoodSetpoint;
 		// Throw some stuff here for 3D sim later
+		//if (atHoodAngleSetpoint() && atWheelVelocitySetpoint() && Shooter.getInstance().getState() != ShooterStates.IDLE) {
+			if (GlobalConstants.Controllers.DRIVER_CONTROLLER.getPOV() != -1) {
+				launchFuel();
+			}
+		//}
+		FuelSim.getInstance().updateSim();
+		SmartDashboard.putNumber("SCORE", FuelSim.Hub.BLUE_HUB.getScore());
+		ShooterMath.solveShot(Drive.getInstance().getPose(), new Translation2d(0,0), BLUE_HUB_POSE);
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
-		wheelSetpoint = velocity;
-		SmartDashboard.putNumber("Wheel Setpoint (Radians per Second)", wheelSetpoint.in(RadiansPerSecond));
-		wheelSim.setInputVoltage(VOLTS * (wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSetpoint.in(RadiansPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RadiansPerSecond))));
+		double wheelSpeed = SmartDashboard.getNumber("Wheel Setpoint (Rotations per Second)", 0);
+		SmartDashboard.putNumber("Wheel Setpoint (Rotations per Second)", wheelSpeed);
+		wheelSim.setInputVoltage(VOLTS * (wheelFeedforward.calculate(wheelSpeed * 2 * Math.PI) + wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSpeed * 2 * Math.PI)));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
-		hoodSetpoint = angle;
-		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), hoodSetpoint.in(Radians));
-		SmartDashboard.putNumber("Hood PID Output", pid_calc);
+		double hoodGoal = SmartDashboard.getNumber("Hood Setpoint (Degrees)", 0);
+		SmartDashboard.putNumber("Hood Setpoint (Degrees)", hoodGoal);
+		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), Units.degreesToRadians(hoodGoal));
 		hoodSim.setInputVoltage(pid_calc * VOLTS);
 	}
 
@@ -103,5 +120,31 @@ public class ShooterIOSim extends ShooterIOReal {
 	@Override
 	public boolean atHoodAngleSetpoint() {
 		return (Math.abs(hoodMotor.getPosition().getValue().in(Degrees) - hoodSetpoint.in(Degrees)) < HOOD_ANGLE_TOLERANCE_DEGREES);
+	}
+
+	public void launchFuel() {
+		double Jt = 2 * FLYWHEEL_MOI;
+		double Vw = 0.0508 * wheelSim.getAngularVelocityRadPerSec();
+		double rEff = 0.0508 / 2.0;
+		double T = (20.0 * Jt)
+                / (7.0 * 0.448 * 0.45392 * rEff * rEff + 40.0 * Jt);
+		double Vp = Vw * T;
+		double omegaFinal = wheelSim.getAngularVelocityRadPerSec() - (0.448 * 0.45392 * Vp * rEff) / Jt;
+		wheelSim.setAngularVelocity(omegaFinal);
+		double launchAngle = hoodSim.getAngleRads();
+		// Make a Translation3d for velocity of the fuel using launch angle and Vp
+		// Take into account robot orientation and that shooter is 90 deg CCW from robot forward
+		// The horizontal (ground-plane) component is Vp * cos(launchAngle) in the shooter forward direction.
+		// Shooter forward = robot forward rotated +90deg (CCW), so rotate by robot yaw + 90deg to get field-frame components.
+
+		double robotYaw = Drive.getInstance().getPose().getRotation().getRadians();
+		double shooterHeading = robotYaw + Math.toRadians(90.0); // 90 deg CCW from robot forward
+		double horizontalSpeed = Vp * Math.cos(launchAngle);
+		double dx = horizontalSpeed * Math.cos(shooterHeading);
+		double dy = horizontalSpeed * Math.sin(shooterHeading);
+		double dz = Vp * Math.sin(launchAngle);
+
+		Translation3d launchVelocity = new Translation3d(dx, dy, dz);
+		FuelSim.getInstance().spawnFuel(new Pose3d(Drive.getInstance().getPose()).getTranslation().plus(new Translation3d(0, 0.4, 0.3)), launchVelocity);
 	}
 }

@@ -6,6 +6,8 @@ import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
+import frc.robot.Subsystems.Shooter.ShotSolver.ShotSolution;
+
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -14,6 +16,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private static Shooter instance;
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;
+	private ShotSolution currentShotSolution;
 
 	public static Shooter getInstance() {
 		if (instance == null) {
@@ -34,8 +37,9 @@ public class Shooter extends Subsystem<ShooterStates> {
 
 	@Override
 	public void runState() {
-		io.setHoodAngle(getState().getHoodAngle());
-		io.setWheelVelocity(getState().getWheelVelocity());
+		currentShotSolution = getState().getShotSolution();
+		io.setHoodAngle(currentShotSolution != null ? currentShotSolution.getHoodAngle() : Degrees.of(0.0));
+		io.setWheelVelocity(currentShotSolution != null ? currentShotSolution.getFlywheelSpeed() : RotationsPerSecond.of(0.0));
 		io.logOutputs(outputs);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));

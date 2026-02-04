@@ -1,54 +1,37 @@
 package frc.robot.Subsystems.Shooter;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
+import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Shooter.ShotSolver.ShooterMath;
+import frc.robot.Subsystems.Shooter.ShotSolver.ShotSolution;
+
 import java.util.function.Supplier;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum ShooterStates implements SubsystemStates {
-	IDLE("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
-	REVERSE("REVERSE", () -> Degrees.of(0), () -> REVERSE_WHEEL_SPEED), // TODO: get good value
+	IDLE("IDLE", () -> null),
+	REVERSE("REVERSE", () -> new ShotSolution(REVERSE_SHOT_ANGLE, REVERSE_SHOT_SPEED, Drive.getInstance().getPose(), 0.0, 1.0, null)), // TODO: get good value
 	// Use placeholder Pose2d and zero velocity for now; replace with real robot pose/velocity when available.
-	SHOOT_HUB(
-		"SHOOT HUB",
-		() -> ShooterMath.solveHubShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.hoodAngle()).orElse(FIXED_SHOT_ANGLE),
-		() -> ShooterMath.solveHubShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.flywheelSpeed()).orElse(FIXED_SHOT_SPEED)
-	),
-
-	SHOOT_ALLIANCE(
-		"SHOOT ALLIANCE",
-		() -> ShooterMath.solveAllianceShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.hoodAngle()).orElse(FIXED_SHOT_ANGLE),
-		() -> ShooterMath.solveAllianceShot(new Pose2d(0.0, 0.0, new Rotation2d()), new Translation2d(0.0, 0.0)).map(sol -> sol.flywheelSpeed()).orElse(FIXED_SHOT_SPEED)
-	),
-	SHOOT_FIXED("SHOOT FIXED", () -> FIXED_SHOT_ANGLE, () -> FIXED_SHOT_SPEED),
-	STANDBY("STANDBY", () -> STANDBY_ANGLE, () -> STANDBY_SPEED);
+	SHOOT_HUB("SHOOT HUB", () -> ShooterMath.solveShot(Drive.getInstance().getPose(), Drive.getInstance().getVelocityTranslationFieldRelative(), HUB_POSE)),
+	SHOOT_ALLIANCE("SHOOT ALLIANCE", () -> ShooterMath.solveShot(Drive.getInstance().getPose(), Drive.getInstance().getVelocityTranslationFieldRelative(), SHALLOW_ALLIANCE_POSE)),
+	SHOOT_ALLIANCE_FAR("SHOOT ALLIANCE FAR", () -> ShooterMath.solveShot(Drive.getInstance().getPose(), Drive.getInstance().getVelocityTranslationFieldRelative(), DEEP_ALLIANCE_POSE)),
+	SHOOT_FIXED("SHOOT FIXED", () -> new ShotSolution(FIXED_SHOT_ANGLE, FIXED_SHOT_SPEED, Drive.getInstance().getPose(), 0.0, 1.0, null)),
+	STANDBY("STANDBY", () -> new ShotSolution(STANDBY_ANGLE, STANDBY_SPEED, Drive.getInstance().getPose(), 0.0, 1.0, null));
 
 	private String stateString;
-	private Supplier<Angle> hoodAngleSupplier;
-	private Supplier<AngularVelocity> wheelVelocitySupplier;
+	private Supplier<ShotSolution> shotSolutionSupplier;
 
-	private ShooterStates(String stateString, Supplier<Angle> hoodAngleSupplier, Supplier<AngularVelocity> wheelVelocitySupplier) {
+	private ShooterStates(String stateString, Supplier<ShotSolution> shotSolutionSupplier) {
 		this.stateString = stateString;
-		this.hoodAngleSupplier = hoodAngleSupplier;
-		this.wheelVelocitySupplier = wheelVelocitySupplier;
+		this.shotSolutionSupplier = shotSolutionSupplier;
 	}
 
 	public String getStateString() {
 		return stateString;
 	}
 
-	public Angle getHoodAngle() {
-		return hoodAngleSupplier.get();
-	}
-
-	public AngularVelocity getWheelVelocity() {
-		return wheelVelocitySupplier.get();
+	public ShotSolution getShotSolution() {
+		return shotSolutionSupplier.get();
 	}
 }
