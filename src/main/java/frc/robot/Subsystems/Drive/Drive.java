@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static frc.robot.GlobalConstants.Controllers.DEADBAND;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
+import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.GlobalConstants.FIELD;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
@@ -105,12 +106,14 @@ public class Drive extends Subsystem<DriveStates> {
 		this.rotationController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.repulsorRotationalController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 
+		this.isFieldRelative = true;
+
 		// Zero Gyro
 		addRunnableTrigger(
 			() -> {
 				driveIO.zeroGyro();
 			},
-			DRIVER_CONTROLLER::getStartButtonPressed
+			OPERATOR_CONTROLLER::getBackButtonPressed
 		);
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 	}
