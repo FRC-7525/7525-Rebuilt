@@ -71,7 +71,6 @@ public class Drive extends Subsystem<DriveStates> {
 	private final Field2d field = new Field2d();
 	private RobotConfig config;
 
-
 	private final ProfiledPIDController rotationController;
 	private final ProfiledPIDController translationalController;
 	private final ProfiledPIDController shooterYawController;
@@ -94,7 +93,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
-		
+
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
@@ -124,35 +123,34 @@ public class Drive extends Subsystem<DriveStates> {
 			OPERATOR_CONTROLLER::getBackButtonPressed
 		);
 
-    try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+		}
 
-    AutoBuilder.configure(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-            ),
-            config, // The robot configuration
-            () -> {
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this 
-    );
-  }
-	
-	
+		AutoBuilder.configure(
+			this::getPose, // Robot pose supplier
+			this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+			this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+			(speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+			new PPHolonomicDriveController(
+				// PPHolonomicController is the built in path following controller for holonomic drive trains
+				new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+				new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+			),
+			config, // The robot configuration
+			() -> {
+				var alliance = DriverStation.getAlliance();
+				if (alliance.isPresent()) {
+					return alliance.get() == DriverStation.Alliance.Red;
+				}
+				return false;
+			},
+			this
+		);
+	}
 
 	/**
 	 * Returns the singleton instance of the Drive subsystem.
@@ -179,7 +177,6 @@ public class Drive extends Subsystem<DriveStates> {
 				});
 		}
 		logOutputs(driveIO.getDrive().getState());
-
 
 		switch (getState()) {
 			case NORMAL:
@@ -370,7 +367,15 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public void driveRobotRelative(ChassisSpeeds speeds) {
-		driveIO.setControl(new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(speeds.omegaRadiansPerSecond).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
+		driveIO.setControl(
+			new SwerveRequest.RobotCentric()
+				.withDeadband(DEADBAND)
+				.withVelocityX(speeds.vxMetersPerSecond)
+				.withVelocityY(speeds.vyMetersPerSecond)
+				.withRotationalRate(speeds.omegaRadiansPerSecond)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+		);
 	}
 
 	public void zeroGyro() {
@@ -384,7 +389,6 @@ public class Drive extends Subsystem<DriveStates> {
 	public void resetPose(Pose2d pose) {
 		this.driveIO.getDrive().resetPose(pose);
 	}
-
 
 	public boolean isAtAllianceShootingPosition() {
 		return true;

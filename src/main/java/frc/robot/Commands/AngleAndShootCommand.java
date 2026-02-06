@@ -1,5 +1,3 @@
 package frc.robot.Commands;
 
-public class AngleAndShootCommand {
-    
-}
+public class AngleAndShootCommand {}

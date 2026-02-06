@@ -2,6 +2,7 @@ package frc.robot;
 
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,8 +17,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 
 public class Robot extends LoggedRobot {
 
