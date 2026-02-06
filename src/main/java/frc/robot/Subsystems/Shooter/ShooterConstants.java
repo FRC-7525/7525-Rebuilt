@@ -6,6 +6,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.GlobalConstants;
@@ -66,9 +69,9 @@ public final class ShooterConstants {
 		}; //TODO: tune
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
-	public static final Pose2d HUB_POSITION = new Pose2d(0.0, 0.0, new edu.wpi.first.math.geometry.Rotation2d());
-
-	public static final Pose2d ALLIANCE_BASKET_POSITION = new Pose2d(0.0, 0.0, new edu.wpi.first.math.geometry.Rotation2d());
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-8.937500, -4.4083305, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
+	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
 
 	// Shot sample data for lookup tables (placeholder/example values)
 	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}

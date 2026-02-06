@@ -77,9 +77,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
 		// EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
-		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
+		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
-		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.IDLE, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 	}
 
 	@Override
@@ -112,7 +111,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
-		if (DRIVER_CONTROLLER.getStartButtonPressed()) {
+		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.IDLE);
 		}
 	}
