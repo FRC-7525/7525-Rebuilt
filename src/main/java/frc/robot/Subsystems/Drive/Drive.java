@@ -94,6 +94,8 @@ public class Drive extends Subsystem<DriveStates> {
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
+		
+		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
@@ -150,8 +152,7 @@ public class Drive extends Subsystem<DriveStates> {
     );
   }
 	
-		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
-	}
+	
 
 	/**
 	 * Returns the singleton instance of the Drive subsystem.
@@ -179,14 +180,12 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 		logOutputs(driveIO.getDrive().getState());
 
-		// Otherwise it will try to force wheels to stop in auto
-		if (!DriverStation.isAutonomous()) {
-			getState().driveRobot();
-		}
 
 		switch (getState()) {
 			case NORMAL:
-				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				if (!DriverStation.isAutonomous()) {
+					executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				}
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
@@ -326,10 +325,6 @@ public class Drive extends Subsystem<DriveStates> {
 		return true;
 	}
 
-	public void zeroGyro() {
-		driveIO.zeroGyro();
-	}
-
 	// Util
 	public Pose2d getPose() {
 		return driveIO.getDrive().getState().Pose;
@@ -380,6 +375,8 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void zeroGyro() {
 		driveIO.zeroGyro();
+	}
+
 	public void setSOTMTarget(Pose2d targetPose) {
 		sotmTarget = targetPose;
 	}
