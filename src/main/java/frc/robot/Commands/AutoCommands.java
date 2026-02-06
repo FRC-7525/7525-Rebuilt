@@ -16,12 +16,7 @@ public class AutoCommands {
 	public Command intake() {
 		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.INTAKING));
 	}
-
-	//TODO: Impl once integrated with AA branch
-	public Command shootAndAngle() {
-		return new InstantCommand();
-	}
-
+    
 	public Command returnToIdle() {
 		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.IDLE));
 	}

@@ -3,12 +3,16 @@ package frc.robot;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.AngleAndShootCommand;
+import frc.robot.Commands.AutoCommands;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Manager.Manager;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -22,6 +26,7 @@ public class Robot extends LoggedRobot {
 
 	private final Manager manager = Manager.getInstance();
 	private SendableChooser<Command> autoChooser;
+	private AutoCommands autoCommands = new AutoCommands(this);
 
 	public static boolean isRedAlliance = true;
 
@@ -50,6 +55,13 @@ public class Robot extends LoggedRobot {
 		System.gc();
 		Drive.getInstance().zeroGyro();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		NamedCommands.registerCommand("Intake", autoCommands.intake());
+		NamedCommands.registerCommand("Return to Idle", autoCommands.returnToIdle());
+		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
+		NamedCommands.registerCommand("Wind and Intake", autoCommands.windAndIntake());
+
+		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand(this));	
 	}
 
 	public Manager getManager() {
