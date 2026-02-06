@@ -69,7 +69,7 @@ public final class AutoAlignConstants {
 	public static final Supplier<ProfiledPIDController> SCALED_FF_ROTATIONAL_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new ProfiledPIDController(20, 0, 1, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
-			case SIM -> new ProfiledPIDController(20, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
+			case SIM -> new ProfiledPIDController(.02, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 10, Math.PI * 15), 0.02);
 			default -> new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
 		};
 

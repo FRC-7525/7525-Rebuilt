@@ -44,6 +44,8 @@ public class DriveConstants {
 			return new RobotConfig(1, 1, new ModuleConfig(1, 1, 1, DCMotor.getKrakenX60(1), 1, 1), 1);
 		}
 	}
+	public static final double ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED = 1.0;
+	public static final double ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE = 3.7;
 
 	public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
 }

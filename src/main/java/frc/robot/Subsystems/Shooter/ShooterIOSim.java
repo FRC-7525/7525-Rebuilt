@@ -36,6 +36,7 @@ public class ShooterIOSim extends ShooterIOReal {
 	private TalonFXSimState hoodMotorSim;
 	private FlywheelSim wheelSim;
 	private SingleJointedArmSim hoodSim;
+	private boolean fuelLaunched = false;
 
 	public ShooterIOSim() {
 		super();
@@ -88,8 +89,13 @@ public class ShooterIOSim extends ShooterIOReal {
 		outputs.hoodSetpoint = hoodSetpoint;
 		// Throw some stuff here for 3D sim later
 		//if (atHoodAngleSetpoint() && atWheelVelocitySetpoint() && Shooter.getInstance().getState() != ShooterStates.IDLE) {
-			if (GlobalConstants.Controllers.DRIVER_CONTROLLER.getPOV() != -1) {
+			if (GlobalConstants.Controllers.DRIVER_CONTROLLER.getPOV() != -1 && !fuelLaunched) {
 				launchFuel();
+				fuelLaunched = true;
+			} else {
+				if (GlobalConstants.Controllers.DRIVER_CONTROLLER.getPOV() == -1) {
+					fuelLaunched = false;
+				}
 			}
 		//}
 		FuelSim.getInstance().updateSim();

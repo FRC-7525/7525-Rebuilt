@@ -9,10 +9,7 @@ import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.FIELD;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
-import static frc.robot.Subsystems.Drive.DriveConstants.ANGULAR_VELOCITY_LIMIT;
-import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIVE_ROTATION;
-import static frc.robot.Subsystems.Drive.DriveConstants.RED_ALLIANCE_PERSPECTIVE_ROTATION;
-import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
+import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
@@ -82,7 +79,7 @@ public class Drive extends Subsystem<DriveStates> {
 	 * @param driveIO The DriveIO object used for controlling the drive system.
 	 */
 	private Drive() {
-		super("Drive", DriveStates.NORMAL);
+		super("Drive", DriveStates.AIMLOCK_HUB);
 		this.driveIO = switch (ROBOT_MODE) {
 			case REAL -> new DriveIOReal();
 			case SIM -> new DriveIOSim();
@@ -113,6 +110,8 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getStartButtonPressed
 		);
+		getDriveTrain().resetPose(new Pose2d(0.5, 4, Rotation2d.fromDegrees(-90)));
+
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);		
 	}
 
@@ -130,7 +129,6 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
-		getDriveTrain().resetPose(new Pose2d(3.5, 4, Rotation2d.fromDegrees(-90)));
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Zero on init/when first disabled
@@ -153,9 +151,28 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
 				Pose2d target = sotmTarget;
-				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
-				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
-				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), rotationController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), 0), true);
+				Pose2d shooterPosition = getPose().plus(new Transform2d(
+					ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), 
+					ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
+
+				// Calculate angle from shooter to target in field coordinates
+				Translation2d shooterToTargetTranslation = target.getTranslation().minus(shooterPosition.getTranslation());
+				double targetHeading = shooterToTargetTranslation.getAngle().getDegrees();
+
+				SmartDashboard.putNumber("Target Absolute Heading", targetHeading);
+				SmartDashboard.putNumber("Shooter Absolute Heading", shooterPosition.getRotation().getDegrees());
+				SmartDashboard.putNumber("Heading Error", targetHeading - shooterPosition.getRotation().getDegrees());
+
+				// Controller calculates output based on current heading vs desired heading
+				double rotCmd = rotationController.calculate(
+					shooterPosition.getRotation().getRadians(), 
+					targetHeading);
+
+				executeDriveInstruction(
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), 
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), 
+					ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * rotCmd * 0.5, 
+					false);
 				break;
 			case AA_NEUTRAL:
 			case AA_TOWER_LEFT:
@@ -348,17 +365,16 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public boolean isAtAllianceShootingPosition() {
-		return true;
-		// var allianceOpt = DriverStation.getAlliance();
-		// if (allianceOpt.isEmpty()) {
-		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-		// 	return false;
-		// }
-		// Alliance alliance = allianceOpt.get();
-		// if (alliance == Alliance.Red) {
-		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
-		// } else {
-		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
-		// }
+		var allianceOpt = DriverStation.getAlliance();
+		if (allianceOpt.isEmpty()) {
+			// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+			return false;
+		}
+		Alliance alliance = allianceOpt.get();
+		if (alliance == Alliance.Red) {
+			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED;
+		} else {
+			return getPose().getTranslation().getX() < ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE;
+		}
 	}
 }
