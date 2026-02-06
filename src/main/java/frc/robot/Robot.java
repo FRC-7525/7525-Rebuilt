@@ -4,7 +4,6 @@ import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -61,7 +60,7 @@ public class Robot extends LoggedRobot {
 		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
 		NamedCommands.registerCommand("Wind and Intake", autoCommands.windAndIntake());
 
-		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand(this));	
+		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand(this));
 	}
 
 	public Manager getManager() {

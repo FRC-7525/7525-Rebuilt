@@ -16,7 +16,7 @@ public class AutoCommands {
 	public Command intake() {
 		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.INTAKING));
 	}
-    
+
 	public Command returnToIdle() {
 		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.IDLE));
 	}
