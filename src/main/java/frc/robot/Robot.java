@@ -53,6 +53,10 @@ public class Robot extends LoggedRobot {
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
+	public Manager getManager() {
+		return manager;
+	}
+
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");
