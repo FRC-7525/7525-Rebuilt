@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SweepDU"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Sweeper Autos",
+  "choreoAuto": false
+}

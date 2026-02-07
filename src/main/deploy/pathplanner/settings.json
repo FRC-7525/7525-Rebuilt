@@ -4,10 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left Autos",
-    "Sweeper Autos",
-    "Right Autos"
+    "Shooting",
+    "Right Autos",
+    "Sweeper Autos"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Sweeper Autos"
+  ],
   "defaultMaxVel": 4.389,
   "defaultMaxAccel": 11.7,
   "defaultMaxAngVel": 1000.0,
