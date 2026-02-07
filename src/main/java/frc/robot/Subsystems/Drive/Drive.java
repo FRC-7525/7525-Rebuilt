@@ -158,10 +158,12 @@ public class Drive extends Subsystem<DriveStates> {
 				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
-				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
+				executeAutoAlignDriveInstruction(
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
 					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
 					Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0,
-					true);
+					true
+				);
 				Logger.recordOutput("shooter/target", target);
 				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getRadians());
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
@@ -222,23 +224,10 @@ public class Drive extends Subsystem<DriveStates> {
 	public void executeAutoAlignDriveInstruction(double xVelocity, double yVelocity, double angularVelocity, boolean hasDriverControl) {
 		if (hasDriverControl) {
 			driveIO.setControl(
-				new SwerveRequest.RobotCentric()
-					.withDeadband(DEADBAND)
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withRotationalRate(angularVelocity)
-					.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-					.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
 			);
 		} else {
-			driveIO.setControl(
-				new SwerveRequest.RobotCentric()
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withRotationalRate(angularVelocity)
-					.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-					.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-			);
+			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 		}
 	}
 
