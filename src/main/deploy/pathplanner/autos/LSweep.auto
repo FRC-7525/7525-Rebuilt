@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SweepDU"
+                  "pathName": "SweepUD"
                 }
               }
             ]
@@ -39,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SL"
+            "pathName": "SU"
           }
         },
         {
