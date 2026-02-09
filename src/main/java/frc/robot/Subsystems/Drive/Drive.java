@@ -44,6 +44,7 @@ import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.Subsystems.Shooter.Shooter;
 import kotlin.Pair;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
@@ -117,7 +118,6 @@ public class Drive extends Subsystem<DriveStates> {
 			OPERATOR_CONTROLLER::getBackButtonPressed
 		);
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
-		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 	}
 
 	/**
@@ -150,23 +150,14 @@ public class Drive extends Subsystem<DriveStates> {
 			case NORMAL:
 				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
 				break;
-			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
-			case AIMLOCK_ALLIANCE_LEFT_DEEP:
-			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
-			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				Pose2d target = sotmTarget;
-				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
-				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+				Pose2d shooterToTarget = Shooter.getInstance().getShooterToTarget();
 				executeAutoAlignDriveInstruction(
 					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
 					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
 					Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0,
 					true
 				);
-				Logger.recordOutput("shooter/target", target);
-				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getRadians());
-				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
 				break;
 			case AA_NEUTRAL:
 			case AA_TOWER_LEFT:

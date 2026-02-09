@@ -12,6 +12,8 @@ public final class PosePair {
 		this.bluePose = bluePose;
 	}
 
+	public static final PosePair kZero = new PosePair(Pose2d.kZero, Pose2d.kZero);
+
 	public Pose2d getRedPose() {
 		return redPose;
 	}

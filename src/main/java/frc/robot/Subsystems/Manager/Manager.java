@@ -99,7 +99,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
 
 		// Set subsystem states
-		shooter.setState(getState().getShooterState());
+		shooter.setState(getState().getShooterStateSupplier().get());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
 		climber.setState(getState().getClimberState());

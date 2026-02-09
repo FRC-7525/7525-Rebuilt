@@ -26,6 +26,8 @@ import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
+import static frc.robot.GlobalConstants.FIELD_WIDTH;
+import static frc.robot.GlobalConstants.FIELD_LENGTH;
 
 public final class AutoAlignConstants {
 
@@ -47,8 +49,6 @@ public final class AutoAlignConstants {
 	public static final Angle MAX_YAW_ERROR = Degrees.of(4);
 
 	public static final double GOAL_STRENGTH = 0.1;
-	static final double FIELD_LENGTH = 16.42;
-	static final double FIELD_WIDTH = 8.16;
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
@@ -92,15 +92,6 @@ public final class AutoAlignConstants {
 	public static final PosePair BLUE_ALLIANCE_ZONE = new PosePair(new Pose2d(0, 0, Rotation2d.kZero), new Pose2d(4.625, FIELD_WIDTH, Rotation2d.kZero));
 
 	public static final PosePair RED_ALLIANCE_ZONE = new PosePair(new Pose2d(11.92, 0, Rotation2d.kZero), new Pose2d(FIELD_LENGTH, FIELD_WIDTH, Rotation2d.kZero));
-
-	// Aimlock Positions
-	public static final PosePair AIMLOCK_LEFT_DEEP_POSES = new PosePair(new Pose2d(15.5, 2.000, Rotation2d.kZero), new Pose2d(1, 6, Rotation2d.kZero));
-
-	public static final PosePair AIMLOCK_LEFT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 2.000, Rotation2d.kZero), new Pose2d(3, 6, Rotation2d.kZero));
-
-	public static final PosePair AIMLOCK_RIGHT_DEEP_POSES = new PosePair(new Pose2d(15.5, 6.000, Rotation2d.kZero), new Pose2d(1, 2, Rotation2d.kZero));
-
-	public static final PosePair AIMLOCK_RIGHT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 6.000, Rotation2d.kZero), new Pose2d(3, 2, Rotation2d.kZero));
 
 	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 

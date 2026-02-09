@@ -1,6 +1,7 @@
 package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -9,9 +10,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.GlobalConstants;
+import frc.robot.Subsystems.Drive.AutoAlign.PosePair;
+
 import java.util.function.Supplier;
 
 public final class ShooterConstants {
@@ -68,10 +73,17 @@ public final class ShooterConstants {
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
 		}; //TODO: tune
 
-	// Placeholder positions; replace with real field measurements, Define based on alliance side
-	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
-	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
-	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-8.937500, -4.4083305, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final PosePair HUB_POSES = new PosePair(new Pose2d(11.92, 4.08, Rotation2d.kZero), new Pose2d(4.625, 4.08, Rotation2d.kZero));
+	public static final PosePair LEFT_DEEP_POSES = new PosePair(new Pose2d(15.5, 2.000, Rotation2d.kZero), new Pose2d(1, 6, Rotation2d.kZero));
+	public static final PosePair LEFT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 2.000, Rotation2d.kZero), new Pose2d(3, 6, Rotation2d.kZero));
+	public static final PosePair RIGHT_DEEP_POSES = new PosePair(new Pose2d(15.5, 6.000, Rotation2d.kZero), new Pose2d(1, 2, Rotation2d.kZero));
+	public static final PosePair RIGHT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 6.000, Rotation2d.kZero), new Pose2d(3, 2, Rotation2d.kZero));
+
+	public static final Translation2d BLUE_HUB_TL = new Translation2d(4, 4.61);
+	public static final Translation2d BLUE_HUB_BR = new Translation2d(5.263, 3.456);
+	public static final Translation2d RED_HUB_TL = new Translation2d(11.237, 4.61);
+	public static final Translation2d RED_HUB_BR = new Translation2d(12.500, 3.456);
 
 	// Shot sample data for lookup tables (placeholder/example values)
 	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
@@ -89,4 +101,24 @@ public final class ShooterConstants {
 		new ShotSampleData(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
 		new ShotSampleData(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
 	);
+
+	public static ShotInstruction calculateShotInstruction(Distance d) {
+		if (d.in(Meters) > 10) {// far shot
+			return  new ShotInstruction(RotationsPerSecond.of(380), Degrees.of(45));
+		} else if (d.in(Meters) > 7) { // max speed shot
+			return new ShotInstruction(RotationsPerSecond.of(380), 
+				Degrees.of(1) // angle formula here
+			);
+		} else if (d.in(Meters) > 4) { // 3/4 speed shot
+			return new ShotInstruction(RotationsPerSecond.of(285),
+				Degrees.of(1) // angle formula here
+			);
+		} else { // half speed shot
+			return new ShotInstruction(RotationsPerSecond.of(190),
+				Degrees.of(1) // angle formula here
+			);
+		}
+	}
+
+	public static record ShotInstruction(AngularVelocity flywheelSpeed, Angle hoodAngle) {}
 }
