@@ -26,11 +26,10 @@ public class FuelSimSetup {
         );
 
         FuelSim.getInstance().enableAirResistance();
-        FuelSim.getInstance().setSubticks(1);
+        FuelSim.getInstance().setSubticks(5);
         FuelSim.getInstance().start();
         SmartDashboard.putData(Commands.runOnce(() -> {
                 FuelSim.getInstance().clearFuel();
-                FuelSim.getInstance().spawnStartingFuel();
             })
             .withName("Reset Fuel")
             .ignoringDisable(true));

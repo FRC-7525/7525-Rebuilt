@@ -37,6 +37,9 @@ public class ShooterIOSim extends ShooterIOReal {
 	private FlywheelSim wheelSim;
 	private SingleJointedArmSim hoodSim;
 	private boolean fuelLaunched = false;
+    // TOF tracking
+    private int lastHubScore = 0;
+    private double lastShotStartStateTime = 0.0;
 
 	public ShooterIOSim() {
 		super();
@@ -69,6 +72,9 @@ public class ShooterIOSim extends ShooterIOReal {
 			false, // this be ragebait
 			HOOD_MIN_ANGLE.in(Radians)
 		);
+
+		// initialize lastHubScore to current score to avoid detecting old shots
+		lastHubScore = FuelSim.Hub.BLUE_HUB.getScore();
 	}
 
 	@Override
@@ -97,9 +103,18 @@ public class ShooterIOSim extends ShooterIOReal {
 					fuelLaunched = false;
 				}
 			}
+			
 		//}
 		FuelSim.getInstance().updateSim();
 		SmartDashboard.putNumber("SCORE", FuelSim.Hub.BLUE_HUB.getScore());
+
+		// Check for new scored fuel and compute time-of-flight (TOF)
+		int currentScore = FuelSim.Hub.BLUE_HUB.getScore();
+		if (currentScore > lastHubScore) {
+			double tof = Shooter.getInstance().getStateTime() - lastShotStartStateTime;
+			SmartDashboard.putNumber("T_OF_F", tof);
+			lastHubScore = currentScore;
+		}
 		ShooterMath.solveShot(Drive.getInstance().getPose(), new Translation2d(0,0), BLUE_HUB_POSE);
 	}
 
@@ -152,5 +167,7 @@ public class ShooterIOSim extends ShooterIOReal {
 
 		Translation3d launchVelocity = new Translation3d(dx, dy, dz);
 		FuelSim.getInstance().spawnFuel(new Pose3d(Drive.getInstance().getPose()).getTranslation().plus(new Translation3d(0, 0.4, 0.3)), launchVelocity);
+		// record the shooter state time at the moment of launch so we can compute TOF later
+		lastShotStartStateTime = Shooter.getInstance().getStateTime();
 	}
 }

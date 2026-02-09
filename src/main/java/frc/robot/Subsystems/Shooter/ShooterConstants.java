@@ -87,7 +87,7 @@ public final class ShooterConstants {
 		}; //TODO: tune
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
-	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-8.937500, -4.4083305, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
 

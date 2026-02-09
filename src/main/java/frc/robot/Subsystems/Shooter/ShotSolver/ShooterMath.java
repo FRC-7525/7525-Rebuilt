@@ -32,8 +32,9 @@ public final class ShooterMath {
 
 	// Shot tables
 	private static final List<ShotSample> NEAR_TABLE = new ArrayList<>();
-	private static final List<ShotSample> MEDIUM_TABLE = new ArrayList<>();
-	private static final List<ShotSample> FAR_TABLE = new ArrayList<>();
+	// Commenting out medium/far tables so only NEAR samples are used everywhere
+	// private static final List<ShotSample> MEDIUM_TABLE = new ArrayList<>();
+	// private static final List<ShotSample> FAR_TABLE = new ArrayList<>();
 
 	static {
 		initializeTables();
@@ -45,18 +46,17 @@ public final class ShooterMath {
 			NEAR_TABLE.sort(Comparator.comparingDouble(ShotSample::distance));
 			validateTable(NEAR_TABLE, "NEAR");
 		}
-
-		if (MEDIUM_SHOT_SAMPLES != null && !MEDIUM_SHOT_SAMPLES.isEmpty()) {
-			MEDIUM_TABLE.addAll(MEDIUM_SHOT_SAMPLES);
-			MEDIUM_TABLE.sort(Comparator.comparingDouble(ShotSample::distance));
-			validateTable(MEDIUM_TABLE, "MEDIUM");
-		}
-
-		if (FAR_SHOT_SAMPLES != null && !FAR_SHOT_SAMPLES.isEmpty()) {
-			FAR_TABLE.addAll(FAR_SHOT_SAMPLES);
-			FAR_TABLE.sort(Comparator.comparingDouble(ShotSample::distance));
-			validateTable(FAR_TABLE, "FAR");
-		}
+		// Medium and far tables are intentionally disabled in this configuration.
+		// if (MEDIUM_SHOT_SAMPLES != null && !MEDIUM_SHOT_SAMPLES.isEmpty()) {
+		//     MEDIUM_TABLE.addAll(MEDIUM_SHOT_SAMPLES);
+		//     MEDIUM_TABLE.sort(Comparator.comparingDouble(ShotSample::distance));
+		//     validateTable(MEDIUM_TABLE, "MEDIUM");
+		// }
+		// if (FAR_SHOT_SAMPLES != null && !FAR_SHOT_SAMPLES.isEmpty()) {
+		//     FAR_TABLE.addAll(FAR_SHOT_SAMPLES);
+		//     FAR_TABLE.sort(Comparator.comparingDouble(ShotSample::distance));
+		//     validateTable(FAR_TABLE, "FAR");
+		// }
 	}
 
 	private static void validateTable(List<ShotSample> table, String name) {
@@ -143,10 +143,8 @@ public final class ShooterMath {
 	 */
 	public static boolean canReachTarget(Pose2d robotPose, Pose2d targetPose) {
 		double distance = robotPose.getTranslation().getDistance(targetPose.getTranslation());
-		
-		boolean reachable = isInRange(distance, NEAR_TABLE) ||
-		                    isInRange(distance, MEDIUM_TABLE) ||
-		                    isInRange(distance, FAR_TABLE);
+		// Only using NEAR_TABLE for feasibility in this configuration
+		boolean reachable = isInRange(distance, NEAR_TABLE);
 		
 		Logger.recordOutput("Shooter/Feasibility/Distance", distance);
 		Logger.recordOutput("Shooter/Feasibility/Reachable", reachable);
@@ -263,44 +261,13 @@ public final class ShooterMath {
 	// ========== TABLE SELECTION ==========
 
 	private static ShotTable selectTable(double dist) {
-		boolean nearOk = isInRange(dist, NEAR_TABLE);
-		boolean medOk = isInRange(dist, MEDIUM_TABLE);
-		boolean farOk = isInRange(dist, FAR_TABLE);
-
-		// Multiple valid - choose closest to center
-		if (nearOk && medOk && farOk) {
-			double nearD = distToCenter(dist, NEAR_TABLE);
-			double medD = distToCenter(dist, MEDIUM_TABLE);
-			double farD = distToCenter(dist, FAR_TABLE);
-			
-			if (nearD <= medD && nearD <= farD) {
-				return new ShotTable(NEAR_TABLE, NEAR_FLYWHEEL_SPEED, "NEAR");
-			} else if (medD <= farD) {
-				return new ShotTable(MEDIUM_TABLE, MEDIUM_FLYWHEEL_SPEED, "MEDIUM");
-			} else {
-				return new ShotTable(FAR_TABLE, FAR_FLYWHEEL_SPEED, "FAR");
-			}
-		}
-		
-		if (nearOk) return new ShotTable(NEAR_TABLE, NEAR_FLYWHEEL_SPEED, "NEAR");
-		if (medOk) return new ShotTable(MEDIUM_TABLE, MEDIUM_FLYWHEEL_SPEED, "MEDIUM");
-		if (farOk) return new ShotTable(FAR_TABLE, FAR_FLYWHEEL_SPEED, "FAR");
-		
-		// Out of range - use nearest
-		if (!NEAR_TABLE.isEmpty() && dist < NEAR_TABLE.get(0).distance()) {
-			Logger.recordOutput("Shooter/Solve/Warning", "Below NEAR range");
+		// Simplified: only NEAR table is used. If it's available, return it.
+		if (!NEAR_TABLE.isEmpty()) {
+			// If distance is outside NEAR range, we'll still return NEAR_TABLE (clamped later)
 			return new ShotTable(NEAR_TABLE, NEAR_FLYWHEEL_SPEED, "NEAR");
 		}
-		if (!FAR_TABLE.isEmpty() && dist > FAR_TABLE.get(FAR_TABLE.size() - 1).distance()) {
-			Logger.recordOutput("Shooter/Solve/Warning", "Above FAR range");
-			return new ShotTable(FAR_TABLE, FAR_FLYWHEEL_SPEED, "FAR");
-		}
-		
-		// Fallback
-		if (!NEAR_TABLE.isEmpty()) return new ShotTable(NEAR_TABLE, NEAR_FLYWHEEL_SPEED, "NEAR");
-		if (!MEDIUM_TABLE.isEmpty()) return new ShotTable(MEDIUM_TABLE, MEDIUM_FLYWHEEL_SPEED, "MEDIUM");
-		if (!FAR_TABLE.isEmpty()) return new ShotTable(FAR_TABLE, FAR_FLYWHEEL_SPEED, "FAR");
-		
+
+		// As a last resort return empty/none
 		return new ShotTable(new ArrayList<>(), RotationsPerSecond.of(0), "NONE");
 	}
 

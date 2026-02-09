@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import frc.robot.GlobalConstants;
+import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
 import frc.robot.Subsystems.Shooter.ShotSolver.ShotSolution;
 
@@ -41,6 +42,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		io.setHoodAngle(currentShotSolution != null ? currentShotSolution.getHoodAngle() : Degrees.of(0.0));
 		io.setWheelVelocity(currentShotSolution != null ? currentShotSolution.getFlywheelSpeed() : RotationsPerSecond.of(0.0));
 		io.logOutputs(outputs);
+		Drive.getInstance().setSOTMTarget(BLUE_HUB_POSE);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelVelocity", outputs.rightWheelVelocity.in(RotationsPerSecond));
@@ -53,5 +55,9 @@ public class Shooter extends Subsystem<ShooterStates> {
 
 	public boolean readyToShoot() {
 		return io.atHoodAngleSetpoint() && io.atWheelVelocitySetpoint();
+	}
+
+	public double getStateTime() {
+		return super.getStateTime();
 	}
 }
