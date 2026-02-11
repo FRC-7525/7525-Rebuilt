@@ -39,7 +39,7 @@ public final class ShooterConstants {
 	// ========== FLYWHEEL SPEEDS ==========
 	// Each table uses a fixed flywheel speed
 	
-	public static final AngularVelocity NEAR_FLYWHEEL_SPEED = RotationsPerSecond.of(40.0);
+	public static final AngularVelocity NEAR_FLYWHEEL_SPEED = RotationsPerSecond.of(65);
 	public static final AngularVelocity MEDIUM_FLYWHEEL_SPEED = RotationsPerSecond.of(60.0);
 	public static final AngularVelocity FAR_FLYWHEEL_SPEED = RotationsPerSecond.of(80.0);
 	

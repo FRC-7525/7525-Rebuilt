@@ -24,11 +24,15 @@ public class ShotTables {
 	 * Flywheel speed: NEAR_FLYWHEEL_SPEED
 	 */
 	public static final List<ShotSample> NEAR_SHOT_SAMPLES = List.of(
-		new ShotSample(1.0, Degrees.of(45.0), 0.30),
-		new ShotSample(1.5, Degrees.of(40.0), 0.40),
-		new ShotSample(2.0, Degrees.of(35.0), 0.50),
-		new ShotSample(2.5, Degrees.of(32.0), 0.60),
-		new ShotSample(3.0, Degrees.of(30.0), 0.70)
+		new ShotSample(1.0, Degrees.of(87), 1.78),
+		new ShotSample(1.5, Degrees.of(85), 1.78),
+		new ShotSample(2.0, Degrees.of(83), 1.76),
+		new ShotSample(2.5, Degrees.of(82), 1.76),
+		new ShotSample(3.0, Degrees.of(79), 1.74),
+		new ShotSample(3.5, Degrees.of(77), 1.72),
+		new ShotSample(4.0, Degrees.of(75), 1.72),
+		new ShotSample(4.5, Degrees.of(73), 1.68),
+		new ShotSample(5.0, Degrees.of(71), 1.66)
 	);
 	
 	/**

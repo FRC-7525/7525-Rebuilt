@@ -115,21 +115,18 @@ public class ShooterIOSim extends ShooterIOReal {
 			SmartDashboard.putNumber("T_OF_F", tof);
 			lastHubScore = currentScore;
 		}
-		ShooterMath.solveShot(Drive.getInstance().getPose(), new Translation2d(0,0), BLUE_HUB_POSE);
+		//ShooterMath.solveShot(Drive.getInstance().getPose(), Drive.getInstance().getVelocityTranslationFieldRelative(), BLUE_HUB_POSE);
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
-		double wheelSpeed = SmartDashboard.getNumber("Wheel Setpoint (Rotations per Second)", 0);
-		SmartDashboard.putNumber("Wheel Setpoint (Rotations per Second)", wheelSpeed);
-		wheelSim.setInputVoltage(VOLTS * (wheelFeedforward.calculate(wheelSpeed * 2 * Math.PI) + wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), wheelSpeed * 2 * Math.PI)));
+		SmartDashboard.putNumber("Wheel Setpoint (Rotations per Second)", velocity.in(RotationsPerSecond));
+		wheelSim.setInputVoltage(VOLTS * (wheelFeedforward.calculate(velocity.in(RotationsPerSecond) * 2 * Math.PI) + wheelPID.calculate(wheelSim.getAngularVelocityRadPerSec(), velocity.in(RotationsPerSecond) * 2 * Math.PI)));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
-		double hoodGoal = SmartDashboard.getNumber("Hood Setpoint (Degrees)", 0);
-		SmartDashboard.putNumber("Hood Setpoint (Degrees)", hoodGoal);
-		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), Units.degreesToRadians(hoodGoal));
+		double pid_calc = hoodPID.calculate(hoodSim.getAngleRads(), angle.in(Radians));
 		hoodSim.setInputVoltage(pid_calc * VOLTS);
 	}
 
@@ -157,12 +154,12 @@ public class ShooterIOSim extends ShooterIOReal {
 		// Take into account robot orientation and that shooter is 90 deg CCW from robot forward
 		// The horizontal (ground-plane) component is Vp * cos(launchAngle) in the shooter forward direction.
 		// Shooter forward = robot forward rotated +90deg (CCW), so rotate by robot yaw + 90deg to get field-frame components.
-
+		Translation2d robotVelocity = Drive.getInstance().getVelocityTranslationFieldRelative();
 		double robotYaw = Drive.getInstance().getPose().getRotation().getRadians();
 		double shooterHeading = robotYaw + Math.toRadians(90.0); // 90 deg CCW from robot forward
 		double horizontalSpeed = Vp * Math.cos(launchAngle);
-		double dx = horizontalSpeed * Math.cos(shooterHeading);
-		double dy = horizontalSpeed * Math.sin(shooterHeading);
+		double dx = horizontalSpeed * Math.cos(shooterHeading) + robotVelocity.getX();
+		double dy = horizontalSpeed * Math.sin(shooterHeading) + robotVelocity.getY();
 		double dz = Vp * Math.sin(launchAngle);
 
 		Translation3d launchVelocity = new Translation3d(dx, dy, dz);

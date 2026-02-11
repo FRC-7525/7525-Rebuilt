@@ -25,6 +25,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -158,9 +159,9 @@ public class Drive extends Subsystem<DriveStates> {
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
 				executeAutoAlignDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
-					ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * (Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0),
+					-0.25 * DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
+					-0.25 * DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
+					(Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0),
 					true,
 					isFieldRelative
 				);
@@ -190,12 +191,12 @@ public class Drive extends Subsystem<DriveStates> {
 		SmartDashboard.putData("Field", field);
 
 		// Read and expose the distance slider on the SmartDashboard. Default to 1 meter.
-		double distance = SmartDashboard.getNumber("distance", 1.0);
-		SmartDashboard.putNumber("distance", distance);
+		//double distance = SmartDashboard.getNumber("distance", 1.0);
+		//SmartDashboard.putNumber("distance", distance);
 		// Set the robot pose every loop to be the blue hub pose shifted left by distance on the X axis.
 		// Subtract distance from the BLUE_HUB_POSE.x to move the pose along negative X.
-		Pose2d shiftedPose = new Pose2d(BLUE_HUB_POSE.getX() - distance, BLUE_HUB_POSE.getY(), BLUE_HUB_POSE.getRotation());
-		getDriveTrain().resetPose(shiftedPose);
+		//Pose2d shiftedPose = new Pose2d(BLUE_HUB_POSE.getX() - distance, BLUE_HUB_POSE.getY(), Rotation2d.fromDegrees(-90));
+		//getDriveTrain().resetPose(shiftedPose);
 	}
 
 	/**
@@ -229,7 +230,6 @@ public class Drive extends Subsystem<DriveStates> {
 					.withRotationalDeadband(1)
 			);
 		}
-		setState(DriveStates.AIMLOCK_HUB);
 	}
 
 	public void executeAutoAlignDriveInstruction(double xVelocity, double yVelocity, double angularVelocity, boolean hasDriverControl, boolean fieldRelative) {
@@ -387,16 +387,17 @@ public class Drive extends Subsystem<DriveStates> {
 
 
 	public boolean isAtAllianceShootingPosition() {
-		var allianceOpt = DriverStation.getAlliance();
-		if (allianceOpt.isEmpty()) {
-			// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-			return false;
-		}
-		Alliance alliance = allianceOpt.get();
-		if (alliance == Alliance.Red) {
-			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED;
-		} else {
-			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE;
-		}
+		return true;
+		// var allianceOpt = DriverStation.getAlliance();
+		// if (allianceOpt.isEmpty()) {
+		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
+		// 	return false;
+		// }
+		// Alliance alliance = allianceOpt.get();
+		// if (alliance == Alliance.Red) {
+		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED;
+		// } else {
+		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE;
+		// }
 	}
 }
