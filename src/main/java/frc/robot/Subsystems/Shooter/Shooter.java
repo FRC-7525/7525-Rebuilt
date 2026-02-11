@@ -1,5 +1,6 @@
 package frc.robot.Subsystems.Shooter;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -29,7 +30,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private Pose2d currentTarget = Pose2d.kZero;
 	private Pose2d shooterPosition = Pose2d.kZero;
 	private Pose2d shooterToTarget = Pose2d.kZero;
-	private ShotInstruction shotInstruction = new ShotInstruction();
+	private ShotInstruction shotInstruction = new ShotInstruction(RotationsPerSecond.of(0), Degree.of(0));
 
 
 	public static Shooter getInstance() {
