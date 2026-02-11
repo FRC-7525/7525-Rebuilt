@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.Rotations;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
@@ -52,6 +54,7 @@ public class ClimberIOSim extends ClimberIOReal {
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimLeftRot", outputs.leftPosition.in(Rotations));
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimRightRot", outputs.rightPosition.in(Rotations));
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimSetpointRot", outputs.setpoint.in(Rotations));
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/Pose", new Pose3d());
 	}
 
 	@Override

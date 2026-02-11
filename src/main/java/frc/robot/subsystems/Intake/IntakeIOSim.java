@@ -3,9 +3,14 @@ package frc.robot.Subsystems.Intake;
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -59,6 +64,8 @@ public class IntakeIOSim extends IntakeIOTalonFX {
 		outputs.linearPosition = Meters.of(linearSim.getAngularPositionRotations() * LINEAR_METERS_PER_ROTATION);
 		outputs.linearSetpoint = setpoint;
 		outputs.linearVelocity = MetersPerSecond.of(linearSim.getAngularVelocity().in(RotationsPerSecond) * LINEAR_METERS_PER_ROTATION);
+
+		Logger.recordOutput("Intake/Intake Position", new Pose3d(0.296694, 0.0, 0.223, new Rotation3d(Radians.of(0), Radians.of(linearSim.getAngularPositionRotations()), Radians.of(0))));
 	}
 
 	@Override

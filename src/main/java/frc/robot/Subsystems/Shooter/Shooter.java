@@ -43,6 +43,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/WheelSetpoint", outputs.wheelSetpoint.in(RotationsPerSecond));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodAngle", outputs.hoodAngle.in(Degrees));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodSetpoint", outputs.hoodSetpoint.in(Degrees));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodPose", outputs.hoodPose);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/ReadyToShoot", readyToShoot());
 	}

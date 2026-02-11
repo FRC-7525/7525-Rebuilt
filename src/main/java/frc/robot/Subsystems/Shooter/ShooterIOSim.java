@@ -11,6 +11,9 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -78,6 +81,8 @@ public class ShooterIOSim extends ShooterIOReal {
 		outputs.hoodAngle = Radians.of(hoodSim.getAngleRads());
 		outputs.hoodSetpoint = hoodSetpoint;
 		// Throw some stuff here for 3D sim later
+
+		outputs.hoodPose = new Pose3d(0, 0, 0, new Rotation3d(Radians.of(hoodSim.getAngleRads()), Radians.of(0), Radians.of(0)));
 	}
 
 	@Override
