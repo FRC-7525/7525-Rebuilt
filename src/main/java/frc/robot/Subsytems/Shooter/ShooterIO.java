@@ -22,4 +22,6 @@ public interface ShooterIO {
 	public abstract boolean atWheelVelocitySetpoint();
 
 	public abstract boolean atHoodAngleSetpoint();
+
+	public default void fireOnce() {}
 }
