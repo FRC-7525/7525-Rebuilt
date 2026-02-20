@@ -44,6 +44,7 @@ public final class AutoAlignConstants {
 
 	public static final double TIMEOUT_DISTANCE_THRESHOLD = 0.05;
 	public static final double TIMEOUT_THRESHOLD = 1;
+	public static final Angle MAX_YAW_ERROR = Degrees.of(4);
 
 	public static final double GOAL_STRENGTH = 0.1;
 	static final double FIELD_LENGTH = 16.42;
@@ -52,11 +53,11 @@ public final class AutoAlignConstants {
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
 
-	public static final Supplier<ProfiledPIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new ProfiledPIDController(25, 0, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
-			case SIM -> new ProfiledPIDController(20, 1, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
-			default -> new ProfiledPIDController(20, 1, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
+			case REAL -> new PIDController(1, 0, 0);
+			case SIM -> new PIDController(1, 0, .01);
+			default -> new PIDController(20, 1, 0);
 		};
 
 	public static final Supplier<ProfiledPIDController> SCALED_FF_TRANSLATIONAL_CONTROLLER = () ->
