@@ -23,6 +23,10 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -66,6 +70,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private boolean usedRepulsor = false;
 	private final RepulsorFieldPlanner repulsor = new RepulsorFieldPlanner(Obstacles.FIELD_OBSTACLES, Obstacles.WALLS, (ROBOT_MODE == RobotMode.SIM));
 	private final Field2d field = new Field2d();
+	private RobotConfig config;
 
 	private final ProfiledPIDController rotationController;
 	private final ProfiledPIDController translationalController;
@@ -89,6 +94,8 @@ public class Drive extends Subsystem<DriveStates> {
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
+
+		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
@@ -115,6 +122,34 @@ public class Drive extends Subsystem<DriveStates> {
 				driveIO.zeroGyro();
 			},
 			OPERATOR_CONTROLLER::getBackButtonPressed
+		);
+
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+		}
+
+		AutoBuilder.configure(
+			this::getPose, // Robot pose supplier
+			this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+			this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+			(speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+			new PPHolonomicDriveController(
+				// PPHolonomicController is the built in path following controller for holonomic drive trains
+				new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+				new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+			),
+			config, // The robot configuration
+			() -> {
+				var alliance = DriverStation.getAlliance();
+				if (alliance.isPresent()) {
+					return alliance.get() == DriverStation.Alliance.Red;
+				}
+				return false;
+			},
+			this
 		);
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
@@ -148,7 +183,9 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-				executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				if (!DriverStation.isAutonomous()) {
+					executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				}
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
@@ -306,10 +343,6 @@ public class Drive extends Subsystem<DriveStates> {
 		return true;
 	}
 
-	public void zeroGyro() {
-		driveIO.zeroGyro();
-	}
-
 	// Util
 	public Pose2d getPose() {
 		return driveIO.getDrive().getState().Pose;
@@ -354,8 +387,28 @@ public class Drive extends Subsystem<DriveStates> {
 		resetPID();
 	}
 
+	public void driveRobotRelative(ChassisSpeeds speeds) {
+		driveIO.setControl(
+			new SwerveRequest.RobotCentric()
+				.withDeadband(DEADBAND)
+				.withVelocityX(speeds.vxMetersPerSecond)
+				.withVelocityY(speeds.vyMetersPerSecond)
+				.withRotationalRate(speeds.omegaRadiansPerSecond)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+		);
+	}
+
+	public void zeroGyro() {
+		driveIO.zeroGyro();
+	}
+
 	public void setSOTMTarget(Pose2d targetPose) {
 		sotmTarget = targetPose;
+	}
+
+	public void resetPose(Pose2d pose) {
+		this.driveIO.getDrive().resetPose(pose);
 	}
 
 	public boolean isAtAllianceShootingPosition() {
