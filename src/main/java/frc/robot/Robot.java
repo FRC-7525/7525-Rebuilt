@@ -62,7 +62,7 @@ public class Robot extends LoggedRobot {
 
 		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand());
 	}
-	
+
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");
