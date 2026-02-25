@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.GlobalConstants;
 import java.util.function.Supplier;
 
@@ -18,8 +19,8 @@ public final class ShooterConstants {
 
 	public static final String SUBSYSTEM_NAME = "Shooter";
 	// Preset positions
-	public static final Angle HOOD_MIN_ANGLE = Degrees.of(0); // TODO: get real value
-	public static final Angle HOOD_MAX_ANGLE = Degrees.of(180); // TODO: get real value
+	public static final Angle HOOD_MIN_ANGLE = Degrees.of(0); // TODO: get real value and sim vs real
+	public static final Angle HOOD_MAX_ANGLE = Degrees.of(180); // TODO: get real value and sim vs real
 	
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45); //TODO: get good value
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(78); //TODO: get good value
@@ -45,7 +46,6 @@ public final class ShooterConstants {
 	
 	// ========== TARGET POSES ==========
 	
-	public static final Pose2d HUB_POSE = new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0));
 	public static final Pose2d SHALLOW_ALLIANCE_POSE = new Pose2d(1.8, 8.2, Rotation2d.fromDegrees(0));
 	public static final Pose2d DEEP_ALLIANCE_POSE = new Pose2d(5.0, 8.0, Rotation2d.fromDegrees(0));
 
@@ -87,7 +87,7 @@ public final class ShooterConstants {
 		}; //TODO: tune
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
-	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 0, new Rotation3d(0, 0, Math.PI / 2));
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
 
@@ -107,4 +107,6 @@ public final class ShooterConstants {
 		new ShotSampleData(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
 		new ShotSampleData(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
 	);
+
+	public static final Supplier<Pose2d> HUB_POSE = () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? BLUE_HUB_POSE : RED_HUB_POSE;
 }

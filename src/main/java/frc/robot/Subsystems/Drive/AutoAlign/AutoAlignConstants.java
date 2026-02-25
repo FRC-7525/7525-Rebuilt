@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,7 +41,7 @@ public final class AutoAlignConstants {
 	// Sim
 	public static final Distance DISTANCE_ERROR_MARGIN = Meters.of(0.0208);
 	public static final Distance DISTANCE_ERROR_MARGIN2 = Meters.of(0.5);
-	public static final Angle ANGLE_ERROR_MARGIN = Degrees.of(1.5); // was 0.05 radians
+	public static final Angle ANGLE_ERROR_MARGIN = Degrees.of(0.5);
 
 	public static final double TIMEOUT_DISTANCE_THRESHOLD = 0.05;
 	public static final double TIMEOUT_THRESHOLD = 1;
@@ -52,12 +53,17 @@ public final class AutoAlignConstants {
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
-
+	public static final Supplier<SimpleMotorFeedforward> SHOOTER_YAW_FEEDFORWARD = () -> 
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
+			case SIM -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
+			default -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
+		};
 	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(1, 0, 0);
 			case SIM -> new PIDController(1, 0, 0.01);
-			default -> new PIDController(20, 1, 0);
+			default -> new PIDController(1, 0, 0);
 		};
 
 	public static final Supplier<ProfiledPIDController> SCALED_FF_TRANSLATIONAL_CONTROLLER = () ->

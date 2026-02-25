@@ -712,11 +712,12 @@ public class FuelSim {
         }
 
         private void fuelCollideSide(Fuel fuel) {
-            fuelCollideRectangle(
+            /*fuelCollideRectangle(
                     fuel,
                     new Translation3d(center.getX() - SIDE / 2, center.getY() - SIDE / 2, 0),
                     new Translation3d(center.getX() + SIDE / 2, center.getY() + SIDE / 2, ENTRY_HEIGHT - 0.1));
-            // if (fuel.pos.getZ() > ENTRY_HEIGHT - 0.1) return new Translation2d(); // above hub
+            */
+                    // if (fuel.pos.getZ() > ENTRY_HEIGHT - 0.1) return new Translation2d(); // above hub
             // double distanceToLeft = center.getX() - SIDE / 2 - FUEL_RADIUS - fuel.pos.getX();
             // double distanceToRight = fuel.pos.getX() - center.getX() - SIDE / 2 - FUEL_RADIUS;
             // double distanceToTop = center.getY() - SIDE / 2 - FUEL_RADIUS - fuel.pos.getY();

@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GlobalConstants {
+	public static final boolean TESTING = false; // Set to true to enable testing mode (basically just logs more for tuning and skips some checks)
 
 	public static final int VOLTS = 12;
 
 	public static final LinearAcceleration GRAVITY = MetersPerSecondPerSecond.of(9.81);
 	public static final double SIMULATION_PERIOD = 0.02;
-	// TODO: This is wrong
 	public static final Mass ROBOT_MASS = Kilograms.of(60);
 
 	public static final Field2d FIELD = new Field2d();

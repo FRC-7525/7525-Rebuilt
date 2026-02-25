@@ -1,20 +1,15 @@
 package frc.robot.Subsystems.Drive;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.GlobalConstants.Controllers.DEADBAND;
-import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
-import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
-import static frc.robot.GlobalConstants.FIELD;
-import static frc.robot.GlobalConstants.ROBOT_MODE;
+import static frc.robot.GlobalConstants.Controllers.*;
+import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
-import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+import static frc.robot.Subsystems.Drive.TunerConstants.*;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
-
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
@@ -24,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -32,12 +28,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.RobotMode;
+import frc.robot.GlobalConstants;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
@@ -46,7 +45,6 @@ import kotlin.Pair;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
 
 public class Drive extends Subsystem<DriveStates> {
 
@@ -69,12 +67,14 @@ public class Drive extends Subsystem<DriveStates> {
 	private final ProfiledPIDController rotationController;
 	private final ProfiledPIDController translationalController;
 	private final PIDController shooterYawController;
+	private final SimpleMotorFeedforward shooterYawFeedforward;
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
 
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
+	private Angle aimError = Degrees.of(0);
 
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
@@ -82,14 +82,16 @@ public class Drive extends Subsystem<DriveStates> {
 	 * @param driveIO The DriveIO object used for controlling the drive system.
 	 */
 	private Drive() {
-		super("Drive", DriveStates.NORMAL);
+		super("Drive", DriveStates.AIMLOCK_HUB);
 		this.driveIO = switch (ROBOT_MODE) {
 			case REAL -> new DriveIOReal();
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
 
+		this.shooterYawFeedforward = SHOOTER_YAW_FEEDFORWARD.get();
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
+		this.shooterYawController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
 		this.translationalController = SCALED_FF_TRANSLATIONAL_CONTROLLER.get();
 
@@ -107,6 +109,7 @@ public class Drive extends Subsystem<DriveStates> {
 		this.repulsorRotationalController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 
 		this.isFieldRelative = true;
+		this.sotmTarget = Pose2d.kZero;
 
 		// Zero Gyro
 		addRunnableTrigger(
@@ -155,21 +158,42 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				Pose2d target = sotmTarget;
-				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
-				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+				// Compute shooter pose (robot -> shooter transform) and aim from the shooter, not robot center.
+				// ROBOT_TO_SHOOTER is a 3D transform; extract the 2D translation and yaw rotation.
+				var robotPose = getPose();
+				var shooterTrans3 = ROBOT_TO_SHOOTER.getTranslation();
+				var shooterOffset2d = new Transform2d(new Translation2d(shooterTrans3.getX(), shooterTrans3.getY()), Rotation2d.fromRadians(ROBOT_TO_SHOOTER.getRotation().getZ()));
+				var shooterPose = robotPose.transformBy(shooterOffset2d);
+				// Vector from shooter (not robot center) to the SOTM target
+				var targetVector = sotmTarget.getTranslation().minus(shooterPose.getTranslation());
+				var targetDistance = targetVector.getNorm();
+				var shotVector = targetVector;
+				Rotation2d targetFromShooter = shotVector.getAngle();
+				// Desired robot heading so that the shooter (which has a fixed yaw offset) faces the target.
+				// shooterYaw = robotYaw + shooterOffsetYaw  => robotYaw = targetFromShooter - shooterOffsetYaw
+				Rotation2d shooterYawOffset = Rotation2d.fromRadians(ROBOT_TO_SHOOTER.getRotation().getZ());
+				Rotation2d desiredRobotHeading = targetFromShooter.minus(shooterYawOffset);
+				var omegaRadiansPerSecond = calculateAngularVelocity(desiredRobotHeading.getMeasure()).in(RadiansPerSecond);
 				executeAutoAlignDriveInstruction(
-					-0.25 * DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
-					-0.25 * DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
-					(Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0),
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
+					omegaRadiansPerSecond,
 					true,
 					isFieldRelative
 				);
-				Logger.recordOutput("shooter/target", target);
-				field.getObject("Target").setPose(target);
-				field.getObject("Shooter").setPose(shooterPosition);
-				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getDegrees());
-				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
+				Logger.recordOutput("shooter/target", targetFromShooter);
+				field.getObject("Shooter").setPose(shooterPose);
+				field.getObject("Target").setPose(sotmTarget);
+				Translation2d shooterToTarget = shotVector;
+				// Compute signed angular error between where the shooter is pointing and the bearing to the target.
+				// Previously we recorded the absolute bearing which produced large values even when already aimed.
+				Rotation2d bearingToTarget = shooterToTarget.getAngle();
+				Rotation2d shooterRotation = shooterPose.getRotation();
+				Rotation2d shooterToTargetError = bearingToTarget.minus(shooterRotation);
+				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTargetError.getDegrees());
+				aimError = Degrees.of(shooterToTargetError.getDegrees());
+				Logger.recordOutput("shooter/ShooterPosition", shooterPose);
+				Logger.recordOutput("shooter/TargetDistance", targetDistance);
 				break;
 			case AA_NEUTRAL:
 			case AA_TOWER_LEFT:
@@ -376,8 +400,7 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public ChassisSpeeds getFieldCentricSpeeds() {
-		Pose2d pose = driveIO.getDrive().getState().Pose;
-		return ChassisSpeeds.fromFieldRelativeSpeeds(driveIO.getDrive().getState().Speeds, pose.getRotation());
+		return ChassisSpeeds.fromRobotRelativeSpeeds(driveIO.getDrive().getState().Speeds, getPose().getRotation());
 	}
 
 	public Translation2d getVelocityTranslationFieldRelative() {
@@ -385,19 +408,47 @@ public class Drive extends Subsystem<DriveStates> {
 		return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
 	}
 
+	public Translation2d getTargetVector(Pose2d target) {
+		// Thank you yagsl :)
+		var currentPose = getPose();
+		//var currentFieldOrientedSpeeds = getFieldCentricSpeeds();
+		// if (aimLookaheadTime.isPresent())
+		// {
+		// var aimLookAhead = aimLookaheadTime.get().in(Seconds);
+		// var poseTransform = new Transform2d(Meters.of(currentFieldOrientedSpeeds.vxMetersPerSecond * aimLookAhead),
+		// 									Meters.of(currentFieldOrientedSpeeds.vyMetersPerSecond * aimLookAhead),
+		// 									Rotation2d.kZero);
+		// currentPose = currentPose.plus(poseTransform);
+		// }
+		return target.getTranslation().minus(currentPose.getTranslation());
+  	}
+
+	public AngularVelocity calculateAngularVelocity(Angle target) {
+    	var omegaRadiansPerSecond = shooterYawController.calculate(getPose().getRotation().getRadians(), target.in(Radians)) * MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);	
+      	omegaRadiansPerSecond += shooterYawFeedforward.calculateWithVelocities(getFieldCentricSpeeds().omegaRadiansPerSecond, omegaRadiansPerSecond);
+    	return RadiansPerSecond.of(omegaRadiansPerSecond);
+	}
+
+
 
 	public boolean isAtAllianceShootingPosition() {
-		return true;
-		// var allianceOpt = DriverStation.getAlliance();
-		// if (allianceOpt.isEmpty()) {
-		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-		// 	return false;
-		// }
-		// Alliance alliance = allianceOpt.get();
-		// if (alliance == Alliance.Red) {
-		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED;
-		// } else {
-		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE;
-		// }
+		if (GlobalConstants.TESTING) {
+			// In testing mode, allow testing the alliance shooting position logic without needing to be at the actual field positions.
+			return true;
+		}
+		var allianceOpt = DriverStation.getAlliance();
+		if (allianceOpt.isEmpty()) {
+			return false;
+		}
+		Alliance alliance = allianceOpt.get();
+		if (alliance == Alliance.Red) {
+			return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED; // TODO: get value
+		} else {
+			return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE; // TODO: get value
+		}
+	}
+
+	public boolean isAtSOTMTarget() {
+		return Math.abs(aimError.in(Degrees)) < ANGLE_ERROR_MARGIN.in(Degrees);
 	}
 }

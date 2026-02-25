@@ -12,6 +12,8 @@ import frc.robot.Subsystems.Shooter.ShotSolver.ShotSolution;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 public class Shooter extends Subsystem<ShooterStates> {
 
 	private static Shooter instance;
@@ -42,7 +44,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		io.setHoodAngle(currentShotSolution != null ? currentShotSolution.getHoodAngle() : Degrees.of(0.0));
 		io.setWheelVelocity(currentShotSolution != null ? currentShotSolution.getFlywheelSpeed() : RotationsPerSecond.of(0.0));
 		io.logOutputs(outputs);
-		Drive.getInstance().setSOTMTarget(currentShotSolution != null ? currentShotSolution.getVirtualTarget() : BLUE_HUB_POSE);
+		Drive.getInstance().setSOTMTarget(currentShotSolution != null ? currentShotSolution.getVirtualTarget() : Pose2d.kZero);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelVelocity", outputs.rightWheelVelocity.in(RotationsPerSecond));
