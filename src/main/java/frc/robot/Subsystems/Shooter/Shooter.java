@@ -3,15 +3,12 @@ package frc.robot.Subsystems.Shooter;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
-
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
 import frc.robot.Subsystems.Shooter.ShotSolver.ShotSolution;
-
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class Shooter extends Subsystem<ShooterStates> {

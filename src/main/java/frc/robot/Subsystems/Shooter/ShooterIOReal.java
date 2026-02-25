@@ -11,6 +11,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.GlobalConstants;
 
 public class ShooterIOReal implements ShooterIO {
 
@@ -42,17 +44,37 @@ public class ShooterIOReal implements ShooterIO {
 		outputs.wheelSetpoint = wheelSetpoint;
 		outputs.hoodAngle = hoodMotor.getPosition().getValue();
 		outputs.hoodSetpoint = hoodSetpoint;
+		// TODO: Remove before comp
+		if (GlobalConstants.TESTING) {
+			SmartDashboard.putData("Wheel PID", wheelPID);
+			SmartDashboard.putData("Hood PID", hoodPID);
+			wheelFeedforward.setKs(SmartDashboard.getNumber("Wheel Feedforward kS", wheelFeedforward.getKs()));
+			wheelFeedforward.setKv(SmartDashboard.getNumber("Wheel Feedforward kV", wheelFeedforward.getKv()));
+			SmartDashboard.putNumber("Wheel Feedforward kS", wheelFeedforward.getKs());
+			SmartDashboard.putNumber("Wheel Feedforward kV", wheelFeedforward.getKv());
+		}
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
+		if (GlobalConstants.TESTING) {
+			wheelSetpoint = RotationsPerSecond.of(SmartDashboard.getNumber("Wheel Velocity Setpoint", wheelSetpoint.in(RotationsPerSecond)));
+			SmartDashboard.putNumber("Wheel Velocity Setpoint", wheelSetpoint.in(RotationsPerSecond));
+			SmartDashboard.putNumber("Wheel Velocity", leftMotor.getVelocity().getValue().in(RotationsPerSecond));
+
+		}
 		leftMotor.set(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
+		if (GlobalConstants.TESTING) {
+			hoodSetpoint = Degrees.of(SmartDashboard.getNumber("Hood Angle Setpoint", hoodSetpoint.in(Degrees)));
+			SmartDashboard.putNumber("Hood Angle Setpoint", hoodSetpoint.in(Degrees));
+			SmartDashboard.putNumber("Hood Angle", hoodMotor.getPosition().getValue().in(Degrees));
+		}
 		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().in(Degrees), hoodSetpoint.in(Degrees)));
 	}
 

@@ -22,13 +22,13 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MIN_ANGLE = Degrees.of(0); // TODO: get real value and sim vs real
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(180); // TODO: get real value and sim vs real
 	
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45); //TODO: get good value
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(78); //TODO: get good value
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(20); //TODO: get good value
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(10); //TODO: get good value
 	public static final Angle REVERSE_SHOT_ANGLE = Degrees.of(10); //TODO: get good value
 	public static final AngularVelocity REVERSE_SHOT_SPEED = RotationsPerSecond.of(-5);
 
-	public static final Angle STANDBY_ANGLE = Degrees.of(45); //TODO: get good value
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(500); //TODO: get good value
+	public static final Angle STANDBY_ANGLE = Degrees.of(0); //TODO: get good value
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(0); //TODO: get good value
 
 	/** Maximum iterations for convergence */
 	public static final int SOLVER_ITERATIONS = 10;
@@ -69,19 +69,19 @@ public final class ShooterConstants {
 
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(1, 0, 0);
+			case REAL -> new PIDController(0, 0, 0);
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(1, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.1, 0, 0);
+			case REAL -> new PIDController(0, 0, 0);
 			case SIM -> new PIDController(0.0032, 0.0, 0.0);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<SimpleMotorFeedforward> WHEEL_FEEDFORWARD = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.1, 1, 0.001);
+			case REAL -> new SimpleMotorFeedforward(0, 0);
 			case SIM -> new SimpleMotorFeedforward(0.0, 0.001583, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 1, 0.001);
 		}; //TODO: tune
@@ -90,23 +90,5 @@ public final class ShooterConstants {
 	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 0, new Rotation3d(0, 0, Math.PI / 2));
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
-
-	// Shot sample data for lookup tables (placeholder/example values)
-	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
-
-	public static final java.util.List<ShotSampleData> HUB_SHOT_SAMPLES = java.util.List.of(
-		new ShotSampleData(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
-		new ShotSampleData(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
-		new ShotSampleData(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
-		new ShotSampleData(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
-	);
-
-	public static final java.util.List<ShotSampleData> ALLIANCE_SHOT_SAMPLES = java.util.List.of(
-		new ShotSampleData(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52),
-		new ShotSampleData(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56),
-		new ShotSampleData(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
-		new ShotSampleData(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
-	);
-
 	public static final Supplier<Pose2d> HUB_POSE = () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? BLUE_HUB_POSE : RED_HUB_POSE;
 }

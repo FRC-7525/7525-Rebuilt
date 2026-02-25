@@ -5,12 +5,12 @@ import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Subsystems.Climber.Climber;
+//import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
-import frc.robot.Subsystems.Intake.Intake;
+//import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
-import frc.robot.Subsystems.Vision.Vision;
+//import frc.robot.Subsystems.Vision.Vision;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.misc.Tracer;
 import org.team7525.subsystem.Subsystem;
@@ -21,9 +21,9 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Drive drive;
 	private Shooter shooter;
 	private Hopper hopper;
-	private Intake intake;
-	private Climber climber;
-	private Vision vision;
+	//private Intake intake;
+	//private Climber climber;
+	//private Vision vision;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -38,9 +38,9 @@ public class Manager extends Subsystem<ManagerStates> {
 		drive = Drive.getInstance();
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
-		intake = Intake.getInstance();
-		climber = Climber.getInstance();
-		vision = Vision.getInstance();
+		//intake = Intake.getInstance();
+		//climber = Climber.getInstance();
+		//vision = Vision.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
@@ -98,19 +98,20 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/ShooterStatus", shooter.readyToShoot());
 
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		intake.setState(getState().getIntakeState());
-		climber.setState(getState().getClimberState());
+		//intake.setState(getState().getIntakeState());
+		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
-		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+		//Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
-		Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		//Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButtonPressed()) {
 			setState(ManagerStates.IDLE);

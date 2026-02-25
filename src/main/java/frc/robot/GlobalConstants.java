@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GlobalConstants {
-	public static final boolean TESTING = false; // Set to true to enable testing mode (basically just logs more for tuning and skips some checks)
+	public static final boolean TESTING = true; // Set to true to enable testing mode (basically just logs more for tuning and skips some checks)
 
 	public static final int VOLTS = 12;
 
