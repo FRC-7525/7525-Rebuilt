@@ -60,13 +60,9 @@ public class Robot extends LoggedRobot {
 		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
 		NamedCommands.registerCommand("Wind and Intake", autoCommands.windAndIntake());
 
-		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand(this));
+		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand());
 	}
-
-	public Manager getManager() {
-		return manager;
-	}
-
+	
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");

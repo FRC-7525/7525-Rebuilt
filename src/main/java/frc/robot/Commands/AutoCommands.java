@@ -3,6 +3,7 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 
 public class AutoCommands {
@@ -14,18 +15,18 @@ public class AutoCommands {
 	}
 
 	public Command intake() {
-		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.INTAKING));
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.INTAKING));
 	}
 
 	public Command returnToIdle() {
-		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.IDLE));
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.IDLE));
 	}
 
 	public Command startWindingUp() {
-		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.WINDING_UP));
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.WINDING_UP));
 	}
 
 	public Command windAndIntake() {
-		return new InstantCommand(() -> robot.getManager().setState(ManagerStates.WINDING_AND_INTAKING));
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.WINDING_AND_INTAKING));
 	}
 }
