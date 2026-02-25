@@ -14,3 +14,5 @@
 * Tape over sharp edges
 * Test all spinning. attempt to get consistent shot with all.
 * Test drive
+* Delete dis
+* Push and PR
