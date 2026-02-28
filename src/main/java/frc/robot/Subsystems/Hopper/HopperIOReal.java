@@ -42,6 +42,4 @@ public class HopperIOReal implements HopperIO {
 		kickerMotor.set(targetKickVelocity);
 		kickerMotor2.set(targetKickVelocity2);
 	}
-
-
 }

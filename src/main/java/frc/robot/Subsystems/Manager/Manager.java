@@ -21,6 +21,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Drive drive;
 	private Shooter shooter;
 	private Hopper hopper;
+
 	//private Intake intake;
 	//private Climber climber;
 	//private Vision vision;
@@ -79,7 +80,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		// EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
 		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
-	
+
 		addTrigger(ManagerStates.IDLE, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getAButtonPressed);
 	}
 
