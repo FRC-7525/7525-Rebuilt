@@ -20,6 +20,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -70,6 +71,8 @@ public class Drive extends Subsystem<DriveStates> {
 	private final SimpleMotorFeedforward shooterYawFeedforward;
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
+	private final SlewRateLimiter xRateLimiter;
+	private final SlewRateLimiter yRateLimiter;
 
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
@@ -88,7 +91,8 @@ public class Drive extends Subsystem<DriveStates> {
 			case SIM -> new DriveIOSim();
 			case TESTING -> new DriveIOReal();
 		};
-
+		this.xRateLimiter = new SlewRateLimiter(2);
+		this.yRateLimiter = new SlewRateLimiter(2);
 		this.shooterYawFeedforward = SHOOTER_YAW_FEEDFORWARD.get();
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		this.shooterYawController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
@@ -175,8 +179,8 @@ public class Drive extends Subsystem<DriveStates> {
 				Rotation2d desiredRobotHeading = targetFromShooter.minus(shooterYawOffset);
 				var omegaRadiansPerSecond = calculateAngularVelocity(desiredRobotHeading.getMeasure()).in(RadiansPerSecond);
 				executeAutoAlignDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
+					yRateLimiter.calculate(-0.5 * DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond)),
+					xRateLimiter.calculate(-0.5 * DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond)),
 					omegaRadiansPerSecond,
 					true,
 					isFieldRelative
