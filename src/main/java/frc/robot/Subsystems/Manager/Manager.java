@@ -5,6 +5,8 @@ import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.GlobalConstants;
+import frc.robot.GlobalConstants.RobotMode;
 //import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
@@ -64,7 +66,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> shooter.readyToShoot() && drive.isAtAllianceShootingPosition());
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> shooter.readyToShoot() && drive.isAtAllianceShootingPosition() || (getStateTime() > 4 && GlobalConstants.ROBOT_MODE == RobotMode.SIM));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> shooter.readyToShoot() && !drive.isAtAllianceShootingPosition());
 

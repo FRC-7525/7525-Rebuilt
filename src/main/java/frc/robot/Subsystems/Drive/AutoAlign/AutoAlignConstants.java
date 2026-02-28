@@ -1,10 +1,6 @@
 package frc.robot.Subsystems.Drive.AutoAlign;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.FeetPerSecond;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -13,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -53,17 +50,24 @@ public final class AutoAlignConstants {
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
+
+	// Exponential smoothing of field velocity to avoid instant jumps from accelerations
+	public static final double AIM_VEL_ALPHA = 0.35; // 0..1, higher -> more responsive, lower -> smoother
+
+	// Rather reasonable constraints?
+	public static Constraints SHOOTER_YAW_CONSTRAINTS = new Constraints(2 * Math.PI, 2 * Math.PI);
+	// KS is volts to apply to overcome static friction (so probably like 0.1-1? irl) and KV is  volts to accelerate 1 rad/s (6.28 rads in a circle so probably like 1-2?? idk)
 	public static final Supplier<SimpleMotorFeedforward> SHOOTER_YAW_FEEDFORWARD = () -> 
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
-			case SIM -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
+			case REAL -> new SimpleMotorFeedforward(0.5, 0.5); // TODO: TUNE
+			case SIM -> new SimpleMotorFeedforward(0.0, 0.5); // KV random, no KS bc no friction
 			default -> new SimpleMotorFeedforward(0.2, 0.1); // TODO: TUNE
 		};
-	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<ProfiledPIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(1, 0, 0);
-			case SIM -> new PIDController(1, 0, 0.01);
-			default -> new PIDController(1, 0, 0);
+			case REAL -> new ProfiledPIDController(0.2, 0, 0.01, SHOOTER_YAW_CONSTRAINTS);
+			case SIM -> new ProfiledPIDController(0.5, 0, 0.05, SHOOTER_YAW_CONSTRAINTS);
+			default -> new ProfiledPIDController(1, 0, 0, SHOOTER_YAW_CONSTRAINTS);
 		};
 
 	public static final Supplier<ProfiledPIDController> SCALED_FF_TRANSLATIONAL_CONTROLLER = () ->
