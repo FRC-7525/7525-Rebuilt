@@ -17,7 +17,7 @@ public class Hopper extends Subsystem<HopperStates> {
 		outputs = new HopperIOOutputs();
 		this.io = switch (ROBOT_MODE) {
 			case REAL -> new HopperIOReal();
-			case SIM -> new HopperIOSim();
+			case SIM -> new HopperIOReal();
 			case TESTING -> new HopperIOReal();
 		};
 	}
@@ -32,7 +32,7 @@ public class Hopper extends Subsystem<HopperStates> {
 	@Override
 	protected void runState() {
 		io.setTargetSpinVelocity(getState().getSpinVelocity());
-		io.setTargetKickVelocity(getState().getKickVelocity());
+		io.setTargetKickVelocity(getState().getKickVelocity(), getState().getKickVelocity2());
 		io.updateOutputs(outputs);
 
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocityRPS);

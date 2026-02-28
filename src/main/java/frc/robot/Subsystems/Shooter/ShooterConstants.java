@@ -18,11 +18,11 @@ public final class ShooterConstants {
 
 	public static final String SUBSYSTEM_NAME = "Shooter";
 	// Preset positions
-	public static final double HOOD_MIN_ANGLE_RADS = 0.0; // TODO: get real value
-	public static final double HOOD_MAX_ANGLE_RADS = Math.toRadians(60); // TODO: get real value
+	public static final Angle HOOD_MIN_ANGLE = Degrees.of(4.8025772); // TODO: get real value
+	public static final Angle HOOD_MAX_ANGLE = Degrees.of(54.6051544); // TODO: get real value
 
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45); //TODO: get good value
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(150); //TODO: get good value
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(35); //TODO: get good value
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(-10); //TODO: get good value
 
 	public static final Angle STANDBY_ANGLE = Degrees.of(45); //TODO: get good value
 	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(500); //TODO: get good value
@@ -39,7 +39,7 @@ public final class ShooterConstants {
 	public static final double FLYWHEEL_MOI = 0.00117056; // Roughly accurate for flywheel
 	public static final double FLYWHEEL_GEARING = 1.0; // Also roughly accurate
 	public static final double HOOD_MOI = 0.0001;
-	public static final double HOOD_GEARING = 1.0;
+	public static final double HOOD_GEARING = 75; //100/3 previously,
 	public static final double HOOD_ARM_LENGTH_METERS = 0.2;
 
 	// State defaults
@@ -51,19 +51,19 @@ public final class ShooterConstants {
 
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(1, 0, 0);
+			case REAL -> new PIDController(0.04, 0.0002, 0.0); //.0384 good alr
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
-			case TESTING -> new PIDController(1, 0, 0);
+			case TESTING -> new PIDController(0, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.1, 0, 0);
+			case REAL -> new PIDController(0, 0, 0);
 			case SIM -> new PIDController(0.0077, 0, 0.00013);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<SimpleMotorFeedforward> WHEEL_FEEDFORWARD = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
+			case REAL -> new SimpleMotorFeedforward(0.0, 0.00, 0.000);
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
 		}; //TODO: tune

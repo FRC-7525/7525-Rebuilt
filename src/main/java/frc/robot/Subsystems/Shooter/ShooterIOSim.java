@@ -1,6 +1,7 @@
 package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -54,10 +55,10 @@ public class ShooterIOSim extends ShooterIOReal {
 			DCMotor.getFalcon500(1),
 			HOOD_GEARING,
 			HOOD_ARM_LENGTH_METERS,
-			HOOD_MIN_ANGLE_RADS,
-			HOOD_MAX_ANGLE_RADS,
+			HOOD_MIN_ANGLE.in(Radian),
+			HOOD_MAX_ANGLE.in(Radian),
 			false, // this be ragebait
-			HOOD_MIN_ANGLE_RADS
+			HOOD_MIN_ANGLE.in(Radian)
 		);
 	}
 
