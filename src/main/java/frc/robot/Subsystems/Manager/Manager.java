@@ -22,7 +22,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Shooter shooter;
 	private Hopper hopper;
 
-	//private Intake intake;
+	private Intake intake;
 	//private Climber climber;
 	//private Vision vision;
 
@@ -39,7 +39,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		drive = Drive.getInstance();
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
-		//intake = Intake.getInstance();
+		intake = Intake.getInstance();
 		//climber = Climber.getInstance();
 		//vision = Vision.getInstance();
 
@@ -104,12 +104,12 @@ public class Manager extends Subsystem<ManagerStates> {
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		//intake.setState(getState().getIntakeState());
+		intake.setState(getState().getIntakeState());
 		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		//Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		//Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		//Tracer.traceFunc("VisionPeriodic", vision::periodic);
