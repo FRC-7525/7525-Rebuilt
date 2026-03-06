@@ -36,7 +36,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 		outputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValue();
 		outputs.angularPosition = Rotations.of(pivotMotor.getPosition().getValueAsDouble() / GEARING);
 		outputs.angularSetpoint = setpoint.div(GEARING);
-		SmartDashboard.putData("PIVOT_CONTROLLER", pivotController);		
+		SmartDashboard.putData("PIVOT_CONTROLLER", pivotController);
 	}
 
 	@Override
