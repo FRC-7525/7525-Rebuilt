@@ -12,7 +12,7 @@ public class IntakeConstants {
 
 	public static final String SUBSYSTEM_NAME = "Intake";
 
-	public static final double GEARING = 1;
+	public static final double GEARING = 96;
 	public static final Supplier<PIDController> PIVOT_PID = () ->
 		switch (ROBOT_MODE) {
 			case SIM -> new PIDController(0.0, 0.0, 0.0);

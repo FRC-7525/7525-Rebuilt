@@ -38,8 +38,8 @@ public class Intake extends Subsystem<IntakeStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinSetpointRPS", outputs.spinSetpoint);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinAppliedVolts", outputs.spinAppliedVolts);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinCurrentAmps", outputs.spinCurrentAmps);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/AnglularMeters", outputs.angularPosition.in(Degrees));
-		Logger.recordOutput(SUBSYSTEM_NAME + "/AngularSetpointMeters", outputs.angularSetpoint.in(Degrees));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/AngularDegrees", outputs.angularPosition.in(Degrees));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/AngularSetpointDegrees", outputs.angularSetpoint.in(Degrees));
 	}
 
 	public TalonFX getSpinMotor() {
