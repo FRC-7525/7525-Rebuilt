@@ -1,14 +1,11 @@
 package frc.robot.Subsystems.Intake;
 
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.measure.Angle;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Angle;
 import java.util.function.Supplier;
-
 import org.team7525.controlConstants.PIDConstants;
 
 public class IntakeConstants {
@@ -24,7 +21,7 @@ public class IntakeConstants {
 
 	// States
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
-	public static final Angle INTAKE_OUT_POS = Degrees.of(70); 
+	public static final Angle INTAKE_OUT_POS = Degrees.of(70);
 
 	public static final double SPIN_SPEED_INTAKE = 0.2;
 
@@ -35,6 +32,7 @@ public class IntakeConstants {
 	}
 
 	public static class Sim {
+
 		public static final int NUM_MOTORS = 1;
 		public static final double MOTOR_MOI = 0.0001;
 		public static final PIDConstants LINEAR_PID = new PIDConstants(5.5, 0.0, 0.008); // Tuned in sim	}

@@ -23,6 +23,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Hopper hopper;
 
 	private Intake intake;
+
 	//private Climber climber;
 	//private Vision vision;
 

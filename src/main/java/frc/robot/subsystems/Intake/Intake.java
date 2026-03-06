@@ -13,7 +13,7 @@ public class Intake extends Subsystem<IntakeStates> {
 	private static Intake instance;
 	private final IntakeIO io;
 	private final IntakeIO.IntakeIOOutputs outputs = new IntakeIO.IntakeIOOutputs();
-	
+
 	private Intake() {
 		super(SUBSYSTEM_NAME, IntakeStates.IN);
 		this.io = switch (ROBOT_MODE) {

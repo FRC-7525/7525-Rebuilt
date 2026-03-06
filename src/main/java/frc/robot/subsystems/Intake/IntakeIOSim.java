@@ -63,8 +63,8 @@ public class IntakeIOSim extends IntakeIOTalonFX {
 	@Override
 	public void setAngularPosition(Angle setpoint) {
 		this.setpoint = setpoint;
-			linearSim.setInputVoltage(12 * linearController.calculate(linearSim.getAngularPositionRotations(), setpoint.in(Degrees) / GEARING));
-		} // pid only for sim, irl uses talon pid
+		linearSim.setInputVoltage(12 * linearController.calculate(linearSim.getAngularPositionRotations(), setpoint.in(Degrees) / GEARING));
+	} // pid only for sim, irl uses talon pid
 
 	@Override
 	public TalonFX getSpinMotor() {
