@@ -49,7 +49,7 @@ public class ShooterIOReal implements ShooterIO {
 		outputs.hoodCurrent = hoodMotor.getStatorCurrent().getValueAsDouble();
 		outputs.leftWheelCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
 		outputs.rightWheelCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
-				
+
 		SmartDashboard.putData("ShooterPID", wheelPID);
 		wheelFeedforward.setKv(SmartDashboard.getNumber("ShooterFeedforwardKv", wheelFeedforward.getKv()));
 		SmartDashboard.putNumber("ShooterFeedforwardKs", wheelFeedforward.getKs());
@@ -97,6 +97,6 @@ public class ShooterIOReal implements ShooterIO {
 			hoodMotor.set(0);
 			return true;
 		}
-	return false;
+		return false;
 	}
 }
