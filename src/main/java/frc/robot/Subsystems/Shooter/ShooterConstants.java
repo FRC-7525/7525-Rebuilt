@@ -49,6 +49,8 @@ public final class ShooterConstants {
 	public static final int RIGHT_SHOOTER_MOTOR_ID = 38;
 	public static final int HOOD_MOTOR_ID = 39;
 
+	public static final int LIMIT_SWITCH_PORT = 9;
+
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(0.04, 0.0002, 0.0); //.0384 good alr
