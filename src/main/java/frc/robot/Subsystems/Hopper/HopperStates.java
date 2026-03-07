@@ -3,7 +3,7 @@ package frc.robot.Subsystems.Hopper;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum HopperStates implements SubsystemStates {
-	IDLE("Idle", HopperConstants.OFF_VELOCITY, HopperConstants.OFF_VELOCITY, HopperConstants.SPIN_KICK_VELOCITY_2),
+	IDLE("Idle", HopperConstants.OFF_VELOCITY, HopperConstants.OFF_VELOCITY, HopperConstants.OFF_VELOCITY),
 	SPINDEXING("Spindexing", HopperConstants.SPIN_KICK_VELOCITY, HopperConstants.SPIN_VELOCITY, HopperConstants.SPIN_KICK_VELOCITY_2);
 
 	private String stateString;

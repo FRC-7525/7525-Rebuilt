@@ -57,12 +57,13 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
+		//TODO: Clean up and make this actually work
 		wheelSetpoint = velocity;
-		//var num = SmartDashboard.getNumber("Input/VOLTAGE", 0);
-		//leftMotor.setVoltage(num);
-		//rightMotor.set(num);
-		//SmartDashboard.putNumber("Input/VOLTAGE", num);
-		//leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		var num = SmartDashboard.getNumber("Input/VOLTAGE", 0);
+		leftMotor.setVoltage(num);
+		rightMotor.set(num);
+		SmartDashboard.putNumber("Input/VOLTAGE", num);
+		leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
 	}
 
 	@Override

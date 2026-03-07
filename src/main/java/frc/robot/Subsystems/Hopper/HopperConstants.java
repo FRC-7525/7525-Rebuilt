@@ -3,7 +3,7 @@ package frc.robot.Subsystems.Hopper;
 public class HopperConstants {
 
 	//not real values atm
-	public static final double SPIN_VELOCITY = -0.15;
+	public static final double SPIN_VELOCITY = -1;
 	public static final double OFF_VELOCITY = 0;
 
 	public static final double SPIN_KICK_VELOCITY = -1;

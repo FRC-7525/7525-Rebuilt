@@ -23,6 +23,7 @@ public class IntakeIOSim extends IntakeIOTalonFX {
 	private TalonFXSimState linearSimState;
 	private final PIDController linearController;
 
+	//TODO: Make this not a linear sim and use Krakens instead of falcons
 	public IntakeIOSim() {
 		speed = 0;
 		setpoint = Degrees.of(0);
