@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,6 +25,7 @@ public class ShooterIOReal implements ShooterIO {
 	protected PIDController hoodPID;
 	protected PIDController wheelPID;
 	protected SimpleMotorFeedforward wheelFeedforward;
+	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
 	public ShooterIOReal() {
 		wheelSetpoint = RotationsPerSecond.zero();
@@ -70,6 +72,11 @@ public class ShooterIOReal implements ShooterIO {
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
 		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -hoodSetpoint.in(Degrees)));
+
+		if (limitSwitch.get()) {
+			hoodMotor.setPosition(0);
+			hoodMotor.set(0);
+		}
 	}
 
 	@Override
