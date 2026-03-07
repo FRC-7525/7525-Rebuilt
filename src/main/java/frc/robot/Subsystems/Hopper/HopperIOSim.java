@@ -17,7 +17,7 @@ public class HopperIOSim extends HopperIOReal {
 
 	double targetSpinVelocity;
 	double targetKickerVelocity;
-    double targetKickerVelocity2;
+	double targetKickerVelocity2;
 
 	public HopperIOSim() {
 		spindexerSimState = new TalonFXSimState(spindexerMotor);
