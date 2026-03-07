@@ -16,14 +16,17 @@ public class IntakeConstants {
 	public static final Supplier<PIDController> PIVOT_PID = () ->
 		switch (ROBOT_MODE) {
 			case SIM -> new PIDController(0.0, 0.0, 0.0);
-			case REAL, TESTING -> new PIDController(0.0, 0.0, 0.0);
+			case REAL, TESTING -> new PIDController(0.05, 0.0, 0.0);
 		};
 
 	// States
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
-	public static final Angle INTAKE_OUT_POS = Degrees.of(70);
+	public static final Angle INTAKE_OUT_POS = Degrees.of(-170);
 
-	public static final double SPIN_SPEED_INTAKE = 0.2;
+	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-60);
+	public static final Angle INTAKE_AGITATING_OUT_POS = Degrees.of(-120);
+
+	public static final double SPIN_SPEED_INTAKE = -0.5;
 
 	public static class Real {
 

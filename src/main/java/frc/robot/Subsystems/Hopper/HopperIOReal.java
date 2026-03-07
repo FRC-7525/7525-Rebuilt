@@ -19,7 +19,7 @@ public class HopperIOReal implements HopperIO {
 		spindexerMotor = new TalonFX(SPINDEXER_MOTOR_ID);
 		kickerMotor = new TalonFX(KICKER_MOTOR_ID);
 		kickerMotor2 = new TalonFX(KICKER_MOTOR_2_ID);
-		kickerMotor2.setControl(new Follower(KICKER_MOTOR_ID, MotorAlignmentValue.Opposed));
+		kickerMotor2.setControl(new Follower(KICKER_MOTOR_ID, MotorAlignmentValue.Aligned));
 	}
 
 	@Override

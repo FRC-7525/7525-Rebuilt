@@ -23,7 +23,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 		spinMotor = new TalonFX(Real.SPIN_MOTOR_ID);
 		spinMotor.setNeutralMode(NeutralModeValue.Coast);
 		pivotMotor = new TalonFX(Real.PIVOT_MOTOR_ID);
-		pivotMotor.setNeutralMode(NeutralModeValue.Brake);
+		pivotMotor.setNeutralMode(NeutralModeValue.Coast);
 		pivotMotor.setPosition(0);
 		speed = 0;
 		setpoint = Degrees.of(0);
@@ -35,7 +35,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 		outputs.spinAppliedVolts = spinMotor.getMotorVoltage().getValue();
 		outputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValue();
 		outputs.angularPosition = Rotations.of(pivotMotor.getPosition().getValueAsDouble() / GEARING);
-		outputs.angularSetpoint = setpoint.div(GEARING);
+		outputs.angularSetpoint = setpoint;
 		SmartDashboard.putData("PIVOT_CONTROLLER", pivotController);
 	}
 
@@ -48,7 +48,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 	@Override
 	public void setAngularPosition(Angle setpoint) {
 		this.setpoint = setpoint;
-		pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValueAsDouble() / GEARING, setpoint.in(Rotations) / GEARING));
+		pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
 	}
 
 	@Override

@@ -32,8 +32,16 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-		io.setAngularPosition(getState().getAngle());
 		io.setSpinVelocity(getState().getSpinSpeed());
+
+		//TODO: Find better implementation this is kinda geeked
+		if (getState() == IntakeStates.AGITATING) {
+			if (Math.floor(getStateTime()) % 2 == 0) {
+				io.setAngularPosition(INTAKE_AGITATING_IN_POS);
+			} else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
+		} else io.setAngularPosition(getState().getAngle());
+
+		io.logOutputs(outputs);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocity);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinSetpointRPS", outputs.spinSetpoint);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinAppliedVolts", outputs.spinAppliedVolts);
