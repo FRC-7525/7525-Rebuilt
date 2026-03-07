@@ -25,6 +25,9 @@ public class ShooterIOReal implements ShooterIO {
 	protected PIDController wheelPID;
 	protected SimpleMotorFeedforward wheelFeedforward;
 
+	private double targetHoodAngle = 0;
+	private double targetWheelSpeed = 0;
+
 	public ShooterIOReal() {
 		wheelSetpoint = RotationsPerSecond.zero();
 		hoodSetpoint = Degrees.zero();
@@ -35,7 +38,7 @@ public class ShooterIOReal implements ShooterIO {
 		hoodPID = HOOD_PID.get();
 		wheelPID = WHEEL_PID.get();
 		wheelFeedforward = WHEEL_FEEDFORWARD.get();
-		hoodMotor.setPosition(0);
+		hoodMotor.setPosition(HOOD_MIN_ANGLE);
 	}
 
 	@Override
@@ -53,19 +56,24 @@ public class ShooterIOReal implements ShooterIO {
 		SmartDashboard.putData(hoodPID);
 		SmartDashboard.putNumber("CURRENT L", leftMotor.getStatorCurrent().getValueAsDouble());
 		SmartDashboard.putNumber("CURRENT R", rightMotor.getStatorCurrent().getValueAsDouble());
+
+		SmartDashboard.putNumber("Shooter/TargetHoodAngle", targetHoodAngle);
+		SmartDashboard.putNumber("Shooter/TargetWheelSpeed", targetHoodAngle);
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
 		//leftMotor.set(-1);
-		leftMotor.set(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		// leftMotor.set(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		leftMotor.set(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), targetWheelSpeed) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -hoodSetpoint.in(Degrees)));
+		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -hoodSetpoint.in(Degrees)));
+		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -targetHoodAngle));
 	}
 
 	@Override
@@ -76,5 +84,10 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public boolean atHoodAngleSetpoint() {
 		return (Math.abs(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees) - hoodSetpoint.in(Degrees)) < HOOD_ANGLE_TOLERANCE_DEGREES);
+	}
+
+	@Override
+	public void zeroHood() {
+		hoodMotor.setPosition(HOOD_MIN_ANGLE);
 	}
 }
