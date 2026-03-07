@@ -13,7 +13,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOReal implements ShooterIO {
 
@@ -47,34 +46,34 @@ public class ShooterIOReal implements ShooterIO {
 		outputs.wheelSetpoint = wheelSetpoint;
 		outputs.hoodAngle = hoodMotor.getPosition().getValue().div(-HOOD_GEARING);
 		outputs.hoodSetpoint = hoodSetpoint;
+		outputs.hoodCurrent = hoodMotor.getStatorCurrent().getValueAsDouble();
+		outputs.leftWheelCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
+		outputs.rightWheelCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
+				
 		SmartDashboard.putData("ShooterPID", wheelPID);
 		wheelFeedforward.setKv(SmartDashboard.getNumber("ShooterFeedforwardKv", wheelFeedforward.getKv()));
 		SmartDashboard.putNumber("ShooterFeedforwardKs", wheelFeedforward.getKs());
 		wheelFeedforward.setKs(SmartDashboard.getNumber("ShooterFeedforwardKvs", wheelFeedforward.getKs()));
-		Logger.recordOutput("hoodCurrent", hoodMotor.getStatorCurrent().getValue());
 		SmartDashboard.putData(hoodPID);
-		SmartDashboard.putNumber("CURRENT L", leftMotor.getStatorCurrent().getValueAsDouble());
-		SmartDashboard.putNumber("CURRENT R", rightMotor.getStatorCurrent().getValueAsDouble());
 	}
 
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
-		//TODO: Clean up and make this actually work
 		wheelSetpoint = velocity;
-		var num = SmartDashboard.getNumber("Input/VOLTAGE", 0);
-		leftMotor.setVoltage(num);
-		rightMotor.set(num);
-		SmartDashboard.putNumber("Input/VOLTAGE", num);
-		leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		//TODO: Switch to this when done testing
+		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -hoodSetpoint.in(Degrees)));
+		//TODO: Switch to this after done testing
+		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), -hoodSetpoint.in(Degrees)));
+		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees)));
 
 		if (limitSwitch.get()) {
-			hoodMotor.setPosition(0);
+			hoodMotor.setPosition(HOOD_MIN_ANGLE);
 			hoodMotor.set(0);
 		}
 	}
@@ -87,5 +86,17 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public boolean atHoodAngleSetpoint() {
 		return (Math.abs(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees) - hoodSetpoint.in(Degrees)) < HOOD_ANGLE_TOLERANCE_DEGREES);
+	}
+
+	@Override
+	public boolean zeroHoodMotor() {
+		hoodMotor.set(-.3);
+
+		if (limitSwitch.get()) {
+			hoodMotor.setPosition(HOOD_MIN_ANGLE);
+			hoodMotor.set(0);
+			return true;
+		}
+	return false;
 	}
 }

@@ -11,6 +11,9 @@ public interface ShooterIO {
 		public AngularVelocity wheelSetpoint;
 		public Angle hoodAngle;
 		public Angle hoodSetpoint;
+		public double leftWheelCurrent;
+		public double rightWheelCurrent;
+		public double hoodCurrent;
 	}
 
 	public abstract void logOutputs(ShooterIOOutputs outputs);
@@ -22,4 +25,6 @@ public interface ShooterIO {
 	public abstract boolean atWheelVelocitySetpoint();
 
 	public abstract boolean atHoodAngleSetpoint();
+
+	public abstract boolean zeroHoodMotor();
 }
