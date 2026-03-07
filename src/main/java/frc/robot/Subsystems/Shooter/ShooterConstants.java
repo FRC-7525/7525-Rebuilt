@@ -24,7 +24,7 @@ public final class ShooterConstants {
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(20);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(-26);
 
-	public static final Angle STANDBY_ANGLE = Degrees.of(45); 
+	public static final Angle STANDBY_ANGLE = Degrees.of(45);
 	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(-30);
 
 	// Numerical constants (moved from magic literals)
