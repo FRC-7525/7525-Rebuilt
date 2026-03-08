@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.45,
-        "y": 0.6
+        "x": 2.55,
+        "y": 5.35
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.326814381270903,
-        "y": 0.7059197324414719
+        "x": 0.8253485695118339,
+        "y": 4.703014604749828
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.65,
-        "y": 2.2
+        "x": 0.74,
+        "y": 4.65
       },
       "prevControl": {
-        "x": 6.950100334448161,
-        "y": 1.2705434782608704
+        "x": 1.2973815836303997,
+        "y": 4.866350723257319
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.2,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 11.7,
+        "maxAngularVelocity": 1000.0,
+        "maxAngularAcceleration": 2516.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -42,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 50.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Right Autos",
+  "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

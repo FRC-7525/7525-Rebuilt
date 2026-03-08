@@ -13,15 +13,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 1.0
+                        "name": "WindUp"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "wait",
                       "data": {
-                        "name": "Intake"
+                        "waitTime": 1.0
                       }
                     }
                   ]
@@ -30,16 +30,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SweepDU"
+                  "pathName": "MoveBack"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SL"
           }
         },
         {

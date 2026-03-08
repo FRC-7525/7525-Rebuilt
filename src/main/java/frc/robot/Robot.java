@@ -75,7 +75,7 @@ public class Robot extends LoggedRobot {
 	public void autonomousInit() {
 		Command autoCommand = autoChooser.getSelected();
 		if (autoCommand != null) {
-			autoCommand.schedule();
+			CommandScheduler.getInstance().schedule(autoCommand);
 		}
 	}
 
