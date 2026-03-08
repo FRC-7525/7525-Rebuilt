@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Commands.AngleAndShootCommand;
 import frc.robot.Commands.AutoCommands;
 import frc.robot.Subsystems.Drive.Drive;
@@ -31,7 +32,6 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void robotInit() {
-		autoChooser = AutoBuilder.buildAutoChooser();
 
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL:
@@ -53,16 +53,19 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-
+		
 		NamedCommands.registerCommand("Intake", autoCommands.intake());
 		NamedCommands.registerCommand("Return to Idle", autoCommands.returnToIdle());
 		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
 		NamedCommands.registerCommand("Wind and Intake", autoCommands.windAndIntake());
-
+		NamedCommands.registerCommand("Allow AimLock", autoCommands.allowAimlock());
+		NamedCommands.registerCommand("Disallow AimLock", autoCommands.disallowAimlock());
 		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand());
+		
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
-
+	
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");
@@ -80,7 +83,9 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
-	public void autonomousPeriodic() {}
+	public void autonomousPeriodic() {
+
+	}
 
 	@Override
 	public void autonomousExit() {
