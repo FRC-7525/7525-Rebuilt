@@ -2,7 +2,6 @@ package frc.robot;
 
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;

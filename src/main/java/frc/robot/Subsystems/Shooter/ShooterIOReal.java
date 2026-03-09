@@ -42,6 +42,7 @@ public class ShooterIOReal implements ShooterIO {
 
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);
 		hoodMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+		hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
 		hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Opposed)); // Might need to be inverted

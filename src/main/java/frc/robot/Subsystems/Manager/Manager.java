@@ -105,7 +105,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		intake.setState(getState().getIntakeState());
+		// intake.setState(getState().getIntakeState());
 		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr

@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Hopper;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Hopper.HopperConstants.*;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -12,6 +13,9 @@ public class HopperIOReal implements HopperIO {
 	protected TalonFX spindexerMotor;
 	protected TalonFX kickerMotor;
 	protected TalonFX kickerMotor2;
+	protected TalonFXConfiguration spindexerMotorConfig = new TalonFXConfiguration();
+	protected TalonFXConfiguration kickerMotor1Config = new TalonFXConfiguration();
+	protected TalonFXConfiguration kickerMotor2Config = new TalonFXConfiguration();
 	double targetSpinVelocity;
 	double targetKickerVelocity;
 
@@ -19,7 +23,19 @@ public class HopperIOReal implements HopperIO {
 		spindexerMotor = new TalonFX(SPINDEXER_MOTOR_ID);
 		kickerMotor = new TalonFX(KICKER_MOTOR_ID);
 		kickerMotor2 = new TalonFX(KICKER_MOTOR_2_ID);
-		kickerMotor2.setControl(new Follower(KICKER_MOTOR_ID, MotorAlignmentValue.Aligned));
+		kickerMotor2.setControl(new Follower(KICKER_MOTOR_ID, MotorAlignmentValue.Opposed));
+
+		spindexerMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
+		kickerMotor1Config.CurrentLimits.StatorCurrentLimit = 90;
+		kickerMotor2Config.CurrentLimits.StatorCurrentLimit = 90;
+		
+		spindexerMotorConfig.CurrentLimits.SupplyCurrentLimit = 30;
+		kickerMotor1Config.CurrentLimits.SupplyCurrentLimit = 30;
+		kickerMotor2Config.CurrentLimits.SupplyCurrentLimit = 10;
+
+		spindexerMotor.getConfigurator().apply(spindexerMotorConfig);
+		kickerMotor.getConfigurator().apply(kickerMotor1Config);
+		kickerMotor2.getConfigurator().apply(kickerMotor2Config);
 	}
 
 	@Override
@@ -28,6 +44,8 @@ public class HopperIOReal implements HopperIO {
 		outputs.kickVelocityRPS = kickerMotor.getVelocity().getValue().in(RotationsPerSecond);
 		outputs.targetSpinVelocity = targetSpinVelocity;
 		outputs.targetKickVelocity = targetKickerVelocity;
+		outputs.spindexerCurrent = spindexerMotor.getStatorCurrent().getValueAsDouble();
+		outputs.kickerCurrent = spindexerMotor.getStatorCurrent().getValueAsDouble();
 	}
 
 	@Override
