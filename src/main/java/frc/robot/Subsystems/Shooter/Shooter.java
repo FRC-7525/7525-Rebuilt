@@ -9,12 +9,19 @@ import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class Shooter extends Subsystem<ShooterStates> {
 
 	private static Shooter instance;
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;
 	private ShooterStates cache;
+	private DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_PORT);
+	private Debouncer debouncer = new Debouncer(0.05, DebounceType.kRising); //TODO: Switch debounce type to correct one (should only fire once a ball is first detected, not when a ball leaves)
+	private int numBallsShot = 0;
 
 	public static Shooter getInstance() {
 		if (instance == null) {
@@ -40,6 +47,11 @@ public class Shooter extends Subsystem<ShooterStates> {
 			io.setHoodAngle(getState().getHoodAngle());
 			io.setWheelVelocity(getState().getWheelVelocity());
 			io.logOutputs(outputs);
+
+			//TODO: Remove this stuff later when testing is done
+			if (getState() == ShooterStates.SHOOT_FIXED) { 
+				if (debouncer.calculate(beamBreak.get())) numBallsShot++;
+			} else numBallsShot = 0;
 		} else if (io.zeroHoodMotor()) setState(cache);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));
@@ -49,6 +61,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodSetpoint", outputs.hoodSetpoint.in(Degrees));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/ReadyToShoot", readyToShoot());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/BallsPerSecond", numBallsShot / getStateTime()); //TODO: Remove later when testing is done
 	}
 
 	public boolean readyToShoot() {

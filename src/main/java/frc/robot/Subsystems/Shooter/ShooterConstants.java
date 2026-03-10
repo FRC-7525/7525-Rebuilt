@@ -24,8 +24,9 @@ public final class ShooterConstants {
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
+	//TODO: Change standby values to actual values after testing is done
 	public static final Angle STANDBY_ANGLE = Degrees.of(45);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(30);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
@@ -50,6 +51,7 @@ public final class ShooterConstants {
 	public static final int HOOD_MOTOR_ID = 39;
 
 	public static final int LIMIT_SWITCH_PORT = 9;
+	public static final int BEAM_BREAK_PORT = 0;
 
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
