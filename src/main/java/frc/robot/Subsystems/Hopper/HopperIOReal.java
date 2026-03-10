@@ -28,7 +28,7 @@ public class HopperIOReal implements HopperIO {
 		spindexerMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
 		kickerMotor1Config.CurrentLimits.StatorCurrentLimit = 90;
 		kickerMotor2Config.CurrentLimits.StatorCurrentLimit = 90;
-		
+
 		spindexerMotorConfig.CurrentLimits.SupplyCurrentLimit = 30;
 		kickerMotor1Config.CurrentLimits.SupplyCurrentLimit = 30;
 		kickerMotor2Config.CurrentLimits.SupplyCurrentLimit = 10;
