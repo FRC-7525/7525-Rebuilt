@@ -10,7 +10,7 @@ import org.team7525.subsystem.SubsystemStates;
 public enum ManagerStates implements SubsystemStates {
 	IDLE("IDLE", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
 	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
-	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.STANDBY, ClimberStates.IDLE),
+	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE),
 	WINDING_UP("WINDING_UP", IntakeStates.OUT, HopperStates.IDLE, null, ClimberStates.IDLE),
 	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE), //TODO: Switch back to SHOOTING_FIXED shooter state after testing is done
 	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),

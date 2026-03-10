@@ -22,11 +22,11 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45);
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(30);
 
 	//TODO: Change standby values to actual values after testing is done
 	public static final Angle STANDBY_ANGLE = Degrees.of(45);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(30);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
@@ -56,6 +56,12 @@ public final class ShooterConstants {
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(0.04, 0.0002, 0.0); //.0384 good alr
+			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
+			case TESTING -> new PIDController(0, 0, 0);
+		}; //TODO: tune
+	public static final Supplier<PIDController> HOOD_DOWN_PID = () ->
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(0.03, 0.0002, 0.0); //.0384 good alr
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(0, 0, 0);
 		}; //TODO: tune

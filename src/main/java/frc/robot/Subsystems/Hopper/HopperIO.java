@@ -8,7 +8,8 @@ public interface HopperIO {
 		double spinVelocityRPS;
 		double kickVelocityRPS;
 		double spindexerCurrent;
-		double kickerCurrent;
+		double kicker1Current;
+		double kicker2Current;
 	}
 
 	public void updateOutputs(HopperIOOutputs outputs);

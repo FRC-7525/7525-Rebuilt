@@ -39,5 +39,8 @@ public class Hopper extends Subsystem<HopperStates> {
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/KickVelocityRPS", outputs.kickVelocityRPS);
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetSpinVelocity", outputs.targetSpinVelocity);
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetKickVelocity", outputs.targetKickVelocity);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinSupplyCurrent", outputs.spindexerCurrent);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/Kicker1SupplyCurrent", outputs.kicker1Current);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/Kicker2SupplyCurrent", outputs.kicker2Current);
 	}
 }

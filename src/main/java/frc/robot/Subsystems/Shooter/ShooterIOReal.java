@@ -25,6 +25,7 @@ public class ShooterIOReal implements ShooterIO {
 	protected Angle hoodSetpoint;
 	protected AngularVelocity wheelSetpoint;
 	protected PIDController hoodPID;
+	protected PIDController hoodDownPID;
 	protected PIDController wheelPID;
 	protected SimpleMotorFeedforward wheelFeedforward;
 	protected TalonFXConfiguration leftMotorConfig = new TalonFXConfiguration();
@@ -48,6 +49,7 @@ public class ShooterIOReal implements ShooterIO {
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Opposed)); // Might need to be inverted
 		hoodPID = HOOD_PID.get();
 		hoodPID.setSetpoint(0);
+		hoodDownPID = HOOD_DOWN_PID.get();
 		wheelPID = WHEEL_PID.get();
 		wheelFeedforward = WHEEL_FEEDFORWARD.get();
 		hoodMotor.setPosition(0);
@@ -60,15 +62,16 @@ public class ShooterIOReal implements ShooterIO {
 		outputs.wheelSetpoint = wheelSetpoint;
 		outputs.hoodAngle = hoodMotor.getPosition().getValue().div(HOOD_GEARING);
 		outputs.hoodSetpoint = hoodSetpoint;
-		outputs.hoodCurrent = hoodMotor.getStatorCurrent().getValueAsDouble();
-		outputs.leftWheelCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
-		outputs.rightWheelCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
+		outputs.hoodCurrent = hoodMotor.getSupplyCurrent().getValueAsDouble();
+		outputs.leftWheelCurrent = leftMotor.getSupplyCurrent().getValueAsDouble();
+		outputs.rightWheelCurrent = rightMotor.getSupplyCurrent().getValueAsDouble();
 
 		SmartDashboard.putData("ShooterWheelPID", wheelPID);
 		wheelFeedforward.setKv(SmartDashboard.getNumber("ShooterFeedforwardKv", wheelFeedforward.getKv()));
 		SmartDashboard.putNumber("ShooterFeedforwardKs", wheelFeedforward.getKs());
 		wheelFeedforward.setKs(SmartDashboard.getNumber("ShooterFeedforwardKvs", wheelFeedforward.getKs()));
 		SmartDashboard.putData("ShooterHoodPID", hoodPID);
+		SmartDashboard.putData("ShooterHoodDownPID", hoodDownPID);
 	}
 
 	@Override
@@ -83,7 +86,12 @@ public class ShooterIOReal implements ShooterIO {
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
 		//TODO: Switch to this after done testing
-		hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
+		//TODO: Find a better way to do this lowkey cooked
+		if (angle.in(Degrees) != 0) {
+			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));	
+		} else {
+			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
+		}
 		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees)));
 
 		if (!limitSwitch.get()) {

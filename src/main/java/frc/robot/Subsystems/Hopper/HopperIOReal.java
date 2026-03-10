@@ -44,8 +44,9 @@ public class HopperIOReal implements HopperIO {
 		outputs.kickVelocityRPS = kickerMotor.getVelocity().getValue().in(RotationsPerSecond);
 		outputs.targetSpinVelocity = targetSpinVelocity;
 		outputs.targetKickVelocity = targetKickerVelocity;
-		outputs.spindexerCurrent = spindexerMotor.getStatorCurrent().getValueAsDouble();
-		outputs.kickerCurrent = spindexerMotor.getStatorCurrent().getValueAsDouble();
+		outputs.spindexerCurrent = spindexerMotor.getSupplyCurrent().getValueAsDouble();
+		outputs.kicker1Current = kickerMotor.getSupplyCurrent().getValueAsDouble();
+		outputs.kicker2Current = kickerMotor2.getSupplyCurrent().getValueAsDouble();
 	}
 
 	@Override

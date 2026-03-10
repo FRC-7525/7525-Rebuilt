@@ -33,9 +33,10 @@ public class IntakeIOTalonFX implements IntakeIO {
 	public void logOutputs(IntakeIOOutputs outputs) {
 		outputs.spinVelocity = spinMotor.getVelocity().getValue().in(RotationsPerSecond);
 		outputs.spinAppliedVolts = spinMotor.getMotorVoltage().getValue();
-		outputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValue();
+		outputs.spinCurrentAmps = spinMotor.getSupplyCurrent().getValue();
 		outputs.angularPosition = Rotations.of(pivotMotor.getPosition().getValueAsDouble() / GEARING);
 		outputs.angularSetpoint = setpoint;
+		outputs.pivotCurrentAmps = pivotMotor.getSupplyCurrent().getValue();
 		SmartDashboard.putData("PIVOT_CONTROLLER", pivotController);
 	}
 

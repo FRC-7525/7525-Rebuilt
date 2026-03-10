@@ -21,12 +21,12 @@ public class IntakeConstants {
 
 	// States
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
-	public static final Angle INTAKE_OUT_POS = Degrees.of(-170);
+	public static final Angle INTAKE_OUT_POS = Degrees.of(-180);
 
-	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-60);
+	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-90);
 	public static final Angle INTAKE_AGITATING_OUT_POS = Degrees.of(-120);
 
-	public static final double SPIN_SPEED_INTAKE = -0.5;
+	public static final double SPIN_SPEED_INTAKE = -0.75;
 
 	public static final double OUT_CURRENT_LIMIT = 1000; //TODO: CHANGE TO ACTUAL VALUE LATER
 
