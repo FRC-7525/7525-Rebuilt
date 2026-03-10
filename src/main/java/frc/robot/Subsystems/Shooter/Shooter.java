@@ -4,14 +4,13 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter extends Subsystem<ShooterStates> {
 
@@ -49,7 +48,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 			io.logOutputs(outputs);
 
 			//TODO: Remove this stuff later when testing is done
-			if (getState() == ShooterStates.SHOOT_FIXED) { 
+			if (getState() == ShooterStates.SHOOT_FIXED) {
 				if (debouncer.calculate(beamBreak.get())) numBallsShot++;
 			} else numBallsShot = 0;
 		} else if (io.zeroHoodMotor()) setState(cache);
