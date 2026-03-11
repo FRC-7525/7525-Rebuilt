@@ -106,7 +106,6 @@ public class ShooterIOReal implements ShooterIO {
 		}
 		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees)));
 
-		
 	}
 
 	@Override
