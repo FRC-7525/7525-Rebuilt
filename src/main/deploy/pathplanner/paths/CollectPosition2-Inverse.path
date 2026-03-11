@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.65,
-        "y": 3.2
+        "x": 7.61,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.624715719063545,
-        "y": 1.5445986622073586
+        "x": 7.551766497461928,
+        "y": 6.930954314720813
       },
-      "isLocked": false,
-      "linkedName": null
+      "isLocked": true,
+      "linkedName": "CollectPosition2"
     },
     {
       "anchor": {
         "x": 4.45,
-        "y": 0.6
+        "y": 7.425
       },
       "prevControl": {
-        "x": 6.121496655518395,
-        "y": 0.6179264214046816
+        "x": 5.553604060913704,
+        "y": 7.409776649746193
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TrenchStartPosition"
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 4.389,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Right Autos",
+  "folder": "Collection",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 50.0
+    "rotation": -50.0
   },
   "useDefaultConstraints": true
 }

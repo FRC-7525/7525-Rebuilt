@@ -8,7 +8,6 @@ import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 
 public class AutoCommands {
-
 	Robot robot;
 
 	public AutoCommands(Robot robot) {
@@ -16,19 +15,19 @@ public class AutoCommands {
 	}
 
 	public Command intake() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.INTAKING); System.out.println("hi");});
+		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.INTAKING);});
 	}
 
 	public Command returnToIdle() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.IDLE); System.out.println("hi");});
+		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.IDLE);});
 	}
 
 	public Command startWindingUp() {
-		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.WINDING_UP));
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.WINDING_UP_AUTO));
 	}
 
 	public Command windAndIntake() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.WINDING_AND_INTAKING); System.out.println("hi \n hi \n hi \n hi");});
+		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.WINDING_AND_INTAKING);});
 	}
 
 	public Command test() {
@@ -36,10 +35,10 @@ public class AutoCommands {
 	}
 
 	public Command allowAimlock() {
-		return new InstantCommand(() -> Drive.getInstance().setAutoAimlocking(true));
+		return new InstantCommand(() -> Drive.getInstance().setAiming(true));
 	}
 
 	public Command disallowAimlock() {
-		return new InstantCommand(() -> Drive.getInstance().setAutoAimlocking(false));
+		return new InstantCommand(() -> Drive.getInstance().setAiming(false));
 	}
 }

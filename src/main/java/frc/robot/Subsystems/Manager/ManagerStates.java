@@ -18,7 +18,8 @@ public enum ManagerStates implements SubsystemStates {
 	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE),
 	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND),
 	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT),
-	WINDING_AND_INTAKING("WINDING_AND_INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, null, ClimberStates.IDLE);
+	WINDING_AND_INTAKING("WINDING_AND_INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, null, ClimberStates.IDLE),
+	WINDING_UP_AUTO("WINDING_UP_AUTO", IntakeStates.IN, HopperStates.IDLE, ShooterStates.SHOOT_HUB, ClimberStates.IDLE);
 
 	private final String stateString;
 	private final IntakeStates intakeState;

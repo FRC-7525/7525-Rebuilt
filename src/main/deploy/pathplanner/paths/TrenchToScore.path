@@ -4,31 +4,36 @@
     {
       "anchor": {
         "x": 4.45,
-        "y": 0.6
+        "y": 7.425
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.326814381270903,
-        "y": 0.7059197324414719
+        "x": 1.1745358638672219,
+        "y": 7.65822780912673
       },
-      "isLocked": false,
-      "linkedName": null
+      "isLocked": true,
+      "linkedName": "TrenchStartPosition"
     },
     {
       "anchor": {
-        "x": 7.65,
-        "y": 2.2
+        "x": 2.4217261055634807,
+        "y": 2.7044807417974317
       },
       "prevControl": {
-        "x": 6.950100334448161,
-        "y": 1.2705434782608704
+        "x": 2.913395149786019,
+        "y": 3.299659058487874
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ScorePosition"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.11940298507462671,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,12 +47,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 50.0
+    "rotation": -51.0
   },
   "reversed": false,
-  "folder": "Right Autos",
+  "folder": "Shooting",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 4.389,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

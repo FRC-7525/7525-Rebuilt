@@ -21,7 +21,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Intake"
+                        "name": "IntakeAndWindUp"
                       }
                     }
                   ]
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SweepUD"
+                  "pathName": "SweepPath"
                 }
               }
             ]
@@ -39,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SU"
+            "pathName": "TrenchToScore-R"
           }
         },
         {

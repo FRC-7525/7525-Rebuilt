@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4217261055634807,
-        "y": 2.7044807417974317
+        "x": 2.5,
+        "y": 4.065573033707865
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6970746750753147,
-        "y": 2.0574953465472596
+        "x": 3.379186875891583,
+        "y": 5.231825962910129
       },
       "isLocked": false,
-      "linkedName": "ScorePosition"
+      "linkedName": "RandCenterPos"
     },
     {
       "anchor": {
@@ -20,23 +20,28 @@
         "y": 4.65
       },
       "prevControl": {
-        "x": 1.2973815836303997,
-        "y": 4.866350723257319
+        "x": 1.5289586305278173,
+        "y": 4.7919115549215405
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "ClimbPosition"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.36460554371001935,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.09723160027008614,
+      "minWaypointRelativePos": 0.0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 11.7,
+        "maxVelocity": 4.5,
+        "maxAcceleration": 4.5,
         "maxAngularVelocity": 1000.0,
         "maxAngularAcceleration": 2516.0,
         "nominalVoltage": 12.0,
@@ -62,7 +67,7 @@
   "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -51.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

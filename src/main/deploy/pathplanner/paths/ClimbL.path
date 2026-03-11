@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.476,
-        "y": 7.409776649746193
+        "x": 4.45,
+        "y": 7.425
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9106192893401013,
-        "y": 7.4742335025380715
+        "x": 2.8846192893401015,
+        "y": 7.489456852791879
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TrenchStartPosition"
     },
     {
       "anchor": {
@@ -57,7 +57,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ClimbPosition"
     }
   ],
   "rotationTargets": [],
@@ -93,8 +93,8 @@
   "reversed": false,
   "folder": "Climb",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 4.398,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

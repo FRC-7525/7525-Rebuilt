@@ -81,6 +81,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
+	private boolean aiming = false; // ONLY USED IN AUTO FOR RAGEBAIT STUFF
 
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
@@ -135,7 +136,7 @@ public class Drive extends Subsystem<DriveStates> {
 			this::getPose, // Robot pose supplier
 			this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
 			this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-			(speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+			(speeds, feedforwards) -> driveRobotRelativeAuto(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
 			new PPHolonomicDriveController(
 				// PPHolonomicController is the built in path following controller for holonomic drive trains
 				new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
@@ -399,6 +400,25 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 	}
 
+	// Some ragebait stuff so pp don't control turns in sotm.
+	public void driveRobotRelativeAuto(ChassisSpeeds speeds) {
+		driveIO.setControl(
+			new SwerveRequest.RobotCentric()
+				.withDeadband(DEADBAND)
+				.withVelocityX(speeds.vxMetersPerSecond)
+				.withVelocityY(speeds.vyMetersPerSecond)
+				.withRotationalRate(aiming ? autoAimCalc() : speeds.omegaRadiansPerSecond)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+		);
+	}
+	public double autoAimCalc() {
+		Pose2d target = sotmTarget;
+		Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
+		Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+		return Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0;
+	}
+
 	public void zeroGyro() {
 		driveIO.zeroGyro();
 	}
@@ -409,6 +429,10 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void resetPose(Pose2d pose) {
 		this.driveIO.getDrive().resetPose(pose);
+	}
+
+	public void setAiming(boolean aiming) {
+		this.aiming = aiming;
 	}
 
 	public boolean isAtAllianceShootingPosition() {

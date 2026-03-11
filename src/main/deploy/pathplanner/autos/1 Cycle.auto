@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "UoFL"
+                  "pathName": "CollectPosition1"
                 }
               }
             ]
@@ -39,13 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "UbFL"
+            "pathName": "CollectPosition1-Inverse"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SU"
+            "pathName": "TrenchToScore"
           }
         },
         {
@@ -58,6 +58,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Sweeper Autos",
+  "folder": null,
   "choreoAuto": false
 }

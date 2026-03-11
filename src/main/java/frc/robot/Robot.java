@@ -53,7 +53,6 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
-		
 		NamedCommands.registerCommand("Intake", autoCommands.intake());
 		NamedCommands.registerCommand("Return to Idle", autoCommands.returnToIdle());
 		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
@@ -61,7 +60,6 @@ public class Robot extends LoggedRobot {
 		NamedCommands.registerCommand("Allow AimLock", autoCommands.allowAimlock());
 		NamedCommands.registerCommand("Disallow AimLock", autoCommands.disallowAimlock());
 		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand());
-		
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}

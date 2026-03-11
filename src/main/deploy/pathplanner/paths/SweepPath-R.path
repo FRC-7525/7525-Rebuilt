@@ -4,70 +4,70 @@
     {
       "anchor": {
         "x": 4.45,
-        "y": 0.6
+        "y": 7.425
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.25348662207358,
-        "y": 0.6105936454849497
+        "x": 7.493680456490727,
+        "y": 7.43154065620542
       },
       "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.837366220735786,
-        "y": 1.7765050167224081
+        "x": 7.82,
+        "y": 6.5
       },
       "prevControl": {
-        "x": 7.837366220735786,
-        "y": 0.7765050167224081
+        "x": 7.82,
+        "y": 6.25
       },
       "nextControl": {
-        "x": 7.837366220735786,
-        "y": 2.776505016722408
+        "x": 7.82,
+        "y": 7.614121198463433
       },
       "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.837366220735786,
-        "y": 6.2275
+        "x": 7.82,
+        "y": 1.777
       },
       "prevControl": {
-        "x": 7.837366220735786,
-        "y": 5.2275
+        "x": 7.82,
+        "y": 1.5270000000000001
       },
       "nextControl": {
-        "x": 7.837366220735786,
-        "y": 7.2275
+        "x": 7.82,
+        "y": 2.027000000000001
       },
       "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
         "x": 4.45,
-        "y": 7.425
+        "y": 0.6
       },
       "prevControl": {
-        "x": 6.260819397993312,
-        "y": 7.452073578595317
+        "x": 7.1960912981455065,
+        "y": 0.48376604850213933
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.98,
-      "rotationDegrees": 90.0
+      "rotationDegrees": -90.0
     },
     {
       "waypointRelativePos": 1.94,
-      "rotationDegrees": 90.0
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.7185501066098032,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -82,14 +82,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.0,
-    "rotation": 180.0
+    "velocity": 4.389,
+    "rotation": -0.0
   },
   "reversed": false,
-  "folder": "Sweeper Autos",
+  "folder": "Sweeper",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 4.39,
+    "rotation": -0.0
   },
   "useDefaultConstraints": true
 }
