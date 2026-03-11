@@ -1,12 +1,16 @@
 package frc.robot.Subsystems.Manager;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
+import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
+import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
@@ -79,6 +83,11 @@ public class Manager extends Subsystem<ManagerStates> {
 		// EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
 		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
+
+		// ----------------------------------------------  AUTO EXCLUSIVE TRIGGERS  -------------------------------------------------------
+
+		addTrigger(ManagerStates.WINDING_TO_SCORE_AUTO, ManagerStates.SCORING_AUTO, () -> Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) && Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees));
+		addTrigger(SCORING_AUTO, WINDING_TO_SCORE_AUTO, () -> !Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) || !(Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees)));
 	}
 
 	@Override

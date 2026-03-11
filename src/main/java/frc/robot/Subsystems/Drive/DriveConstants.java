@@ -2,14 +2,14 @@ package frc.robot.Subsystems.Drive;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
+import frc.robot.GlobalConstants;
 
 public class DriveConstants {
 
@@ -32,18 +32,27 @@ public class DriveConstants {
 	public static final Rotation2d BLUE_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(0);
 	public static final Rotation2d RED_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(180);
 
+	public static final Supplier<PIDController> X_AUTO_CONTROLLER = () -> // TODO: TUNE
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(1, 0, 0);
+			case SIM -> new PIDController(5, 0, 0);
+			default -> new PIDController(20, 1, 0);
+		};
+
+	public static final Supplier<PIDController> Y_AUTO_CONTROLLER = () -> // TODO: TUNE
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(1, 0, 0);
+			case SIM -> new PIDController(5, 0, 0);
+			default -> new PIDController(20, 1, 0);
+		};
+
+	public static final Supplier<PIDController> ANGLE_AUTO_CONTROLLER = () -> // TODO: TUNE
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(1, 0, 0);
+			case SIM -> new PIDController(5, 0, 0);
+			default -> new PIDController(20, 1, 0);
+		};
+
 	// Weird syntax because we have our own PIDConstants class (literally just the PP one :skull: copy pasted) so we can use it without installing PP Lib
-	public static final PPHolonomicDriveController PATH_PLANNER_PID = new PPHolonomicDriveController(new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0), new com.pathplanner.lib.config.PIDConstants(5.0, 0, 0));
 
-	public static RobotConfig getRobotConfig() {
-		try {
-			return RobotConfig.fromGUISettings();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// Dummy robot config, unsure of if this is good or bad
-			return new RobotConfig(1, 1, new ModuleConfig(1, 1, 1, DCMotor.getKrakenX60(1), 1, 1), 1);
-		}
-	}
-
-	public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
 }

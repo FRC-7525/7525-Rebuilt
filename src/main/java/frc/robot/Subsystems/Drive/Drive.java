@@ -11,11 +11,15 @@ import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.GlobalConstants.FIELD;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
+import static frc.robot.Subsystems.Drive.DriveConstants.ANGLE_AUTO_CONTROLLER;
 import static frc.robot.Subsystems.Drive.DriveConstants.ANGULAR_VELOCITY_LIMIT;
 import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIVE_ROTATION;
 import static frc.robot.Subsystems.Drive.DriveConstants.RED_ALLIANCE_PERSPECTIVE_ROTATION;
 import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
+import static frc.robot.Subsystems.Drive.DriveConstants.X_AUTO_CONTROLLER;
+import static frc.robot.Subsystems.Drive.DriveConstants.Y_AUTO_CONTROLLER;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
 import choreo.trajectory.SwerveSample;
@@ -23,10 +27,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -38,6 +38,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -60,7 +61,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private DriveIO driveIO;
 
 	private boolean isFieldRelative;
-	private Pair<Translation2d, Translation2d> allianceZone;
+	private boolean allowAutoAimlock = false;
 	private boolean robotMirrored = false;
 	private Pose2d lastPose = new Pose2d();
 	private Pose2d targetPose = Pose2d.kZero;
@@ -70,13 +71,16 @@ public class Drive extends Subsystem<DriveStates> {
 	private boolean usedRepulsor = false;
 	private final RepulsorFieldPlanner repulsor = new RepulsorFieldPlanner(Obstacles.FIELD_OBSTACLES, Obstacles.WALLS, (ROBOT_MODE == RobotMode.SIM));
 	private final Field2d field = new Field2d();
-	private RobotConfig config;
 
 	private final ProfiledPIDController rotationController;
 	private final ProfiledPIDController translationalController;
 	private final PIDController shooterYawController;
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
+
+	private final PIDController xController;
+    private final PIDController yController;
+    private final PIDController headingController;
 
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
@@ -104,6 +108,10 @@ public class Drive extends Subsystem<DriveStates> {
 		this.repulsorTranslationController = REPULSOR_TRANSLATIONAL_CONTROLLER.get();
 		this.repulsorRotationalController = REPULSOR_ROTATIONAL_CONTROLLER.get();
 
+		this.xController = X_AUTO_CONTROLLER.get();
+		this.yController = Y_AUTO_CONTROLLER.get();
+		this.headingController = ANGLE_AUTO_CONTROLLER.get();
+
 		this.shooterYawController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 		this.repulsorTranslationController.setTolerance(DISTANCE_ERROR_MARGIN.in(Meters));
 		this.translationalController.setTolerance(DISTANCE_ERROR_MARGIN.in(Meters));
@@ -111,6 +119,7 @@ public class Drive extends Subsystem<DriveStates> {
 		this.rotationController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 
 		this.shooterYawController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
+		this.headingController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.rotationController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.repulsorRotationalController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 
@@ -124,33 +133,6 @@ public class Drive extends Subsystem<DriveStates> {
 			OPERATOR_CONTROLLER::getBackButtonPressed
 		);
 
-		try {
-			config = RobotConfig.fromGUISettings();
-		} catch (Exception e) {
-			// Handle exception as needed
-			e.printStackTrace();
-		}
-
-		AutoBuilder.configure(
-			this::getPose, // Robot pose supplier
-			this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-			this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-			(speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-			new PPHolonomicDriveController(
-				// PPHolonomicController is the built in path following controller for holonomic drive trains
-				new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-				new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-			),
-			config, // The robot configuration
-			() -> {
-				var alliance = DriverStation.getAlliance();
-				if (alliance.isPresent()) {
-					return alliance.get() == DriverStation.Alliance.Red;
-				}
-				return false;
-			},
-			this
-		);
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 	}
@@ -192,6 +174,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
+				System.out.println("hiii");
 				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
@@ -220,6 +203,7 @@ public class Drive extends Subsystem<DriveStates> {
 					executeScaledFeedforwardAutoAlign();
 				}
 				break;
+			case AUTO: break;
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
@@ -335,11 +319,11 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 	}
 
-	boolean isInTeamAllianceZone(Pose2d currentPose) {
+	public boolean isInTeamAllianceZone(Pose2d currentPose) {
 		double x = currentPose.getX();
 		double y = currentPose.getY();
-		if (!(x > allianceZone.getFirst().getX() && x < allianceZone.getSecond().getX())) return false;
-		if (!(y > allianceZone.getFirst().getY() && y < allianceZone.getSecond().getY())) return false;
+		if (!(x > Robot.allianceZone.getFirst().getX() && x < Robot.allianceZone.getSecond().getX())) return false;
+		if (!(y > Robot.allianceZone.getFirst().getY() && y < Robot.allianceZone.getSecond().getY())) return false;
 		return true;
 	}
 
@@ -387,13 +371,33 @@ public class Drive extends Subsystem<DriveStates> {
 		resetPID();
 	}
 
-	public void driveRobotRelative(ChassisSpeeds speeds) {
-		driveIO.setControl(
-			new SwerveRequest.RobotCentric()
-				.withDeadband(DEADBAND)
-				.withVelocityX(speeds.vxMetersPerSecond)
-				.withVelocityY(speeds.vyMetersPerSecond)
-				.withRotationalRate(speeds.omegaRadiansPerSecond)
+	public void driveRobotAutonomous(SwerveSample sample) {
+
+		Pose2d currentPose = Drive.getInstance().getPose();
+		var targetSpeeds = sample.getChassisSpeeds();
+		targetSpeeds.vxMetersPerSecond = targetSpeeds.vxMetersPerSecond + xController.calculate(currentPose.getX(), sample.x);
+		targetSpeeds.vyMetersPerSecond = targetSpeeds.vyMetersPerSecond + yController.calculate(currentPose.getY(), sample.y);
+
+		if (allowAutoAimlock) targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
+		else targetSpeeds.omegaRadiansPerSecond = headingController.calculate(currentPose.getRotation().getRadians(), sample.heading);
+
+		Logger.recordOutput("aimlock enabled", allowAutoAimlock);
+
+		if (Robot.isRedAlliance)
+			driveIO.setControl(
+			new SwerveRequest.FieldCentric()
+				.withVelocityX(-targetSpeeds.vxMetersPerSecond)
+				.withVelocityY(-targetSpeeds.vyMetersPerSecond)
+				.withRotationalRate(targetSpeeds.omegaRadiansPerSecond)
+				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+		);
+		else 
+			driveIO.setControl(
+			new SwerveRequest.FieldCentric()
+				.withVelocityX(targetSpeeds.vxMetersPerSecond)
+				.withVelocityY(targetSpeeds.vyMetersPerSecond)
+				.withRotationalRate(targetSpeeds.omegaRadiansPerSecond)
 				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
 				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
 		);
@@ -424,5 +428,16 @@ public class Drive extends Subsystem<DriveStates> {
 		// } else {
 		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
 		// }
+	}
+
+	public void setAutoAimlock(boolean allowed) {
+		this.allowAutoAimlock = allowed;
+	}
+
+	public Angle getAngleDiffBetweenShooterAndTarget() {
+		Pose2d target = RED_HUB_POSE;
+		Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
+		Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+		return shooterToTarget.getTranslation().getAngle().getMeasure();
 	}
 }

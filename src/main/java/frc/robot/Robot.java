@@ -1,19 +1,19 @@
 package frc.robot;
 
+import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
+import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Commands.AngleAndShootCommand;
-import frc.robot.Commands.AutoCommands;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.Autonomous.AutoRoutines;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Manager.Manager;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -22,17 +22,19 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
 
+import choreo.auto.AutoChooser;
+
 public class Robot extends LoggedRobot {
 
+	private final AutoChooser autoChooser = new AutoChooser();
+	private final AutoRoutines autoRoutines = new AutoRoutines();
 	private final Manager manager = Manager.getInstance();
-	private SendableChooser<Command> autoChooser;
-	private AutoCommands autoCommands = new AutoCommands(this);
-
+	
 	public static boolean isRedAlliance = true;
+	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
 
 	@Override
 	public void robotInit() {
-
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL:
 				Logger.addDataReceiver(new NT4Publisher());
@@ -50,20 +52,14 @@ public class Robot extends LoggedRobot {
 		Logger.start();
 		CommandsUtil.logCommands();
 		DriverStation.silenceJoystickConnectionWarning(true);
-		CommandScheduler.getInstance().unregisterAllSubsystems();
+		// CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
 		
-		NamedCommands.registerCommand("Intake", autoCommands.intake());
-		NamedCommands.registerCommand("Return to Idle", autoCommands.returnToIdle());
-		NamedCommands.registerCommand("Start Winding Up", autoCommands.startWindingUp());
-		NamedCommands.registerCommand("Wind and Intake", autoCommands.windAndIntake());
-		NamedCommands.registerCommand("Allow AimLock", autoCommands.allowAimlock());
-		NamedCommands.registerCommand("Disallow AimLock", autoCommands.disallowAimlock());
-		NamedCommands.registerCommand("Shooting Hub", new AngleAndShootCommand());
-		
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
+		SmartDashboard.putData("autoChooser", autoChooser);
+
+		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 	}
 	
 	@Override
@@ -76,10 +72,7 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		Command autoCommand = autoChooser.getSelected();
-		if (autoCommand != null) {
-			CommandScheduler.getInstance().schedule(autoCommand);
-		}
+		Drive.getInstance().setState(DriveStates.AUTO);
 	}
 
 	@Override
@@ -108,6 +101,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void disabledPeriodic() {
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+		allianceZone = isRedAlliance ? RED_ALLIANCE_BOUNDS : BLUE_ALLIANCE_BOUNDS;
 	}
 
 	@Override
