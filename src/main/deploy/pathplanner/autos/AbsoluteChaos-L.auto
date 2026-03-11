@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Shooting Hub"
+            "name": "IntakeAndWindUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScatterPath-L"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Misc",
+  "folder": "InterestingIdeas",
   "choreoAuto": false
 }

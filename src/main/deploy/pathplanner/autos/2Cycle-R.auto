@@ -1,0 +1,93 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeAndWindUp"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CollectPosition1-R"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition1-Inverse-R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Hub"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreToTrench-R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition2-R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition2-Inverse-R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Hub"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "CycleAutos",
+  "choreoAuto": false
+}

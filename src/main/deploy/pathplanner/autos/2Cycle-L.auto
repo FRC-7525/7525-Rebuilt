@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SweepPath"
+                  "pathName": "CollectPosition1-L"
                 }
               }
             ]
@@ -39,7 +39,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TrenchToScore-R"
+            "pathName": "CollectPosition1-Inverse-L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Hub"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreToTrench-L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition2-L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition2-Inverse-L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-L"
           }
         },
         {
@@ -52,6 +88,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Sweeper Autos",
+  "folder": "CycleAutos",
   "choreoAuto": false
 }

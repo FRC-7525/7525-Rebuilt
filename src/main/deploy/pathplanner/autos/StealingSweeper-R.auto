@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAndWindUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StealingSweepPath-R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-SweepVersion-L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Hub"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "InterestingIdeas",
+  "choreoAuto": false
+}

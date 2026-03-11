@@ -1,0 +1,69 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeAndWindUp"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CollectPosition1-L"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CollectPosition1-Inverse-L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TrenchToScore-L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Hub"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreToClimb-L"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "CycleAutos",
+  "choreoAuto": false
+}

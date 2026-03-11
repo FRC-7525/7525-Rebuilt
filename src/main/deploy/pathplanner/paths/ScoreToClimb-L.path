@@ -4,15 +4,15 @@
     {
       "anchor": {
         "x": 2.4217261055634807,
-        "y": 2.7044807417974317
+        "y": 5.296519258202568
       },
       "prevControl": null,
       "nextControl": {
         "x": 0.6970746750753147,
-        "y": 2.0574953465472596
+        "y": 4.649533862952396
       },
       "isLocked": false,
-      "linkedName": "ScorePosition"
+      "linkedName": "ScorePositionL"
     },
     {
       "anchor": {
@@ -62,7 +62,7 @@
   "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -51.0
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

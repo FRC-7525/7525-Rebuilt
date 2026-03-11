@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAndWindUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScatterPath-R"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "InterestingIdeas",
+  "choreoAuto": false
+}

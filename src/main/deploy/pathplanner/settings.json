@@ -5,14 +5,16 @@
   "pathFolders": [
     "Climb",
     "Collection",
+    "InterestingIdeas",
     "Shooting",
     "Sweeper"
   ],
   "autoFolders": [
-    "Cycle Autos",
+    "CenterAutos",
+    "CycleAutos",
     "Misc",
-    "New Folder",
-    "Sweeper Autos"
+    "InterestingIdeas",
+    "SweeperAutos"
   ],
   "defaultMaxVel": 4.389,
   "defaultMaxAccel": 11.7,

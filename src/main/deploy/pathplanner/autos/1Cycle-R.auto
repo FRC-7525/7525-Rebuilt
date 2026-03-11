@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CollectPosition1"
+                  "pathName": "CollectPosition1-R"
                 }
               }
             ]
@@ -39,13 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CollectPosition1-Inverse"
+            "pathName": "CollectPosition1-Inverse-R"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TrenchToScore"
+            "pathName": "TrenchToScore-R"
           }
         },
         {
@@ -53,17 +53,11 @@
           "data": {
             "name": "Shooting Hub"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ClimbLFromScore"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "CycleAutos",
   "choreoAuto": false
 }
