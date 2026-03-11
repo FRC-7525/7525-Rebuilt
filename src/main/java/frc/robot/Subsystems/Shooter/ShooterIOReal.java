@@ -7,6 +7,7 @@ import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -31,12 +32,22 @@ public class ShooterIOReal implements ShooterIO {
 	protected TalonFXConfiguration leftMotorConfig = new TalonFXConfiguration();
 	protected TalonFXConfiguration hoodMotorConfig = new TalonFXConfiguration();
 	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+	protected VelocityVoltage wheelControlReq = new VelocityVoltage(0);
 
 	public ShooterIOReal() {
+		hoodPID = HOOD_PID.get();
+		hoodPID.setSetpoint(0);
+		hoodDownPID = HOOD_DOWN_PID.get();
+		wheelPID = WHEEL_PID.get();
+		wheelFeedforward = WHEEL_FEEDFORWARD.get();
+
 		wheelSetpoint = RotationsPerSecond.zero();
 		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		leftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+		leftMotorConfig.Slot0.kP = wheelPID.getP();
+		leftMotorConfig.Slot0.kI = wheelPID.getI();
+		leftMotorConfig.Slot0.kD = wheelPID.getD();
 		leftMotor.getConfigurator().apply(leftMotorConfig);
 
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
@@ -47,12 +58,6 @@ public class ShooterIOReal implements ShooterIO {
 		hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Opposed)); // Might need to be inverted
-		hoodPID = HOOD_PID.get();
-		hoodPID.setSetpoint(0);
-		hoodDownPID = HOOD_DOWN_PID.get();
-		wheelPID = WHEEL_PID.get();
-		wheelFeedforward = WHEEL_FEEDFORWARD.get();
-		hoodMotor.setPosition(0);
 	}
 
 	@Override
@@ -68,8 +73,7 @@ public class ShooterIOReal implements ShooterIO {
 
 		SmartDashboard.putData("ShooterWheelPID", wheelPID);
 		wheelFeedforward.setKv(SmartDashboard.getNumber("ShooterFeedforwardKv", wheelFeedforward.getKv()));
-		SmartDashboard.putNumber("ShooterFeedforwardKs", wheelFeedforward.getKs());
-		wheelFeedforward.setKs(SmartDashboard.getNumber("ShooterFeedforwardKvs", wheelFeedforward.getKs()));
+		SmartDashboard.putNumber("ShooterFeedforwardKv", wheelFeedforward.getKv());
 		SmartDashboard.putData("ShooterHoodPID", hoodPID);
 		SmartDashboard.putData("ShooterHoodDownPID", hoodDownPID);
 	}
@@ -78,8 +82,9 @@ public class ShooterIOReal implements ShooterIO {
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
 		//TODO: Switch to this when done testing
-		leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
 		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		leftMotor.setControl(wheelControlReq.withVelocity(velocity).withFeedForward(wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond))));
 	}
 
 	@Override
@@ -90,14 +95,18 @@ public class ShooterIOReal implements ShooterIO {
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		} else {
+			if (!limitSwitch.get()) {
+				hoodMotor.setPosition(0);
+				hoodMotor.set(0);
+				hoodPID.reset();
+				hoodDownPID.reset();
+				return;
+			}
 			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		}
 		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees)));
 
-		if (!limitSwitch.get()) {
-			hoodMotor.setPosition(0);
-			hoodMotor.set(0);
-		}
+		
 	}
 
 	@Override
