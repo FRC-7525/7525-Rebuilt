@@ -412,6 +412,7 @@ public class Drive extends Subsystem<DriveStates> {
 				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
 		);
 	}
+
 	public double autoAimCalc() {
 		Pose2d target = sotmTarget;
 		Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));

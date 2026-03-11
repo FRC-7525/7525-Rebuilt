@@ -8,6 +8,7 @@ import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 
 public class AutoCommands {
+
 	Robot robot;
 
 	public AutoCommands(Robot robot) {
@@ -15,11 +16,15 @@ public class AutoCommands {
 	}
 
 	public Command intake() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.INTAKING);});
+		return new InstantCommand(() -> {
+			Manager.getInstance().setState(ManagerStates.INTAKING);
+		});
 	}
 
 	public Command returnToIdle() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.IDLE);});
+		return new InstantCommand(() -> {
+			Manager.getInstance().setState(ManagerStates.IDLE);
+		});
 	}
 
 	public Command startWindingUp() {
@@ -27,11 +32,15 @@ public class AutoCommands {
 	}
 
 	public Command windAndIntake() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.WINDING_AND_INTAKING);});
+		return new InstantCommand(() -> {
+			Manager.getInstance().setState(ManagerStates.WINDING_AND_INTAKING);
+		});
 	}
 
 	public Command test() {
-		return new InstantCommand(() -> {System.out.println("hiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");});
+		return new InstantCommand(() -> {
+			System.out.println("hiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+		});
 	}
 
 	public Command allowAimlock() {

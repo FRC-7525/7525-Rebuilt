@@ -8,6 +8,7 @@ import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 
 public class AngleAndShootCommand extends Command {
+
 	// needed because shooting is a continuous action that you cannot be driving whilst
 	// (we can investigate SOTM but for now this is regular)
 	private final Timer timer;

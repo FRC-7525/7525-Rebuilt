@@ -32,7 +32,6 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void robotInit() {
-
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL:
 				Logger.addDataReceiver(new NT4Publisher());
@@ -63,7 +62,7 @@ public class Robot extends LoggedRobot {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
-	
+
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");
@@ -81,9 +80,7 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
-	public void autonomousPeriodic() {
-
-	}
+	public void autonomousPeriodic() {}
 
 	@Override
 	public void autonomousExit() {
