@@ -44,7 +44,7 @@ public final class ShooterConstants {
 	public static final double HOOD_ARM_LENGTH_METERS = 0.2;
 
 	// State defaults
-	public static final AngularVelocity REVERSE_WHEEL_SPEED = RotationsPerSecond.of(-100);
+	public static final AngularVelocity REVERSE_WHEEL_SPEED = RotationsPerSecond.of(-60);
 
 	public static final int LEFT_SHOOTER_MOTOR_ID = 37;
 	public static final int RIGHT_SHOOTER_MOTOR_ID = 38;
@@ -61,7 +61,7 @@ public final class ShooterConstants {
 		}; //TODO: tune
 	public static final Supplier<PIDController> HOOD_DOWN_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.02, 0.0002, 0.0); //.0384 good alr
+			case REAL -> new PIDController(0.03, 0.0002, 0.0); //.0384 good alr
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(0, 0, 0);
 		}; //TODO: tune
