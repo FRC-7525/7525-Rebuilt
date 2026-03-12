@@ -42,7 +42,7 @@ public class Intake extends Subsystem<IntakeStates> {
 				agitatingIn = !agitatingIn;
 				prevTime = getStateTime();
 			}
-			
+
 			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
 			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
 		} else io.setAngularPosition(getState().getAngle());
