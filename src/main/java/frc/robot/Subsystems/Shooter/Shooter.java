@@ -23,7 +23,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private ShooterIOOutputs outputs;
 	private ShooterStates cache;
 	private DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_PORT);
-	private Debouncer debouncer = new Debouncer(0.05, DebounceType.kRising); //TODO: Switch debounce type to correct one (should only fire once a ball is first detected, not when a ball leaves)
+	private boolean previousBBValue = true;
 	private int numBallsShot = 0;
 
 	public static Shooter getInstance() {
@@ -53,7 +53,10 @@ public class Shooter extends Subsystem<ShooterStates> {
 
 			//TODO: Remove this stuff later when testing is done
 			if (getState() == ShooterStates.SHOOT_FIXED) {
-				if (debouncer.calculate(beamBreak.get())) numBallsShot++;
+				if (previousBBValue != beamBreak.get()) {
+					if (previousBBValue) numBallsShot++;
+					previousBBValue = beamBreak.get();
+				}
 			} else numBallsShot = 0;
 		} else if (io.zeroHoodMotor()) setState(cache);
 
@@ -64,7 +67,8 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodSetpoint", outputs.hoodSetpoint.in(Degrees));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/ReadyToShoot", readyToShoot());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/BallsPerSecond", numBallsShot); //TODO: Remove later when testing is done
+		Logger.recordOutput(SUBSYSTEM_NAME + "/BallsPerSecond", numBallsShot / getStateTime()); //TODO: Remove later when testing is done
+		Logger.recordOutput(SUBSYSTEM_NAME + "/NumBallsShot", numBallsShot);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelCurrent", outputs.leftWheelCurrent);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelCurrent", outputs.rightWheelCurrent);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodCurrent", outputs.hoodCurrent);
