@@ -8,29 +8,30 @@ import frc.robot.Subsystems.Shooter.ShooterStates;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum ManagerStates implements SubsystemStates {
-	IDLE("IDLE", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
-	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE),
-	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE),
-	WINDING_UP("WINDING_UP", IntakeStates.OUT, HopperStates.IDLE, null, ClimberStates.IDLE),
-	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE), //TODO: Switch back to SHOOTING_FIXED shooter state after testing is done
-	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),
-	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE),
-	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.AGITATING, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE),
-	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND),
-	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT);
-
+	IDLE("IDLE", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE, CurrentLimiterStates.IDLE),
+	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE, CurrentLimiterStates.EXTENDED_IDLE),
+	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE, CurrentLimiterStates.INTAKING),
+	WINDING_UP("WINDING_UP", IntakeStates.OUT, HopperStates.IDLE, null, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP),
+	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP_FIXED_SHOT), //TODO: Switch back to SHOOTING_FIXED shooter state after testing is done
+	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.SHUTTLING),
+	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_HUB),
+	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.AGITATING, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_FIXED),
+	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND, CurrentLimiterStates.EXTENDING_CLIMBER),
+	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT, CurrentLimiterStates.RETRACTING_CLIMBER);
 	private final String stateString;
 	private final IntakeStates intakeState;
 	private final HopperStates hopperState;
 	private final ShooterStates shooterState;
 	private final ClimberStates climberState;
+	private final CurrentLimiterStates currentLimiterState;
 
-	ManagerStates(String stateString, IntakeStates intakeState, HopperStates hopperState, ShooterStates shooterState, ClimberStates climberState) {
+	ManagerStates(String stateString, IntakeStates intakeState, HopperStates hopperState, ShooterStates shooterState, ClimberStates climberState, CurrentLimiterStates currentLimiterState) {
 		this.stateString = stateString;
 		this.intakeState = intakeState;
 		this.hopperState = hopperState;
 		this.shooterState = shooterState;
 		this.climberState = climberState;
+		this.currentLimiterState = currentLimiterState;
 	}
 
 	@Override
@@ -57,5 +58,9 @@ public enum ManagerStates implements SubsystemStates {
 
 	public ClimberStates getClimberState() {
 		return climberState;
+	}
+
+	public CurrentLimiterStates getCurrentLimiterState() {
+		return currentLimiterState;
 	}
 }

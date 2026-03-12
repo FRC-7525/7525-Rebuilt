@@ -18,8 +18,11 @@ import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
+import java.util.List;
+
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -356,6 +359,21 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void setSOTMTarget(Pose2d targetPose) {
 		sotmTarget = targetPose;
+	}
+
+	public List<TalonFX> getDriveMotors() {
+		List<TalonFX> driveMotors = new java.util.ArrayList<>();
+		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+			driveMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getDriveMotor()));
+		}
+		return driveMotors;
+	}
+	public List<TalonFX> getTurnMotors() {
+		List<TalonFX> turnMotors = new java.util.ArrayList<>();
+		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+			turnMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getSteerMotor()));
+		}
+		return turnMotors;
 	}
 
 	public boolean isAtAllianceShootingPosition() {

@@ -3,6 +3,8 @@ package frc.robot.Subsystems.Hopper;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Hopper.HopperConstants.*;
 
+import java.util.List;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,13 +27,13 @@ public class HopperIOReal implements HopperIO {
 		kickerMotor2 = new TalonFX(KICKER_MOTOR_2_ID);
 		kickerMotor2.setControl(new Follower(KICKER_MOTOR_ID, MotorAlignmentValue.Opposed));
 
-		spindexerMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
-		kickerMotor1Config.CurrentLimits.StatorCurrentLimit = 90;
-		kickerMotor2Config.CurrentLimits.StatorCurrentLimit = 90;
+		// spindexerMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
+		// kickerMotor1Config.CurrentLimits.StatorCurrentLimit = 90;
+		// kickerMotor2Config.CurrentLimits.StatorCurrentLimit = 90;
 
-		spindexerMotorConfig.CurrentLimits.SupplyCurrentLimit = 30;
-		kickerMotor1Config.CurrentLimits.SupplyCurrentLimit = 30;
-		kickerMotor2Config.CurrentLimits.SupplyCurrentLimit = 10;
+		// spindexerMotorConfig.CurrentLimits.SupplyCurrentLimit = 30;
+		// kickerMotor1Config.CurrentLimits.SupplyCurrentLimit = 30;
+		// kickerMotor2Config.CurrentLimits.SupplyCurrentLimit = 10;
 
 		spindexerMotor.getConfigurator().apply(spindexerMotorConfig);
 		kickerMotor.getConfigurator().apply(kickerMotor1Config);
@@ -59,5 +61,13 @@ public class HopperIOReal implements HopperIO {
 	public void setTargetKickerVelocity(double targetKickVelocity) {
 		this.targetKickerVelocity = targetKickVelocity;
 		kickerMotor.set(targetKickVelocity);
+	}
+
+	public TalonFX getSpinMotor() {
+		return spindexerMotor;
+	}
+
+	public List<TalonFX> getKickerMotors() {
+		return List.of(kickerMotor, kickerMotor2);
 	}
 }

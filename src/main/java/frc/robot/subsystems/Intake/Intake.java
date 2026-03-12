@@ -55,6 +55,10 @@ public class Intake extends Subsystem<IntakeStates> {
 		return io.getSpinMotor();
 	}
 
+	public TalonFX getPivotMotor() {
+		return io.getPivotMotor();
+	}
+
 	public double getStateTime() {
 		return super.getStateTime();
 	}

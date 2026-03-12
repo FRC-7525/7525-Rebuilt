@@ -68,4 +68,9 @@ public class IntakeIOTalonFX implements IntakeIO {
 	public TalonFX getSpinMotor() {
 		return spinMotor;
 	}
+
+	@Override
+	public TalonFX getPivotMotor() {
+		return pivotMotor;
+	}
 }
