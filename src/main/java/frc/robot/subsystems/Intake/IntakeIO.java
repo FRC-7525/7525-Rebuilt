@@ -28,5 +28,6 @@ public interface IntakeIO {
 	public void setAngularPosition(Angle setpoint);
 
 	public TalonFX getSpinMotor();
+
 	public TalonFX getPivotMotor();
 }

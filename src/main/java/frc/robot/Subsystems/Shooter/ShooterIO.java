@@ -1,11 +1,9 @@
 package frc.robot.Subsystems.Shooter;
 
-import java.util.List;
-
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import java.util.List;
 
 public interface ShooterIO {
 	class ShooterIOOutputs {

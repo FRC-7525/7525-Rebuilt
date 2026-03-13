@@ -1,11 +1,11 @@
 package frc.robot.Subsystems.Hopper;
 
-import java.util.List;
-
 import com.ctre.phoenix6.hardware.TalonFX;
+import java.util.List;
 
 public interface HopperIO {
 	public class HopperIOOutputs {
+
 		double targetSpinVelocity;
 		double targetKickVelocity;
 		double spinVelocityRPS;
@@ -22,6 +22,8 @@ public interface HopperIO {
 	public void setTargetKickerVelocity(double velocity);
 
 	public TalonFX getSpinMotor();
+
 	public TalonFX getKickerMotor1();
+
 	public TalonFX getKickerMotor2();
 }

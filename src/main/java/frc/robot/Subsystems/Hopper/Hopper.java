@@ -2,13 +2,11 @@ package frc.robot.Subsystems.Hopper;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
-import java.util.List;
-
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Hopper extends Subsystem<HopperStates> {
 
@@ -36,9 +34,11 @@ public class Hopper extends Subsystem<HopperStates> {
 	public TalonFX getSpinMotor() {
 		return io.getSpinMotor();
 	}
+
 	public TalonFX getKickerMotor1() {
 		return io.getKickerMotor1();
 	}
+
 	public TalonFX getKickerMotor2() {
 		return io.getKickerMotor2();
 	}

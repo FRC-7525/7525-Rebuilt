@@ -4,17 +4,15 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
-import java.util.List;
-
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Shooter extends Subsystem<ShooterStates> {
 

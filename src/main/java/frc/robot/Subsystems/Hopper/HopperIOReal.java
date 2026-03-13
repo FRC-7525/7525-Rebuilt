@@ -3,12 +3,11 @@ package frc.robot.Subsystems.Hopper;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Hopper.HopperConstants.*;
 
-import java.util.List;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import java.util.List;
 
 public class HopperIOReal implements HopperIO {
 
