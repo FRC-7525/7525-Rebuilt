@@ -50,7 +50,7 @@ public class IntakeIOSim extends IntakeIOTalonFX {
 		linearSimState.setSupplyVoltage(12.0);
 
 		outputs.spinSetpoint = speed;
-		outputs.angularSetpoint= setpoint;
+		outputs.angularSetpoint = setpoint;
 		outputs.spinAppliedVolts = spinMotor.getMotorVoltage().getValue();
 		outputs.spinCurrentAmps = spinMotor.getStatorCurrent().getValue();
 		// incomplete sim bc buns
