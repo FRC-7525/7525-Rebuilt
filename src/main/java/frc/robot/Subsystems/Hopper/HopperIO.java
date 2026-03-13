@@ -1,7 +1,6 @@
 package frc.robot.Subsystems.Hopper;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import java.util.List;
 
 public interface HopperIO {
 	public class HopperIOOutputs {

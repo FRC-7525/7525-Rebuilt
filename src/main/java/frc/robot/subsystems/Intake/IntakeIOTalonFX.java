@@ -18,7 +18,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 	protected final TalonFX pivotMotor;
 	protected final TalonFXConfiguration pivotMotorConfiguration = new TalonFXConfiguration();
 	private final PIDController pivotController;
-	private double speed;
 	private Angle setpoint;
 
 	public IntakeIOTalonFX() {
@@ -31,8 +30,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 		pivotMotor = new TalonFX(Real.PIVOT_MOTOR_ID);
 		pivotMotor.setNeutralMode(NeutralModeValue.Coast);
 		pivotMotor.setPosition(0);
-
-		speed = 0;
 		setpoint = Degrees.of(0);
 	}
 
@@ -50,7 +47,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 	@Override
 	public void setSpinVelocity(double speed) {
 		spinMotor.set(speed);
-		this.speed = speed;
 	}
 
 	@Override

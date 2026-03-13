@@ -1,12 +1,10 @@
 package frc.robot.Subsystems.Manager;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
-import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 public class CurrentLimiter extends Subsystem<CurrentLimiterStates> {

@@ -5,8 +5,6 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;

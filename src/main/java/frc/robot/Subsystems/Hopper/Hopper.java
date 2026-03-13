@@ -4,7 +4,6 @@ import static frc.robot.GlobalConstants.ROBOT_MODE;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
-import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
