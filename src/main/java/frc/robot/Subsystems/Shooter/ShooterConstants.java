@@ -4,11 +4,13 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.GlobalConstants;
@@ -21,12 +23,12 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772); // TODO: get real value
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
 
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45);
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(60);
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	//TODO: Change standby values to actual values after testing is done
-	public static final Angle STANDBY_ANGLE = Degrees.of(45);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(60);
+	public static final Angle STANDBY_ANGLE = Degrees.of(10.5);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
@@ -67,7 +69,7 @@ public final class ShooterConstants {
 		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.45, 0, 0);
+			case REAL -> new PIDController(0.5, 0, 0); 
 			case SIM -> new PIDController(0.0077, 0, 0);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune

@@ -82,8 +82,12 @@ public class ShooterIOReal implements ShooterIO {
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
 		//TODO: Switch to this when done testing
-		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
-		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond)));
+		if (velocity.in(RotationsPerSecond) == 0) {
+			leftMotor.stopMotor();
+			return;
+		}
+		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate());
+		//eftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), velocity.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelPID.getSetpoint());
 		leftMotor.setControl(wheelControlReq.withVelocity(velocity).withFeedForward(wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond))));
 	}
 
