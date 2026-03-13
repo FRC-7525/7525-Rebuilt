@@ -3,6 +3,7 @@ package frc.robot;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drive.Drive;
@@ -39,6 +40,7 @@ public class Robot extends LoggedRobot {
 		Logger.start();
 		CommandsUtil.logCommands();
 		DriverStation.silenceJoystickConnectionWarning(true);
+		RobotController.setBrownoutVoltage(5.5);
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
