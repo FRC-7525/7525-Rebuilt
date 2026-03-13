@@ -57,9 +57,9 @@ public class CurrentLimiter extends Subsystem<CurrentLimiterStates>{
         limitConfigs.SupplyCurrentLimit = getState().getSpindexerLimit();
         Hopper.getInstance().getSpinMotor().getConfigurator().apply(limitConfigs);
         limitConfigs.SupplyCurrentLimit = getState().getKickerLimit();
-        Hopper.getInstance().getKickerMotors().forEach(motor -> {
-            motor.getConfigurator().apply(limitConfigs);
-        });
+        Hopper.getInstance().getKickerMotor1().getConfigurator().apply(limitConfigs);
+        limitConfigs.SupplyCurrentLimit = getState().getKickerLimit2();
+        Hopper.getInstance().getKickerMotor2().getConfigurator().apply(limitConfigs);
         limitConfigs.SupplyCurrentLimit = getState().getIntakeWheelLimit();
         Intake.getInstance().getSpinMotor().getConfigurator().apply(limitConfigs);
         limitConfigs.SupplyCurrentLimit = getState().getPivotLimit();

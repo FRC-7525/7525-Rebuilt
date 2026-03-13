@@ -11,6 +11,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40, 
         40, 
         40, 
+        40,
         40
     ),
 	EXTENDED_IDLE(
@@ -21,6 +22,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40, 
         40, 
         40, 
+        40,
         40
     ),
 	INTAKING(
@@ -31,12 +33,14 @@ public enum CurrentLimiterStates implements SubsystemStates {
         20,
         40,
         40,
+        40,
         40
     ),
 	WINDING_UP(
         60,
         30,
         30,
+        40,
         40,
         40,
         40,
@@ -51,6 +55,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40,
         40,
         40,
+        40,
         40
     ), 
 	SHUTTLING(
@@ -59,6 +64,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         60,
         20,
         40,
+        20,
         20,
         20,
         20
@@ -71,7 +77,8 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40,
         20,
         20,
-        20
+        30,
+        10
     ),
 	SHOOTING_FIXED(
         30,
@@ -81,10 +88,12 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40,
         20,
         20,
+        20,
         20
     ),
 	EXTENDING_CLIMBER(
         80,
+        40,
         40,
         40,
         40,
@@ -101,6 +110,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         40,
         40,
         40,
+        40,
         40
     );
     private int driveLimit;
@@ -111,8 +121,9 @@ public enum CurrentLimiterStates implements SubsystemStates {
     private int hoodLimit;
     private int spindexerLimit;
     private int kickerLimit;
+    private int kickerLimit2;
 
-    private CurrentLimiterStates(int driveLimit, int turnLimit, int shooterLimit, int pivotLimit, int intakeWheelLimit, int hoodLimit, int spindexerLimit, int kickerLimit) {
+    private CurrentLimiterStates(int driveLimit, int turnLimit, int shooterLimit, int pivotLimit, int intakeWheelLimit, int hoodLimit, int spindexerLimit, int kickerLimit, int kickerLimit2) {
         this.driveLimit = driveLimit;
         this.turnLimit = turnLimit;
         this.shooterLimit = shooterLimit;
@@ -121,6 +132,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
         this.hoodLimit = hoodLimit;
         this.spindexerLimit = spindexerLimit;
         this.kickerLimit = kickerLimit;
+        this.kickerLimit2 = kickerLimit2;
     }
     
     public int getDriveLimit() {
@@ -130,7 +142,7 @@ public enum CurrentLimiterStates implements SubsystemStates {
     public int getTurnLimit() {
         return turnLimit;
     }
-    
+
     public int getShooterLimit() {
         return shooterLimit;
     }
@@ -153,5 +165,9 @@ public enum CurrentLimiterStates implements SubsystemStates {
     
     public int getKickerLimit() {
         return kickerLimit;
+    }
+
+    public int getKickerLimit2() {
+        return kickerLimit2;
     }
 }

@@ -67,7 +67,11 @@ public class HopperIOReal implements HopperIO {
 		return spindexerMotor;
 	}
 
-	public List<TalonFX> getKickerMotors() {
-		return List.of(kickerMotor, kickerMotor2);
+	public TalonFX getKickerMotor1() {
+		return kickerMotor;
+	}
+
+	public TalonFX getKickerMotor2() {
+		return kickerMotor2;
 	}
 }

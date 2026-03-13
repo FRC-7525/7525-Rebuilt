@@ -36,8 +36,11 @@ public class Hopper extends Subsystem<HopperStates> {
 	public TalonFX getSpinMotor() {
 		return io.getSpinMotor();
 	}
-	public List<TalonFX> getKickerMotors() {
-		return io.getKickerMotors();
+	public TalonFX getKickerMotor1() {
+		return io.getKickerMotor1();
+	}
+	public TalonFX getKickerMotor2() {
+		return io.getKickerMotor2();
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public interface HopperIO {
 	public class HopperIOOutputs {
-
 		double targetSpinVelocity;
 		double targetKickVelocity;
 		double spinVelocityRPS;
@@ -23,5 +22,6 @@ public interface HopperIO {
 	public void setTargetKickerVelocity(double velocity);
 
 	public TalonFX getSpinMotor();
-	public List<TalonFX> getKickerMotors();
+	public TalonFX getKickerMotor1();
+	public TalonFX getKickerMotor2();
 }

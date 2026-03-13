@@ -108,12 +108,12 @@ public class Manager extends Subsystem<ManagerStates> {
 		currentLimiter.setState(getState().getCurrentLimiterState());
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		intake.setState(getState().getIntakeState());
+		// intake.setState(getState().getIntakeState());
 		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("CurrentLimiterPeriodic", CurrentLimiter.getInstance()::periodic);

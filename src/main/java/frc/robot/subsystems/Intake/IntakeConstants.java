@@ -23,7 +23,7 @@ public class IntakeConstants {
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
 	public static final Angle INTAKE_OUT_POS = Degrees.of(-180);
 
-	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-90);
+	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-70);
 	public static final Angle INTAKE_AGITATING_OUT_POS = Degrees.of(-120);
 	public static final double AGITATION_TIME = 0.5;
 
