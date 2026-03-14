@@ -8,94 +8,67 @@ import frc.robot.Autonomous.ChoreoTrajectories.ChoreoTraj;
 import frc.robot.Subsystems.Drive.Drive;
 
 public class AutoRoutines {
-    
-    private AutoFactory autoFactory;
-    private AutoCommands autoCommands = new AutoCommands();
 
-    public AutoRoutines() {
-        autoFactory = new AutoFactory(
-            Drive.getInstance()::getPose,
-            Drive.getInstance()::resetPose,
-            Drive.getInstance()::driveRobotAutonomous,
-            true,
-            Drive.getInstance()
-        );
+	private AutoFactory autoFactory;
+	private AutoCommands autoCommands = new AutoCommands();
 
-        autoFactory.bind("Idle", autoCommands.returnToIdle());
-        autoFactory.bind("Intake", autoCommands.intake());
-        autoFactory.bind("Intake And Pass", autoCommands.intakeAndPass());
-        autoFactory.bind("Wind To Shuttle", autoCommands.windToShuttle());
-        autoFactory.bind("Wind To Score", autoCommands.windToScore());
-        autoFactory.bind("Allow Aimlock", autoCommands.allowAimlock());
-        autoFactory.bind("Disallow Aimlock", autoCommands.disallowAimlock());
-        autoFactory.bind("StopRobot", autoCommands.stopRobot());
-        autoFactory.bind("PrintTest", autoCommands.printTest());
-        autoFactory.bind("Wait 5 Seconds", autoCommands.waitXSeconds(5));
-        
-    }
+	public AutoRoutines() {
+		autoFactory = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::resetPose, Drive.getInstance()::driveRobotAutonomous, true, Drive.getInstance());
 
-    public AutoRoutine Right2CycleRoutine() {
-        AutoRoutine routine = autoFactory.newRoutine("Right2CycleRoutine");
-        AutoTrajectory traj = ChoreoTraj.Right2Cycle.asAutoTraj(routine);
+		autoFactory.bind("Idle", autoCommands.returnToIdle());
+		autoFactory.bind("Intake", autoCommands.intake());
+		autoFactory.bind("Intake And Pass", autoCommands.intakeAndPass());
+		autoFactory.bind("Wind To Shuttle", autoCommands.windToShuttle());
+		autoFactory.bind("Wind To Score", autoCommands.windToScore());
+		autoFactory.bind("Allow Aimlock", autoCommands.allowAimlock());
+		autoFactory.bind("Disallow Aimlock", autoCommands.disallowAimlock());
+		autoFactory.bind("StopRobot", autoCommands.stopRobot());
+		autoFactory.bind("PrintTest", autoCommands.printTest());
+		autoFactory.bind("Wait 5 Seconds", autoCommands.waitXSeconds(5));
+	}
 
-        routine.active().onTrue(
-            Commands.print("AUTO STARTED")
-            .andThen(traj.resetOdometry())
-            .andThen(traj.cmd())
-        );
+	public AutoRoutine Right2CycleRoutine() {
+		AutoRoutine routine = autoFactory.newRoutine("Right2CycleRoutine");
+		AutoTrajectory traj = ChoreoTraj.Right2Cycle.asAutoTraj(routine);
 
-        return routine;
-    }
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
 
-    public AutoRoutine Left2CycleRoutine() {
-        AutoRoutine routine = autoFactory.newRoutine("Left2CycleRoutine");
-        AutoTrajectory traj = ChoreoTraj.Left2Cycle.asAutoTraj(routine);
+		return routine;
+	}
 
-        routine.active().onTrue(
-            Commands.print("AUTO STARTED")
-            .andThen(traj.resetOdometry())
-            .andThen(traj.cmd())
-        );
+	public AutoRoutine Left2CycleRoutine() {
+		AutoRoutine routine = autoFactory.newRoutine("Left2CycleRoutine");
+		AutoTrajectory traj = ChoreoTraj.Left2Cycle.asAutoTraj(routine);
 
-        return routine;
-    }
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
 
-    public AutoRoutine sweeperRight1Cycle() {
-        AutoRoutine routine = autoFactory.newRoutine("SweeperRight1Cycle");
-        AutoTrajectory traj = ChoreoTraj.SweeperRight1Cycle.asAutoTraj(routine);
+		return routine;
+	}
 
-        routine.active().onTrue(
-            Commands.print("AUTO STARTED")
-            .andThen(traj.resetOdometry())
-            .andThen(traj.cmd())
-        );
+	public AutoRoutine sweeperRight1Cycle() {
+		AutoRoutine routine = autoFactory.newRoutine("SweeperRight1Cycle");
+		AutoTrajectory traj = ChoreoTraj.SweeperRight1Cycle.asAutoTraj(routine);
 
-        return routine;
-    }
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
 
-    public AutoRoutine sweeperLeft1Cycle() {
-        AutoRoutine routine = autoFactory.newRoutine("SweeperLeft1Cycle");
-        AutoTrajectory traj = ChoreoTraj.SweeperLeft1Cycle.asAutoTraj(routine);
+		return routine;
+	}
 
-        routine.active().onTrue(
-            Commands.print("AUTO STARTED")
-            .andThen(traj.resetOdometry())
-            .andThen(traj.cmd())
-        );
+	public AutoRoutine sweeperLeft1Cycle() {
+		AutoRoutine routine = autoFactory.newRoutine("SweeperLeft1Cycle");
+		AutoTrajectory traj = ChoreoTraj.SweeperLeft1Cycle.asAutoTraj(routine);
 
-        return routine;
-    }
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
 
-    public AutoRoutine right1CycleDepot() {
-        AutoRoutine routine = autoFactory.newRoutine("Right1CycleDepot");
-        AutoTrajectory traj = ChoreoTraj.Right1CycleDepot.asAutoTraj(routine);
+		return routine;
+	}
 
-        routine.active().onTrue(
-            Commands.print("AUTO STARTED")
-            .andThen(traj.resetOdometry())
-            .andThen(traj.cmd())
-        );
+	public AutoRoutine right1CycleDepot() {
+		AutoRoutine routine = autoFactory.newRoutine("Right1CycleDepot");
+		AutoTrajectory traj = ChoreoTraj.Right1CycleDepot.asAutoTraj(routine);
 
-        return routine;
-    }
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
+
+		return routine;
+	}
 }

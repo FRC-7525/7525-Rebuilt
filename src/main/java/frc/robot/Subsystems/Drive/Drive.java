@@ -80,8 +80,8 @@ public class Drive extends Subsystem<DriveStates> {
 	private final PIDController repulsorRotationalController;
 
 	private final PIDController xController;
-    private final PIDController yController;
-    private final PIDController headingController;
+	private final PIDController yController;
+	private final PIDController headingController;
 
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
@@ -204,7 +204,8 @@ public class Drive extends Subsystem<DriveStates> {
 					executeScaledFeedforwardAutoAlign();
 				}
 				break;
-			case AUTO: break;
+			case AUTO:
+				break;
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
@@ -373,7 +374,6 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public void driveRobotAutonomous(SwerveSample sample) {
-
 		Pose2d currentPose = Drive.getInstance().getPose();
 		var targetSpeeds = sample.getChassisSpeeds();
 		targetSpeeds.vxMetersPerSecond = targetSpeeds.vxMetersPerSecond + xController.calculate(currentPose.getX(), sample.x);
@@ -384,8 +384,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		Logger.recordOutput("aimlock enabled", allowAutoAimlock);
 
-		if (Robot.isRedAlliance)
-			driveIO.setControl(
+		if (Robot.isRedAlliance) driveIO.setControl(
 			new SwerveRequest.FieldCentric()
 				.withVelocityX(-targetSpeeds.vxMetersPerSecond)
 				.withVelocityY(-targetSpeeds.vyMetersPerSecond)
@@ -393,8 +392,7 @@ public class Drive extends Subsystem<DriveStates> {
 				.withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
 				.withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
 		);
-		else 
-			driveIO.setControl(
+		else driveIO.setControl(
 			new SwerveRequest.FieldCentric()
 				.withVelocityX(targetSpeeds.vxMetersPerSecond)
 				.withVelocityY(targetSpeeds.vyMetersPerSecond)
@@ -414,8 +412,8 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void resetPose(Pose2d pose) {
 		this.driveIO.getDrive().resetPose(pose);
-  }
-  
+	}
+
 	public List<TalonFX> getDriveMotors() {
 		List<TalonFX> driveMotors = new java.util.ArrayList<>();
 		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {

@@ -4,6 +4,7 @@ import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
 import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
+import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -16,7 +17,6 @@ import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Manager.Manager;
 import kotlin.Pair;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -24,14 +24,12 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
 
-import choreo.auto.AutoChooser;
-
 public class Robot extends LoggedRobot {
 
 	private final AutoChooser autoChooser = new AutoChooser();
 	private final AutoRoutines autoRoutines = new AutoRoutines();
 	private final Manager manager = Manager.getInstance();
-	
+
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
 
@@ -58,7 +56,7 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
-		
+
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
 		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
 		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);
@@ -68,7 +66,7 @@ public class Robot extends LoggedRobot {
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 	}
-	
+
 	@Override
 	public void robotPeriodic() {
 		Tracer.startTrace("RobotPeriodic");
@@ -83,9 +81,7 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
-	public void autonomousPeriodic() {
-
-	}
+	public void autonomousPeriodic() {}
 
 	@Override
 	public void autonomousExit() {

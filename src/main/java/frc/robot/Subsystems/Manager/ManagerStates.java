@@ -24,7 +24,6 @@ public enum ManagerStates implements SubsystemStates {
 	WINDING_TO_SCORE_AUTO("AUTO WINDING SCORE", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP),
 	WINDING_TO_SHUTTLE_AUTO("AUTO WINDING PASS", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP),
 	SCORING_AUTO("AUTO SCORING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_HUB);
-	
 
 	private final String stateString;
 	private final IntakeStates intakeState;

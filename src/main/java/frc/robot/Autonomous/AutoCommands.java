@@ -10,7 +10,9 @@ import frc.robot.Subsystems.Manager.ManagerStates;
 public class AutoCommands {
 
 	public Command intake() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.INTAKING);});
+		return new InstantCommand(() -> {
+			Manager.getInstance().setState(ManagerStates.INTAKING);
+		});
 	}
 
 	public Command intakeAndPass() {
@@ -18,7 +20,9 @@ public class AutoCommands {
 	}
 
 	public Command returnToIdle() {
-		return new InstantCommand(() -> {Manager.getInstance().setState(ManagerStates.IDLE);});
+		return new InstantCommand(() -> {
+			Manager.getInstance().setState(ManagerStates.IDLE);
+		});
 	}
 
 	public Command windToScore() {
@@ -37,16 +41,15 @@ public class AutoCommands {
 		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(false));
 	}
 
-    public Command stopRobot() {
-        return new InstantCommand(() -> Drive.getInstance().executeDriveInstruction(0, 0, 0, false));
-    }
+	public Command stopRobot() {
+		return new InstantCommand(() -> Drive.getInstance().executeDriveInstruction(0, 0, 0, false));
+	}
 
 	public Command waitXSeconds(double seconds) {
 		return new WaitCommand(seconds);
 	}
 
-    public Command printTest() {
-        return new InstantCommand(() -> System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"));
-    }
-
+	public Command printTest() {
+		return new InstantCommand(() -> System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"));
+	}
 }

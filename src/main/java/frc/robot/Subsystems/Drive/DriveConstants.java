@@ -2,14 +2,13 @@ package frc.robot.Subsystems.Drive;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import frc.robot.GlobalConstants;
+import java.util.function.Supplier;
 
 public class DriveConstants {
 
@@ -52,7 +51,6 @@ public class DriveConstants {
 			case SIM -> new PIDController(5, 0, 0);
 			default -> new PIDController(20, 1, 0);
 		};
-
 	// Weird syntax because we have our own PIDConstants class (literally just the PP one :skull: copy pasted) so we can use it without installing PP Lib
 
 }
