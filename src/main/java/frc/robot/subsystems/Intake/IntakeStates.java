@@ -9,7 +9,7 @@ public enum IntakeStates implements SubsystemStates {
 	IN("In", INTAKE_IN_POS, 0),
 	OUT("Out", INTAKE_OUT_POS, 0),
 	INTAKE("Intake", INTAKE_OUT_POS, SPIN_SPEED_INTAKE),
-	AGITATING("Agitating", INTAKE_AGITATING_IN_POS, SPIN_SPEED_INTAKE);
+	AGITATING("Agitating", INTAKE_AGITATING_IN_POS, 0);
 
 	private String stateString;
 	public final Angle angularPos; //force units

@@ -4,8 +4,11 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -15,6 +18,9 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;
 	private ShooterStates cache;
+	private DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_PORT);
+	private boolean previousBBValue = true;
+	private int numBallsShot = 0;
 
 	public static Shooter getInstance() {
 		if (instance == null) {
@@ -40,6 +46,14 @@ public class Shooter extends Subsystem<ShooterStates> {
 			io.setHoodAngle(getState().getHoodAngle());
 			io.setWheelVelocity(getState().getWheelVelocity());
 			io.logOutputs(outputs);
+
+			//TODO: Remove this stuff later when testing is done
+			if (getState() == ShooterStates.SHOOT_FIXED) {
+				if (previousBBValue != beamBreak.get()) {
+					if (previousBBValue) numBallsShot++;
+					previousBBValue = beamBreak.get();
+				}
+			} else numBallsShot = 0;
 		} else if (io.zeroHoodMotor()) setState(cache);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));
@@ -49,6 +63,11 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodSetpoint", outputs.hoodSetpoint.in(Degrees));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/ReadyToShoot", readyToShoot());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/BallsPerSecond", numBallsShot / getStateTime()); //TODO: Remove later when testing is done
+		Logger.recordOutput(SUBSYSTEM_NAME + "/NumBallsShot", numBallsShot);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelCurrent", outputs.leftWheelCurrent);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelCurrent", outputs.rightWheelCurrent);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodCurrent", outputs.hoodCurrent);
 	}
 
 	public boolean readyToShoot() {
@@ -58,5 +77,13 @@ public class Shooter extends Subsystem<ShooterStates> {
 	@Override
 	protected void stateExit() {
 		cache = getState();
+	}
+
+	public List<TalonFX> getShooterMotors() {
+		return io.getShooterMotors();
+	}
+
+	public TalonFX getHoodMotor() {
+		return io.getHoodMotor();
 	}
 }

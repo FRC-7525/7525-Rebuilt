@@ -4,11 +4,13 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.GlobalConstants;
@@ -21,11 +23,12 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772); // TODO: get real value
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
 
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(45);
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
-	public static final Angle STANDBY_ANGLE = Degrees.of(45);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(30);
+	//TODO: Change standby values to actual values after testing is done
+	public static final Angle STANDBY_ANGLE = Degrees.of(10.5);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
@@ -43,13 +46,14 @@ public final class ShooterConstants {
 	public static final double HOOD_ARM_LENGTH_METERS = 0.2;
 
 	// State defaults
-	public static final AngularVelocity REVERSE_WHEEL_SPEED = RotationsPerSecond.of(-100);
+	public static final AngularVelocity REVERSE_WHEEL_SPEED = RotationsPerSecond.of(-60);
 
 	public static final int LEFT_SHOOTER_MOTOR_ID = 37;
 	public static final int RIGHT_SHOOTER_MOTOR_ID = 38;
 	public static final int HOOD_MOTOR_ID = 39;
 
 	public static final int LIMIT_SWITCH_PORT = 9;
+	public static final int BEAM_BREAK_PORT = 0;
 
 	public static final Supplier<PIDController> HOOD_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
@@ -57,15 +61,21 @@ public final class ShooterConstants {
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(0, 0, 0);
 		}; //TODO: tune
+	public static final Supplier<PIDController> HOOD_DOWN_PID = () ->
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(0.03, 0.0002, 0.0); //.0384 good alr
+			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
+			case TESTING -> new PIDController(0, 0, 0);
+		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.0936, 0, 0);
-			case SIM -> new PIDController(0.0077, 0, 0.00013);
+			case REAL -> new PIDController(0.5, 0, 0);
+			case SIM -> new PIDController(0.0077, 0, 0);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<SimpleMotorFeedforward> WHEEL_FEEDFORWARD = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.18, 0.0375, 0.184); // Recalc fakes :wilted_rose:
+			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12); // Recalc fakes :wilted_rose:
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
 		}; //TODO: tune

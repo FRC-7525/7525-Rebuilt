@@ -31,13 +31,15 @@ public enum ManagerStates implements SubsystemStates {
 	private final HopperStates hopperState;
 	private final ShooterStates shooterState;
 	private final ClimberStates climberState;
+	private final CurrentLimiterStates currentLimiterState;
 
-	ManagerStates(String stateString, IntakeStates intakeState, HopperStates hopperState, ShooterStates shooterState, ClimberStates climberState) {
+	ManagerStates(String stateString, IntakeStates intakeState, HopperStates hopperState, ShooterStates shooterState, ClimberStates climberState, CurrentLimiterStates currentLimiterState) {
 		this.stateString = stateString;
 		this.intakeState = intakeState;
 		this.hopperState = hopperState;
 		this.shooterState = shooterState;
 		this.climberState = climberState;
+		this.currentLimiterState = currentLimiterState;
 	}
 
 	@Override
@@ -64,5 +66,9 @@ public enum ManagerStates implements SubsystemStates {
 
 	public ClimberStates getClimberState() {
 		return climberState;
+	}
+
+	public CurrentLimiterStates getCurrentLimiterState() {
+		return currentLimiterState;
 	}
 }

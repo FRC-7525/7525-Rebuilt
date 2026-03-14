@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Hopper;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
@@ -29,6 +30,18 @@ public class Hopper extends Subsystem<HopperStates> {
 		return instance;
 	}
 
+	public TalonFX getSpinMotor() {
+		return io.getSpinMotor();
+	}
+
+	public TalonFX getKickerMotor1() {
+		return io.getKickerMotor1();
+	}
+
+	public TalonFX getKickerMotor2() {
+		return io.getKickerMotor2();
+	}
+
 	@Override
 	protected void runState() {
 		io.setTargetSpinVelocity(getState().getSpinVelocity());
@@ -39,5 +52,8 @@ public class Hopper extends Subsystem<HopperStates> {
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/KickVelocityRPS", outputs.kickVelocityRPS);
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetSpinVelocity", outputs.targetSpinVelocity);
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/TargetKickVelocity", outputs.targetKickVelocity);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinSupplyCurrent", outputs.spindexerCurrent);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/Kicker1SupplyCurrent", outputs.kicker1Current);
+		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/Kicker2SupplyCurrent", outputs.kicker2Current);
 	}
 }

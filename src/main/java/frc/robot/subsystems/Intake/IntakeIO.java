@@ -16,6 +16,7 @@ public interface IntakeIO {
 		public double spinSetpoint = 0;
 		public Voltage spinAppliedVolts = Volts.of(0);
 		public Current spinCurrentAmps = Amps.of(0);
+		public Current pivotCurrentAmps = Amps.of(0);
 		public Angle angularPosition = Degrees.of(0);
 		public Angle angularSetpoint = Degrees.of(0);
 	}
@@ -27,4 +28,6 @@ public interface IntakeIO {
 	public void setAngularPosition(Angle setpoint);
 
 	public TalonFX getSpinMotor();
+
+	public TalonFX getPivotMotor();
 }

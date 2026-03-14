@@ -4,11 +4,8 @@ import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
 import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
-import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Autonomous.AutoRoutines;
@@ -52,7 +49,8 @@ public class Robot extends LoggedRobot {
 		Logger.start();
 		CommandsUtil.logCommands();
 		DriverStation.silenceJoystickConnectionWarning(true);
-		// CommandScheduler.getInstance().unregisterAllSubsystems();
+		RobotController.setBrownoutVoltage(5.5);
+		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
 		

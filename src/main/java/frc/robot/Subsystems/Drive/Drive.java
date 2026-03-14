@@ -24,6 +24,7 @@ import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -49,6 +50,7 @@ import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
+import java.util.List;
 import kotlin.Pair;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
@@ -413,6 +415,22 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void resetPose(Pose2d pose) {
 		this.driveIO.getDrive().resetPose(pose);
+  }
+  
+	public List<TalonFX> getDriveMotors() {
+		List<TalonFX> driveMotors = new java.util.ArrayList<>();
+		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+			driveMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getDriveMotor()));
+		}
+		return driveMotors;
+	}
+
+	public List<TalonFX> getTurnMotors() {
+		List<TalonFX> turnMotors = new java.util.ArrayList<>();
+		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+			turnMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getSteerMotor()));
+		}
+		return turnMotors;
 	}
 
 	public boolean isAtAllianceShootingPosition() {

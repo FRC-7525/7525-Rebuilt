@@ -25,7 +25,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Drive drive;
 	private Shooter shooter;
 	private Hopper hopper;
-
+	private CurrentLimiter currentLimiter;
 	private Intake intake;
 
 	//private Climber climber;
@@ -41,10 +41,12 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Manager() {
 		super(SUBSYSTEM_NAME, ManagerStates.IDLE);
 		instance = this;
+		currentLimiter = CurrentLimiter.getInstance();
 		drive = Drive.getInstance();
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
+		currentLimiter.periodic();
 		//climber = Climber.getInstance();
 		//vision = Vision.getInstance();
 
@@ -112,16 +114,18 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
 
 		// Set subsystem states
+		currentLimiter.setState(getState().getCurrentLimiterState());
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		intake.setState(getState().getIntakeState());
+		// intake.setState(getState().getIntakeState());
 		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		//Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		Tracer.traceFunc("CurrentLimiterPeriodic", CurrentLimiter.getInstance()::periodic);
 		//Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {

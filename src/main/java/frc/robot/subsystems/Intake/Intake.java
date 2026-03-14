@@ -13,6 +13,8 @@ public class Intake extends Subsystem<IntakeStates> {
 	private static Intake instance;
 	private final IntakeIO io;
 	private final IntakeIO.IntakeIOOutputs outputs = new IntakeIO.IntakeIOOutputs();
+	private double prevTime = 0;
+	private boolean agitatingIn = false;
 
 	private Intake() {
 		super(SUBSYSTEM_NAME, IntakeStates.IN);
@@ -36,9 +38,13 @@ public class Intake extends Subsystem<IntakeStates> {
 
 		//TODO: Find better implementation this is kinda geeked
 		if (getState() == IntakeStates.AGITATING) {
-			if (Math.floor(getStateTime()) % 2 == 0) {
-				io.setAngularPosition(INTAKE_AGITATING_IN_POS);
-			} else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
+			if (getStateTime() - prevTime > AGITATION_TIME) {
+				agitatingIn = !agitatingIn;
+				prevTime = getStateTime();
+			}
+
+			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
+			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
 		} else io.setAngularPosition(getState().getAngle());
 
 		io.logOutputs(outputs);
@@ -48,10 +54,15 @@ public class Intake extends Subsystem<IntakeStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinCurrentAmps", outputs.spinCurrentAmps);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/AngularDegrees", outputs.angularPosition.in(Degrees));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/AngularSetpointDegrees", outputs.angularSetpoint.in(Degrees));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/PivotCurrentAmps", outputs.pivotCurrentAmps);
 	}
 
 	public TalonFX getSpinMotor() {
 		return io.getSpinMotor();
+	}
+
+	public TalonFX getPivotMotor() {
+		return io.getPivotMotor();
 	}
 
 	public double getStateTime() {
