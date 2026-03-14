@@ -14,6 +14,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private static Shooter instance;
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;
+	private ShooterStates cache;
 
 	public static Shooter getInstance() {
 		if (instance == null) {
@@ -30,13 +31,16 @@ public class Shooter extends Subsystem<ShooterStates> {
 		super(SUBSYSTEM_NAME, ShooterStates.IDLE);
 		this.io = io;
 		outputs = new ShooterIOOutputs();
+		cache = ShooterStates.IDLE;
 	}
 
 	@Override
 	public void runState() {
-		io.setHoodAngle(getState().getHoodAngle());
-		io.setWheelVelocity(getState().getWheelVelocity());
-		io.logOutputs(outputs);
+		if (getState() != ShooterStates.ZEROING) {
+			io.setHoodAngle(getState().getHoodAngle());
+			io.setWheelVelocity(getState().getWheelVelocity());
+			io.logOutputs(outputs);
+		} else if (io.zeroHoodMotor()) setState(cache);
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelVelocity", outputs.leftWheelVelocity.in(RotationsPerSecond));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelVelocity", outputs.rightWheelVelocity.in(RotationsPerSecond));
@@ -49,5 +53,10 @@ public class Shooter extends Subsystem<ShooterStates> {
 
 	public boolean readyToShoot() {
 		return io.atHoodAngleSetpoint() && io.atWheelVelocitySetpoint();
+	}
+
+	@Override
+	protected void stateExit() {
+		cache = getState();
 	}
 }

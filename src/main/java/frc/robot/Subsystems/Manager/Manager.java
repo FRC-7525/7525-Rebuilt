@@ -25,9 +25,11 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Drive drive;
 	private Shooter shooter;
 	private Hopper hopper;
+
 	private Intake intake;
-	private Climber climber;
-	private Vision vision;
+
+	//private Climber climber;
+	//private Vision vision;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -43,8 +45,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
-		climber = Climber.getInstance();
-		vision = Vision.getInstance();
+		//climber = Climber.getInstance();
+		//vision = Vision.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
@@ -84,6 +86,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 
+		addTrigger(ManagerStates.IDLE, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getAButtonPressed);
+
 		// ----------------------------------------------  AUTO EXCLUSIVE TRIGGERS  -------------------------------------------------------
 
 		addTrigger(ManagerStates.WINDING_TO_SCORE_AUTO, ManagerStates.SCORING_AUTO, () -> Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) && Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees));
@@ -103,7 +107,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		}
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE", getState().getStateString());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
+		//Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
 
@@ -111,14 +115,14 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		climber.setState(getState().getClimberState());
+		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
 		Tracer.traceFunc("IntakePeriodic", intake::periodic);
-		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
-		Tracer.traceFunc("DrivePeriodic", drive::periodic);
-		Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+		//Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		//Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.IDLE);

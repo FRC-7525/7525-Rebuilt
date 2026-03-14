@@ -16,7 +16,8 @@ public class HopperIOSim extends HopperIOReal {
 	private final DCMotorSim kickerSim;
 
 	double targetSpinVelocity;
-	double targetKickVelocity;
+	double targetKickerVelocity;
+	double targetKickerVelocity2;
 
 	public HopperIOSim() {
 		spindexerSimState = new TalonFXSimState(spindexerMotor);
@@ -29,9 +30,9 @@ public class HopperIOSim extends HopperIOReal {
 	@Override
 	public void updateOutputs(HopperIOOutputs outputs) {
 		outputs.spinVelocityRPS = spindexerSim.getAngularVelocity().in(RotationsPerSecond);
-		outputs.targetSpinVelocity = targetSpinVelocity;
-		outputs.targetKickVelocity = targetKickVelocity;
 		outputs.kickVelocityRPS = kickerSim.getAngularVelocity().in(RotationsPerSecond);
+		outputs.targetSpinVelocity = targetSpinVelocity;
+		outputs.targetKickVelocity = targetKickerVelocity;
 
 		spindexerSimState.setRotorVelocity(spindexerSim.getAngularVelocity());
 		kickerSimState.setRotorVelocity(kickerSim.getAngularVelocity());
@@ -44,8 +45,8 @@ public class HopperIOSim extends HopperIOReal {
 	}
 
 	@Override
-	public void setTargetKickVelocity(double targetKickVelocity) {
-		this.targetKickVelocity = targetKickVelocity;
-		kickerMotor.set(targetKickVelocity);
+	public void setTargetKickerVelocity(double velocity) {
+		this.targetKickerVelocity = velocity;
+		kickerMotor.set(targetKickerVelocity);
 	}
 }

@@ -9,8 +9,9 @@ public enum HopperStates implements SubsystemStates {
 	private String stateString;
 	private double spinVelocity;
 	private double kickVelocity;
+	private double kickVelocity2;
 
-	HopperStates(String stateString, double spinVelocity, double kickVelocity) {
+	HopperStates(String stateString, double kickVelocity, double spinVelocity) {
 		this.stateString = stateString;
 		this.spinVelocity = spinVelocity;
 		this.kickVelocity = kickVelocity;
@@ -27,5 +28,9 @@ public enum HopperStates implements SubsystemStates {
 
 	public double getKickVelocity() {
 		return kickVelocity;
+	}
+
+	public double getKickVelocity2() {
+		return kickVelocity2;
 	}
 }

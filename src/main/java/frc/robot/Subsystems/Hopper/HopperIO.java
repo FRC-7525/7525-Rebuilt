@@ -13,5 +13,5 @@ public interface HopperIO {
 
 	public void setTargetSpinVelocity(double velocity);
 
-	public void setTargetKickVelocity(double velocity);
+	public void setTargetKickerVelocity(double velocity);
 }
