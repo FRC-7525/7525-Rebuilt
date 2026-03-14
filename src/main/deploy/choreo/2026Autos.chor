@@ -3,8 +3,65 @@
  "version":2,
  "type":"Swerve",
  "variables":{
-  "expressions":{},
+  "expressions":{
+   "AvoidRadius":{
+    "dimension":"Number",
+    "var":{
+     "exp":"1.31826984978596",
+     "val":1.31826984978596
+    }
+   },
+   "AvoidX":{
+    "dimension":"Number",
+    "var":{
+     "exp":"4.603233922272921",
+     "val":4.603233922272921
+    }
+   },
+   "LowerAvoidY":{
+    "dimension":"Number",
+    "var":{
+     "exp":"2.3492540158331394",
+     "val":2.3492540158331394
+    }
+   },
+   "UpperAvoidY":{
+    "dimension":"Number",
+    "var":{
+     "exp":"5.72074598417",
+     "val":5.72074598417
+    }
+   }
+  },
   "poses":{
+   "LeftAllianceTrenchStraighten":{
+    "x":{
+     "exp":"3.869765043258667 m",
+     "val":3.869765043258667
+    },
+    "y":{
+     "exp":"7.61882797599 m",
+     "val":7.61882797599
+    },
+    "heading":{
+     "exp":"pi rad",
+     "val":3.141592653589793
+    }
+   },
+   "LeftNeutralTrenchStraighten":{
+    "x":{
+     "exp":"5.39705429077148 m",
+     "val":5.39705429077148
+    },
+    "y":{
+     "exp":"7.61882797599 m",
+     "val":7.61882797599
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
    "RightAllianceTrenchStraighten":{
     "x":{
      "exp":"3.869765043258667 m",

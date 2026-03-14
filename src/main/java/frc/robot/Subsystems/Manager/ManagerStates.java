@@ -20,6 +20,7 @@ public enum ManagerStates implements SubsystemStates {
 	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT),
 	// AUTO EXCLUSIVE STATES
 	INTAKING_AUTO("AUTO INTAKING", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE),
+	INTAKE_AND_PASS_AUTO("AUTO INTAKING AND PASSING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE),
 	WINDING_TO_SCORE_AUTO("AUTO WINDING SCORE", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),
 	WINDING_TO_SHUTTLE_AUTO("AUTO WINDING PASS", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE),
 	SCORING_AUTO("AUTO SCORING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE);

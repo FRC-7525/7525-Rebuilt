@@ -24,12 +24,40 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj Right2Cycle = new ChoreoTraj(
+    public static final ChoreoTraj Left2Cycle = new ChoreoTraj(
+	    "Left2Cycle",
+	    OptionalInt.empty(),
+	    6.84435,
+	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj Right2Cycle = new ChoreoTraj(
 	    "Right2Cycle",
 	    OptionalInt.empty(),
 	    6.89872,
 	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
 	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.094))
+	);
+	public static final ChoreoTraj SweeperRight1Cycle = new ChoreoTraj(
+	    "SweeperRight1Cycle",
+	    OptionalInt.empty(),
+	    7.97167,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj SweeperLeft1Cycle = new ChoreoTraj(
+	    "SweeperLeft1Cycle",
+	    OptionalInt.empty(),
+	    7.979,
+	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.085))
+	);
+	public static final ChoreoTraj Right1CycleDepot = new ChoreoTraj(
+	    "Right1CycleDepot",
+	    OptionalInt.empty(),
+	    7.32117,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(0.581, 0.48, Rotation2d.fromRadians(1.571))
 	);
 
     /**
@@ -37,7 +65,11 @@ public record ChoreoTraj(
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("Right2Cycle", Right2Cycle)
+    	Map.entry("Left2Cycle", Left2Cycle),
+		Map.entry("Right2Cycle", Right2Cycle),
+		Map.entry("SweeperRight1Cycle", SweeperRight1Cycle),
+		Map.entry("SweeperLeft1Cycle", SweeperLeft1Cycle),
+		Map.entry("Right1CycleDepot", Right1CycleDepot)
     );
 
     /**
