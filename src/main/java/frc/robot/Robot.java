@@ -4,14 +4,19 @@ import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
 import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Autonomous.AutoRoutines;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Manager.Manager;
+import kotlin.Pair;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -55,6 +60,10 @@ public class Robot extends LoggedRobot {
 		Drive.getInstance().zeroGyro();
 		
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
+		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
+		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);
+		autoChooser.addRoutine("left Sweeper 1 Cycle", autoRoutines::sweeperLeft1Cycle);
+		autoChooser.addRoutine("Right 1 Cycle Depot", autoRoutines::right1CycleDepot);
 		SmartDashboard.putData("autoChooser", autoChooser);
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
