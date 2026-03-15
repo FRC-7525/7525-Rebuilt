@@ -69,13 +69,13 @@ public final class ShooterConstants {
 		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.5, 0, 0);
+			case REAL -> new PIDController(0.92, 0, 0);
 			case SIM -> new PIDController(0.0077, 0, 0);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune
 	public static final Supplier<SimpleMotorFeedforward> WHEEL_FEEDFORWARD = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12); // Recalc fakes :wilted_rose:
+			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.05); //kV-0.118, kA-.201
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
 		}; //TODO: tune

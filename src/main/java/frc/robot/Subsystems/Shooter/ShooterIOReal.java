@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GainSchedBehaviorValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.controller.PIDController;
@@ -48,7 +49,11 @@ public class ShooterIOReal implements ShooterIO {
 		leftMotorConfig.Slot0.kP = wheelPID.getP();
 		leftMotorConfig.Slot0.kI = wheelPID.getI();
 		leftMotorConfig.Slot0.kD = wheelPID.getD();
+		leftMotorConfig.Slot0.kS = wheelFeedforward.getKs();
+		leftMotorConfig.Slot0.kV = wheelFeedforward.getKv();
+		leftMotorConfig.Slot0.kA = wheelFeedforward.getKa();
 		leftMotor.getConfigurator().apply(leftMotorConfig);
+		rightMotor.getConfigurator().apply(leftMotorConfig);
 
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
 
@@ -88,7 +93,7 @@ public class ShooterIOReal implements ShooterIO {
 		}
 		// leftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), wheelSetpoint.in(RotationsPerSecond)) + wheelFeedforward.calculate());
 		//eftMotor.setVoltage(wheelPID.calculate(leftMotor.getVelocity().getValue().in(RotationsPerSecond), velocity.in(RotationsPerSecond)) + wheelFeedforward.calculate(wheelPID.getSetpoint());
-		leftMotor.setControl(wheelControlReq.withVelocity(velocity).withFeedForward(wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond))));
+		leftMotor.setControl(wheelControlReq.withVelocity(velocity));
 	}
 
 	@Override

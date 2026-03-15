@@ -5,6 +5,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.GlobalConstants;
 import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOOutputs;
@@ -18,6 +21,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;
 	private ShooterStates cache;
+	public LinearFilter smoothFilter;
 	private DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_PORT);
 	private boolean previousBBValue = true;
 	private int numBallsShot = 0;
@@ -38,10 +42,12 @@ public class Shooter extends Subsystem<ShooterStates> {
 		this.io = io;
 		outputs = new ShooterIOOutputs();
 		cache = ShooterStates.IDLE;
+		smoothFilter = LinearFilter.movingAverage(5);
 	}
 
 	@Override
 	public void runState() {
+		smoothFilter.calculate(io.getShooterMotors().get(0).getVelocity().getValueAsDouble());
 		if (getState() != ShooterStates.ZEROING) {
 			io.setHoodAngle(getState().getHoodAngle());
 			io.setWheelVelocity(getState().getWheelVelocity());
@@ -68,6 +74,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/LeftWheelCurrent", outputs.leftWheelCurrent);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/RightWheelCurrent", outputs.rightWheelCurrent);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HoodCurrent", outputs.hoodCurrent);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/FIlteredRPS", smoothFilter.lastValue());
 	}
 
 	public boolean readyToShoot() {
