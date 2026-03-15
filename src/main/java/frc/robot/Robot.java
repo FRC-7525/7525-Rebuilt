@@ -87,11 +87,15 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void autonomousExit() {
 		CommandScheduler.getInstance().cancelAll();
+		manager.setState(IDLE);
+		Drive.getInstance().setState(DriveStates.NORMAL);
 	}
 
 	@Override
 	public void teleopInit() {
+		CommandScheduler.getInstance().cancelAll();
 		manager.setState(IDLE);
+		Drive.getInstance().setState(DriveStates.NORMAL);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Intake intake;
 
 	//private Climber climber;
-	//private Vision vision;
+	private Vision vision;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -48,7 +48,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake = Intake.getInstance();
 		currentLimiter.periodic();
 		//climber = Climber.getInstance();
-		//vision = Vision.getInstance();
+		vision = Vision.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
@@ -124,9 +124,9 @@ public class Manager extends Subsystem<ManagerStates> {
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
 		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
-		//Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("CurrentLimiterPeriodic", CurrentLimiter.getInstance()::periodic);
-		//Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.IDLE);

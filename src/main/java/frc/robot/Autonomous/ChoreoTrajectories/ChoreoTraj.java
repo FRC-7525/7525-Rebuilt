@@ -1,4 +1,4 @@
-// spotless:off
+
 package frc.robot.Autonomous.ChoreoTrajectories;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -6,10 +6,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.Map;
 import java.util.OptionalInt;
 
+// If these imports cause errors because you're not using ChoreoLib,
+// turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-// If the 2 imports above cause errors because you're not using ChoreoLib,
-// turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
 
 /**
  * A class containing the name, start pose, end pose, and total time of every Choreo trajectory.
@@ -25,67 +25,67 @@ public record ChoreoTraj(
     Pose2d endPoseBlue
 ) {
     public static final ChoreoTraj Drive1 = new ChoreoTraj(
-        "Drive1",
-        OptionalInt.empty(),
-        0.66623,
-        new Pose2d(0.5, 2, Rotation2d.fromRadians(0)),
-        new Pose2d(1.5, 2, Rotation2d.fromRadians(0))
-    );
-    public static final ChoreoTraj Left2Cycle = new ChoreoTraj(
-        "Left2Cycle",
-        OptionalInt.empty(),
-        6.84435,
-        new Pose2d(4.41208, 7.61883, Rotation2d.fromRadians(0)),
-        new Pose2d(2.52135, 7.23333, Rotation2d.fromRadians(3.14104))
-    );
-    public static final ChoreoTraj Right1CycleDepot = new ChoreoTraj(
-        "Right1CycleDepot",
-        OptionalInt.empty(),
-        7.32117,
-        new Pose2d(4.41208, 0.45117, Rotation2d.fromRadians(0)),
-        new Pose2d(0.58133, 0.48027, Rotation2d.fromRadians(1.5708))
-    );
-    public static final ChoreoTraj Right2Cycle = new ChoreoTraj(
-        "Right2Cycle",
-        OptionalInt.empty(),
-        6.89872,
-        new Pose2d(4.41208, 0.45117, Rotation2d.fromRadians(0)),
-        new Pose2d(2.52135, 0.83667, Rotation2d.fromRadians(-0.09353))
-    );
-    public static final ChoreoTraj SweeperLeft1Cycle = new ChoreoTraj(
-        "SweeperLeft1Cycle",
-        OptionalInt.empty(),
-        7.979,
-        new Pose2d(4.41208, 7.61883, Rotation2d.fromRadians(0)),
-        new Pose2d(2.52135, 0.83667, Rotation2d.fromRadians(-0.08456))
-    );
-    public static final ChoreoTraj SweeperRight1Cycle = new ChoreoTraj(
-        "SweeperRight1Cycle",
-        OptionalInt.empty(),
-        7.97167,
-        new Pose2d(4.41208, 0.45117, Rotation2d.fromRadians(0)),
-        new Pose2d(2.52135, 7.23333, Rotation2d.fromRadians(3.14095))
-    );
-    public static final ChoreoTraj SweeperRight1Cycle_copy1 = new ChoreoTraj(
-        "SweeperRight1Cycle_copy1",
-        OptionalInt.empty(),
-        7.97167,
-        new Pose2d(4.41208, 0.45117, Rotation2d.fromRadians(0)),
-        new Pose2d(2.52135, 7.23333, Rotation2d.fromRadians(3.14095))
-    );
+	    "Drive1",
+	    OptionalInt.empty(),
+	    1.50695,
+	    new Pose2d(0.5, 2, Rotation2d.fromRadians(0)),
+	    new Pose2d(1.5, 1, Rotation2d.fromRadians(1.571))
+	);
+	public static final ChoreoTraj Left2Cycle = new ChoreoTraj(
+	    "Left2Cycle",
+	    OptionalInt.empty(),
+	    6.84435,
+	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj Right1CycleDepot = new ChoreoTraj(
+	    "Right1CycleDepot",
+	    OptionalInt.empty(),
+	    7.32117,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(0.581, 0.48, Rotation2d.fromRadians(1.571))
+	);
+	public static final ChoreoTraj Right2Cycle = new ChoreoTraj(
+	    "Right2Cycle",
+	    OptionalInt.empty(),
+	    6.89872,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.094))
+	);
+	public static final ChoreoTraj SweeperLeft1Cycle = new ChoreoTraj(
+	    "SweeperLeft1Cycle",
+	    OptionalInt.empty(),
+	    7.979,
+	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.085))
+	);
+	public static final ChoreoTraj SweeperRight1Cycle = new ChoreoTraj(
+	    "SweeperRight1Cycle",
+	    OptionalInt.empty(),
+	    7.97167,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj SweeperRight1Cycle_copy1 = new ChoreoTraj(
+	    "SweeperRight1Cycle_copy1",
+	    OptionalInt.empty(),
+	    7.97167,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-        Map.entry("Drive1", Drive1),
-        Map.entry("Left2Cycle", Left2Cycle),
-        Map.entry("Right1CycleDepot", Right1CycleDepot),
-        Map.entry("Right2Cycle", Right2Cycle),
-        Map.entry("SweeperLeft1Cycle", SweeperLeft1Cycle),
-        Map.entry("SweeperRight1Cycle", SweeperRight1Cycle),
-        Map.entry("SweeperRight1Cycle_copy1", SweeperRight1Cycle_copy1)
+    	Map.entry("Drive1", Drive1),
+		Map.entry("Left2Cycle", Left2Cycle),
+		Map.entry("Right1CycleDepot", Right1CycleDepot),
+		Map.entry("Right2Cycle", Right2Cycle),
+		Map.entry("SweeperLeft1Cycle", SweeperLeft1Cycle),
+		Map.entry("SweeperRight1Cycle", SweeperRight1Cycle),
+		Map.entry("SweeperRight1Cycle_copy1", SweeperRight1Cycle_copy1)
     );
 
     /**
@@ -112,4 +112,3 @@ public record ChoreoTraj(
         return routine.trajectory(this.name);
     }
 }
-// spotless:on
