@@ -49,6 +49,10 @@ public class Manager extends Subsystem<ManagerStates> {
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.IDLE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
+		
+		//EXTENDED_IDLE <---> ZEROING
+		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.ZEROING, OPERATOR_CONTROLLER::getXButtonPressed);
+		addTrigger(ManagerStates.ZEROING, ManagerStates.EXTENDED_IDLE, OPERATOR_CONTROLLER::getXButtonPressed);
 
 		// IDLE/EXTENDED_IDLE --> INTAKING
 		addTrigger(ManagerStates.IDLE, ManagerStates.INTAKING, DRIVER_CONTROLLER::getXButtonPressed);

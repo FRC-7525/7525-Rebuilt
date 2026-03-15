@@ -20,7 +20,8 @@ public enum DriveStates implements SubsystemStates {
 	AIMLOCK_ALLIANCE_RIGHT_SHALLOW("Locking Aim To shallow right side of alliance station", AIMLOCK_RIGHT_SHALLOW_POSES),
 	AA_TOWER_LEFT("Going to left side of tower", TOWER_LEFT),
 	AA_TOWER_RIGHT("Going to right side of tower", TOWER_RIGHT),
-	AA_NEUTRAL("Going to neutral zone", NEUTRAL_POSES);
+	AA_NEUTRAL("Going to neutral zone", NEUTRAL_POSES),
+	SNAKE_DRIVE("Snake Drive Mode", new PosePair(Pose2d.kZero, Pose2d.kZero));
 
 	private String stateString;
 	private PosePair targetPosePair;

@@ -17,7 +17,8 @@ public enum ManagerStates implements SubsystemStates {
 	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_HUB),
 	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.AGITATING, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_FIXED),
 	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND, CurrentLimiterStates.EXTENDING_CLIMBER),
-	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT, CurrentLimiterStates.RETRACTING_CLIMBER);
+	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT, CurrentLimiterStates.RETRACTING_CLIMBER),
+	ZEROING("ZEROING MECHANISMS", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.ZEROING, ClimberStates.IDLE, CurrentLimiterStates.EXTENDED_IDLE);
 
 	private final String stateString;
 	private final IntakeStates intakeState;
