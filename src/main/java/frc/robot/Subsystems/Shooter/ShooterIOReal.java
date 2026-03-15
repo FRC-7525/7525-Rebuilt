@@ -94,6 +94,8 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
+		hoodSetpoint = Degrees.of(SmartDashboard.getNumber("HOOD_ANGLE_TUNING", 0));
+		SmartDashboard.putNumber("HOOD_ANGLE_TUNING", hoodSetpoint.in(Degrees));
 		//TODO: Switch to this after done testing
 		//TODO: Find a better way to do this lowkey cooked
 		if (angle.in(Degrees) != 0) {

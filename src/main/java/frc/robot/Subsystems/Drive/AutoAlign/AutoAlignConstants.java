@@ -40,11 +40,11 @@ public final class AutoAlignConstants {
 	// Sim
 	public static final Distance DISTANCE_ERROR_MARGIN = Meters.of(0.0208);
 	public static final Distance DISTANCE_ERROR_MARGIN2 = Meters.of(0.5);
-	public static final Angle ANGLE_ERROR_MARGIN = Degrees.of(1.5); // was 0.05 radians
+	public static final Angle ANGLE_ERROR_MARGIN = Degrees.of(0.5); // was 0.05 radians
 
 	public static final double TIMEOUT_DISTANCE_THRESHOLD = 0.05;
 	public static final double TIMEOUT_THRESHOLD = 1;
-	public static final Angle MAX_YAW_ERROR = Degrees.of(4);
+	public static final Angle MAX_YAW_ERROR = Degrees.of(0.5);
 
 	public static final double GOAL_STRENGTH = 0.1;
 	static final double FIELD_LENGTH = 16.42;
@@ -54,6 +54,13 @@ public final class AutoAlignConstants {
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
 
 	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new PIDController(0.1, 0, 0);
+			case SIM -> new PIDController(1, 0, .01);
+			default -> new PIDController(20, 1, 0);
+		};
+	public static final Angle SWITCH_DIST = Degrees.of(5);
+	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(1, 0, 0);
 			case SIM -> new PIDController(1, 0, .01);
