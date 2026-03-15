@@ -16,6 +16,7 @@ import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIV
 import static frc.robot.Subsystems.Drive.DriveConstants.RED_ALLIANCE_PERSPECTIVE_ROTATION;
 import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
@@ -146,6 +147,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
+		sotmTarget = Robot.isRedAlliance ? RED_HUB_POSE : BLUE_HUB_POSE;
 		SmartDashboard.putData("Sus Fast COntroller", shooterYawControllerFast);
 		SmartDashboard.putData("Shooter CONTROLLER", shooterYawController);
 		if (DriverStation.isDisabled()) robotMirrored = false;
@@ -169,7 +171,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				Pose2d target = RED_HUB_POSE;
+				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
 				double turnValue;
