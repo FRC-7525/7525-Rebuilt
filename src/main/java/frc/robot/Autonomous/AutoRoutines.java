@@ -71,4 +71,13 @@ public class AutoRoutines {
 
 		return routine;
 	}
+
+	public AutoRoutine driveStraight() {
+		AutoRoutine routine = autoFactory.newRoutine("Drive1");
+		AutoTrajectory traj = ChoreoTraj.Drive1.asAutoTraj(routine);
+
+		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
+
+		return routine;
+	}
 }
