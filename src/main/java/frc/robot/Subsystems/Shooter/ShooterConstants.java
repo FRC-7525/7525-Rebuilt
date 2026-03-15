@@ -69,7 +69,7 @@ public final class ShooterConstants {
 		}; //TODO: tune
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(5, 0, 0); 
+			case REAL -> new PIDController(0.5, 0, 0);
 			case SIM -> new PIDController(0.0077, 0, 0);
 			case TESTING -> new PIDController(0.1, 0, 0);
 		}; //TODO: tune
