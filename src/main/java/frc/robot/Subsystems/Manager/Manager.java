@@ -109,7 +109,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		}
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE", getState().getStateString());
-		//Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
 

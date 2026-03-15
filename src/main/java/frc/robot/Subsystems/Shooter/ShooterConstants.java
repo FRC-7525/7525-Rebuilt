@@ -24,11 +24,11 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(85);
 
 	//TODO: Change standby values to actual values after testing is done
 	public static final Angle STANDBY_ANGLE = Degrees.of(10.5);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(85);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;

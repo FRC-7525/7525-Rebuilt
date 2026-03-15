@@ -78,6 +78,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private final PIDController shooterYawController;
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
+	private final PIDController shooterYawControllerFast;
 
 	private final PIDController xController;
 	private final PIDController yController;
@@ -103,6 +104,7 @@ public class Drive extends Subsystem<DriveStates> {
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
+		this.shooterYawControllerFast = SHOOTER_YAW_CONTROLLER_FAST.get();
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
 		this.translationalController = SCALED_FF_TRANSLATIONAL_CONTROLLER.get();
 
@@ -123,7 +125,7 @@ public class Drive extends Subsystem<DriveStates> {
 		this.headingController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.rotationController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.repulsorRotationalController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
-
+		this.shooterYawControllerFast.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.isFieldRelative = true;
 
 		// Zero Gyro
@@ -135,7 +137,15 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 
 		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
+		addRunnableTrigger(
+			() -> {
+				driveIO.zeroGyro();
+			},
+			DRIVER_CONTROLLER::getBackButtonPressed
+		);
+		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 	}
 
 	/**
@@ -152,6 +162,8 @@ public class Drive extends Subsystem<DriveStates> {
 
 	@Override
 	public void runState() {
+		SmartDashboard.putData("Sus Fast COntroller", shooterYawControllerFast);
+		SmartDashboard.putData("Shooter CONTROLLER", shooterYawController);
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Zero on init/when first disabled
@@ -166,27 +178,25 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-				if (!DriverStation.isAutonomous()) {
-					executeDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
-				}
+				executeDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				System.out.println("hiii");
-				Pose2d target = sotmTarget;
+				Pose2d target = RED_HUB_POSE;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
-				executeAutoAlignDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond),
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond),
-					Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0,
-					true
-				);
+				double turnValue;
+				if (Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) >= SWITCH_DIST.in(Degrees)) {
+					turnValue = shooterYawControllerFast.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI);
+				} else {
+					turnValue = Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0;
+				}
+				executeAutoAlignDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), turnValue, true);
 				Logger.recordOutput("shooter/target", target);
-				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getRadians());
+				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getDegrees());
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
 				break;
 			case AA_NEUTRAL:
