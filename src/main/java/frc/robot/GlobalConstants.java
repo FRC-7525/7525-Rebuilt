@@ -7,10 +7,9 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import kotlin.Pair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import kotlin.Pair;
 
 public class GlobalConstants {
 
@@ -58,8 +57,8 @@ public class GlobalConstants {
 		public static final ArrayList<Integer> CANIVORE_DEVICE_ORDER = new ArrayList<Integer>(Arrays.asList(39, 56, 6, 4, 58, 9, 5, 11, 12, 2, 59, 3, 8));
 	}
 
-	public static kotlin.Pair<Translation2d, Translation2d> BLUE_ALLIANCE_BOUNDS = new Pair<Translation2d,Translation2d>(new Translation2d(0,0), new Translation2d(4, 8.05));
-	public static kotlin.Pair<Translation2d, Translation2d> RED_ALLIANCE_BOUNDS = new Pair<Translation2d,Translation2d>(new Translation2d(12.54,0), new Translation2d(16.57, 8.05));
+	public static kotlin.Pair<Translation2d, Translation2d> BLUE_ALLIANCE_BOUNDS = new Pair<Translation2d, Translation2d>(new Translation2d(0, 0), new Translation2d(4, 8.05));
+	public static kotlin.Pair<Translation2d, Translation2d> RED_ALLIANCE_BOUNDS = new Pair<Translation2d, Translation2d>(new Translation2d(12.54, 0), new Translation2d(16.57, 8.05));
 
 	public static final double TRIGGERS_REGISTER_POINT = 0.5;
 }
