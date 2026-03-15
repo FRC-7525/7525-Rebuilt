@@ -63,7 +63,7 @@ public final class AutoAlignConstants {
 	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(1, 0, 0);
-			case SIM -> new PIDController(1, 0, .01);
+			case SIM -> new PIDController(2, 0, .01);
 			default -> new PIDController(20, 1, 0);
 		};
 

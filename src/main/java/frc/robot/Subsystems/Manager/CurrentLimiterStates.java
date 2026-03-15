@@ -12,7 +12,8 @@ public enum CurrentLimiterStates implements SubsystemStates {
 	SHOOTING_HUB(30, 30, 89, 20, 40, 20, 20, 30, 10),
 	SHOOTING_FIXED(30, 30, 60, 20, 40, 20, 20, 30, 10),
 	EXTENDING_CLIMBER(80, 40, 40, 40, 40, 40, 40, 40, 40),
-	RETRACTING_CLIMBER(80, 40, 40, 40, 40, 40, 40, 40, 40);
+	RETRACTING_CLIMBER(80, 40, 40, 40, 40, 40, 40, 40, 40),
+	INTAKING_AND_SHOOTING_AUTO(60, 20, 89, 20, 30, 40, 40, 30, 10);
 
 	private int driveLimit;
 	private int turnLimit;
