@@ -60,11 +60,13 @@ public class Manager extends Subsystem<ManagerStates> {
 		// IDLE/EXTENDED_IDLE --> WINDING_UP
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, OPERATOR_CONTROLLER::getYButtonPressed);
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// INTAKING --> WINDING_UP
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, OPERATOR_CONTROLLER::getYButtonPressed);
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
@@ -108,19 +110,19 @@ public class Manager extends Subsystem<ManagerStates> {
 		currentLimiter.setState(getState().getCurrentLimiterState());
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		// intake.setState(getState().getIntakeState());
+		intake.setState(getState().getIntakeState());
 		//climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("CurrentLimiterPeriodic", CurrentLimiter.getInstance()::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
-			setState(ManagerStates.IDLE);
+			setState(ManagerStates.EXTENDED_IDLE);
 		}
 	}
 

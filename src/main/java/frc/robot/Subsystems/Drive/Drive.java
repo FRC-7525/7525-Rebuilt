@@ -127,6 +127,7 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
+		
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
@@ -201,6 +202,10 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
+
+		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
+			setState(DriveStates.NORMAL);
+		}
 	}
 
 	/**
@@ -238,9 +243,15 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void executeAutoAlignDriveInstruction(double xVelocity, double yVelocity, double angularVelocity, boolean hasDriverControl) {
 		if (hasDriverControl) {
-			driveIO.setControl(
-				new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-			);
+			if (!isFieldRelative) {
+				driveIO.setControl(
+					new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				);
+			} else {
+				driveIO.setControl(
+					new SwerveRequest.FieldCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				);
+			}
 		} else {
 			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 		}
