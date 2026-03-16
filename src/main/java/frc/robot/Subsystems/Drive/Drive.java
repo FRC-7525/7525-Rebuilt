@@ -391,7 +391,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		if (allowAutoAimlock) {
 
-			if (Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) >= SWITCH_DIST.in(Degrees)) {
+			if (Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) >= SWITCH_DIST.in(Degrees)) {
 				targetSpeeds.omegaRadiansPerSecond = shooterYawControllerFast.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI);
 			} else {
 				targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
