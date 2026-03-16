@@ -84,5 +84,4 @@ public final class ShooterConstants {
 	public static final Transform2d ROBOT_TO_SHOOTER_2D = new Transform2d(-0.2270125, -0.1119715947, Rotation2d.kCCW_90deg);
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
-
 }
