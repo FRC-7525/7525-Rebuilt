@@ -14,7 +14,10 @@ import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.ANGLE_AUTO_CONTROLLER;
 import static frc.robot.Subsystems.Drive.DriveConstants.ANGULAR_VELOCITY_LIMIT;
 import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIVE_ROTATION;
+import static frc.robot.Subsystems.Drive.DriveConstants.CLOSE_TO_ZERO;
 import static frc.robot.Subsystems.Drive.DriveConstants.RED_ALLIANCE_PERSPECTIVE_ROTATION;
+import static frc.robot.Subsystems.Drive.DriveConstants.SLOW_MODE_MULTIPLIER;
+import static frc.robot.Subsystems.Drive.DriveConstants.SNAKE_DRIVE_CONTROLLER;
 import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
 import static frc.robot.Subsystems.Drive.DriveConstants.X_AUTO_CONTROLLER;
 import static frc.robot.Subsystems.Drive.DriveConstants.Y_AUTO_CONTROLLER;
@@ -33,6 +36,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -45,6 +49,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
@@ -79,6 +84,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
 	private final PIDController shooterYawControllerFast;
+	private final PIDController snakeDriveController;
 
 	private final PIDController xController;
 	private final PIDController yController;
@@ -87,6 +93,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
+	private double driveMultiplier = 1;
 
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
@@ -101,7 +108,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case TESTING -> new DriveIOReal();
 		};
 
-		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
+		this.snakeDriveController = SNAKE_DRIVE_CONTROLLER.get();
 
 		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		this.shooterYawControllerFast = SHOOTER_YAW_CONTROLLER_FAST.get();
@@ -121,6 +128,7 @@ public class Drive extends Subsystem<DriveStates> {
 		this.repulsorRotationalController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 		this.rotationController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 
+		this.snakeDriveController.enableContinuousInput(-Math.PI, Math.PI);
 		this.shooterYawController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.headingController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.rotationController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
@@ -143,9 +151,12 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
+		
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
 	}
 
 	/**
@@ -166,6 +177,9 @@ public class Drive extends Subsystem<DriveStates> {
 		SmartDashboard.putData("Shooter CONTROLLER", shooterYawController);
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
+		if (DRIVER_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) driveMultiplier = SLOW_MODE_MULTIPLIER;
+		else driveMultiplier = 1;
+
 		// Zero on init/when first disabled
 		if (!robotMirrored && !DriverStation.isDisabled()) {
 			DriverStation.getAlliance()
@@ -178,7 +192,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-				executeDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				executeDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
@@ -214,11 +228,22 @@ public class Drive extends Subsystem<DriveStates> {
 					executeScaledFeedforwardAutoAlign();
 				}
 				break;
-			case AUTO:
+			case SNAKE_DRIVE:
+				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getLeftX(), DRIVER_CONTROLLER.getLeftY());
+				Rotation2d leftStickDir = !Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
+				if (leftStickVector.getNorm() < CLOSE_TO_ZERO) leftStickDir = getPose().getRotation();
+
+				executeAutoAlignDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, snakeDriveController.calculate(getPose().getRotation().getRadians(), leftStickDir.getRadians()), true);
 				break;
+      case AUTO:
+        break;
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
+
+		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
+			setState(DriveStates.NORMAL);
+		}
 	}
 
 	/**
@@ -256,9 +281,15 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void executeAutoAlignDriveInstruction(double xVelocity, double yVelocity, double angularVelocity, boolean hasDriverControl) {
 		if (hasDriverControl) {
-			driveIO.setControl(
-				new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
-			);
+			if (!isFieldRelative) {
+				driveIO.setControl(
+					new SwerveRequest.RobotCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				);
+			} else {
+				driveIO.setControl(
+					new SwerveRequest.FieldCentric().withDeadband(DEADBAND).withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+				);
+			}
 		} else {
 			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(angularVelocity).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 		}
