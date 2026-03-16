@@ -31,12 +31,19 @@ public record ChoreoTraj(
 	    new Pose2d(0.5, 2, Rotation2d.fromRadians(0)),
 	    new Pose2d(1.5, 1, Rotation2d.fromRadians(1.571))
 	);
-	public static final ChoreoTraj Left2Cycle = new ChoreoTraj(
-	    "Left2Cycle",
+	public static final ChoreoTraj Left2Cycle_P1 = new ChoreoTraj(
+	    "Left2Cycle_P1",
 	    OptionalInt.empty(),
-	    6.84435,
+	    3.05365,
 	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj Left2Cycle_P2 = new ChoreoTraj(
+	    "Left2Cycle_P2",
+	    OptionalInt.empty(),
+	    4.00081,
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.605)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(0))
 	);
 	public static final ChoreoTraj Right1CycleDepot = new ChoreoTraj(
 	    "Right1CycleDepot",
@@ -45,33 +52,47 @@ public record ChoreoTraj(
 	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
 	    new Pose2d(0.581, 0.48, Rotation2d.fromRadians(1.571))
 	);
-	public static final ChoreoTraj Right2Cycle = new ChoreoTraj(
-	    "Right2Cycle",
+	public static final ChoreoTraj Right2Cycle_P1 = new ChoreoTraj(
+	    "Right2Cycle_P1",
 	    OptionalInt.empty(),
-	    6.89872,
+	    3.07669,
 	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
-	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.094))
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.002))
 	);
-	public static final ChoreoTraj SweeperLeft1Cycle = new ChoreoTraj(
-	    "SweeperLeft1Cycle",
+	public static final ChoreoTraj Right2Cycle_P2 = new ChoreoTraj(
+	    "Right2Cycle_P2",
 	    OptionalInt.empty(),
-	    7.979,
+	    3.82898,
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.536)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.093))
+	);
+	public static final ChoreoTraj SweeperRight1Cycle_P1 = new ChoreoTraj(
+	    "SweeperRight1Cycle_P1",
+	    OptionalInt.empty(),
+	    7.97167,
+	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	);
+	public static final ChoreoTraj SweeperRight1Cycle_P2 = new ChoreoTraj(
+	    "SweeperRight1Cycle_P2",
+	    OptionalInt.empty(),
+	    3.60422,
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.5)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-3.141))
+	);
+	public static final ChoreoTraj SweeperLeft1Cycle_P1 = new ChoreoTraj(
+	    "SweeperLeft1Cycle_P1",
+	    OptionalInt.empty(),
+	    4.44971,
 	    new Pose2d(4.412, 7.619, Rotation2d.fromRadians(0)),
-	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.085))
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(0))
 	);
-	public static final ChoreoTraj SweeperRight1Cycle = new ChoreoTraj(
-	    "SweeperRight1Cycle",
+	public static final ChoreoTraj SweeperLeft1Cycle_P2 = new ChoreoTraj(
+	    "SweeperLeft1Cycle_P2",
 	    OptionalInt.empty(),
-	    7.97167,
-	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
-	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
-	);
-	public static final ChoreoTraj SweeperRight1Cycle_copy1 = new ChoreoTraj(
-	    "SweeperRight1Cycle_copy1",
-	    OptionalInt.empty(),
-	    7.97167,
-	    new Pose2d(4.412, 0.451, Rotation2d.fromRadians(0)),
-	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(3.141))
+	    3.54001,
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.555)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.059))
 	);
 
     /**
@@ -80,12 +101,15 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
     	Map.entry("Drive1", Drive1),
-		Map.entry("Left2Cycle", Left2Cycle),
+		Map.entry("Left2Cycle_P1", Left2Cycle_P1),
+		Map.entry("Left2Cycle_P2", Left2Cycle_P2),
 		Map.entry("Right1CycleDepot", Right1CycleDepot),
-		Map.entry("Right2Cycle", Right2Cycle),
-		Map.entry("SweeperLeft1Cycle", SweeperLeft1Cycle),
-		Map.entry("SweeperRight1Cycle", SweeperRight1Cycle),
-		Map.entry("SweeperRight1Cycle_copy1", SweeperRight1Cycle_copy1)
+		Map.entry("Right2Cycle_P1", Right2Cycle_P1),
+		Map.entry("Right2Cycle_P2", Right2Cycle_P2),
+		Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
+		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
+		Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
+		Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2)
     );
 
     /**

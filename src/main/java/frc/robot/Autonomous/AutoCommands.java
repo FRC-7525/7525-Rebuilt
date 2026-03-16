@@ -2,7 +2,6 @@ package frc.robot.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
@@ -43,10 +42,6 @@ public class AutoCommands {
 
 	public Command stopRobot() {
 		return new InstantCommand(() -> Drive.getInstance().executeDriveInstruction(0, 0, 0, false));
-	}
-
-	public Command waitXSeconds(double seconds) {
-		return new WaitCommand(seconds);
 	}
 
 	public Command printTest() {
