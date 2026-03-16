@@ -4,13 +4,12 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.GlobalConstants;
@@ -82,23 +81,7 @@ public final class ShooterConstants {
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
 	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Transform2d ROBOT_TO_SHOOTER_2D = new Transform2d(-0.2270125, -0.1119715947, Rotation2d.kCCW_90deg);
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
-
-	// Shot sample data for lookup tables (placeholder/example values)
-	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
-
-	public static final java.util.List<ShotSampleData> HUB_SHOT_SAMPLES = java.util.List.of(
-		new ShotSampleData(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
-		new ShotSampleData(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
-		new ShotSampleData(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
-		new ShotSampleData(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
-	);
-
-	public static final java.util.List<ShotSampleData> ALLIANCE_SHOT_SAMPLES = java.util.List.of(
-		new ShotSampleData(2.0, Degrees.of(28), RotationsPerSecond.of(19), 0.52),
-		new ShotSampleData(3.0, Degrees.of(33), RotationsPerSecond.of(24), 0.56),
-		new ShotSampleData(4.0, Degrees.of(38), RotationsPerSecond.of(29), 0.61),
-		new ShotSampleData(5.0, Degrees.of(44), RotationsPerSecond.of(34), 0.66)
-	);
 }
