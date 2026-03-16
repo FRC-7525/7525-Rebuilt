@@ -2,12 +2,9 @@ package frc.robot.Subsystems.Drive;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -15,6 +12,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import frc.robot.GlobalConstants;
+import java.util.function.Supplier;
 import java.util.function.Supplier;
 
 public class DriveConstants {

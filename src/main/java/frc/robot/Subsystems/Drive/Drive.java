@@ -151,7 +151,7 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
-		
+
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
@@ -192,7 +192,12 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-				executeDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1, isFieldRelative);
+				executeDriveInstruction(
+					DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
+					isFieldRelative
+				);
 				break;
 			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
 			case AIMLOCK_ALLIANCE_LEFT_DEEP:
@@ -233,10 +238,15 @@ public class Drive extends Subsystem<DriveStates> {
 				Rotation2d leftStickDir = !Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
 				if (leftStickVector.getNorm() < CLOSE_TO_ZERO) leftStickDir = getPose().getRotation();
 
-				executeAutoAlignDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, snakeDriveController.calculate(getPose().getRotation().getRadians(), leftStickDir.getRadians()), true);
+				executeAutoAlignDriveInstruction(
+					DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					snakeDriveController.calculate(getPose().getRotation().getRadians(), leftStickDir.getRadians()),
+					true
+				);
 				break;
-      case AUTO:
-        break;
+			case AUTO:
+				break;
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
