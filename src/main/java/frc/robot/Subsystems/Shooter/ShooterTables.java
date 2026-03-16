@@ -17,7 +17,8 @@ public class ShooterTables {
 		ALLIANCE_TABLE.put(0.3683, 0.0);
 		ALLIANCE_TABLE.put(0.0, 0.0); // Here so we have better bounds of table. Do not include if using regressions
 	}
-	public static InterpolatingDoubleTreeMap SHUTTLING_TABLE = ALLIANCE_TABLE; 
+
+	public static InterpolatingDoubleTreeMap SHUTTLING_TABLE = ALLIANCE_TABLE;
 	//public static InterpolatingDoubleTreeMap SHUTTLING_TABLE = new InterpolatingDoubleTreeMap();
 
 	// static {
