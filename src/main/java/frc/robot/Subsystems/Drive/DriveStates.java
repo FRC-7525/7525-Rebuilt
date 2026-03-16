@@ -21,6 +21,7 @@ public enum DriveStates implements SubsystemStates {
 	AA_TOWER_LEFT("Going to left side of tower", TOWER_LEFT),
 	AA_TOWER_RIGHT("Going to right side of tower", TOWER_RIGHT),
 	AA_NEUTRAL("Going to neutral zone", NEUTRAL_POSES),
+	SNAKE_DRIVE("Snake Drive Mode", new PosePair(Pose2d.kZero, Pose2d.kZero));
 	AUTO("test", NEUTRAL_POSES);
 
 	private String stateString;

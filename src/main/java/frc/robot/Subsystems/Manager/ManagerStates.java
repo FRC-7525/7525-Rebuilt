@@ -12,12 +12,13 @@ public enum ManagerStates implements SubsystemStates {
 	EXTENDED_IDLE("EXTENDED_IDLE", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.IDLE, CurrentLimiterStates.EXTENDED_IDLE),
 	INTAKING("INTAKING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.STANDBY, ClimberStates.IDLE, CurrentLimiterStates.INTAKING),
 	WINDING_UP("WINDING_UP", IntakeStates.OUT, HopperStates.IDLE, null, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP),
-	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP_FIXED_SHOT),
-	SHUTTLING("SHUTTLING", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.SHUTTLING),
+	WINDING_UP_FIXED_SHOT("WINDING_UP_FIXED_SHOT", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE, CurrentLimiterStates.WINDING_UP_FIXED_SHOT), //TODO: Switch back to SHOOTING_FIXED shooter state after testing is done
+	SHUTTLING("SHUTTLING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.SHOOT_ALLIANCE, ClimberStates.IDLE, CurrentLimiterStates.SHUTTLING),
 	SHOOTING_HUB("SHOOTING_HUB", IntakeStates.IN, HopperStates.SPINDEXING, ShooterStates.SHOOT_HUB, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_HUB),
 	SHOOTING_FIXED("SHOOTING_FIXED", IntakeStates.AGITATING, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE, CurrentLimiterStates.SHOOTING_FIXED),
 	EXTENDING_CLIMBER("EXTENDING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.EXTEND, CurrentLimiterStates.EXTENDING_CLIMBER),
 	RETRACTING_CLIMBER("RETRACTING_CLIMBER", IntakeStates.IN, HopperStates.IDLE, ShooterStates.IDLE, ClimberStates.RETRACT, CurrentLimiterStates.RETRACTING_CLIMBER),
+	ZEROING("ZEROING MECHANISMS", IntakeStates.OUT, HopperStates.IDLE, ShooterStates.ZEROING, ClimberStates.IDLE, CurrentLimiterStates.EXTENDED_IDLE);
 	// AUTO EXCLUSIVE STATES
 	INTAKING_AUTO("AUTO INTAKING", IntakeStates.INTAKE, HopperStates.IDLE, ShooterStates.STANDBY, ClimberStates.IDLE, CurrentLimiterStates.INTAKING),
 	INTAKE_AND_PASS_AUTO("AUTO INTAKING AND PASSING", IntakeStates.INTAKE, HopperStates.SPINDEXING, ShooterStates.SHOOT_FIXED, ClimberStates.IDLE, CurrentLimiterStates.INTAKING_AND_SHOOTING_AUTO),
