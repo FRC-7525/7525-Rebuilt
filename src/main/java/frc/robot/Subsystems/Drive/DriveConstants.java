@@ -67,7 +67,7 @@ public class DriveConstants {
 
 	public static final Supplier<PIDController> SNAKE_DRIVE_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(1, 0, 0);
+			case REAL -> new PIDController(3, 0, 0);
 			case SIM -> new PIDController(10, 0, .01);
 			default -> new PIDController(20, 1, 0);
 		};

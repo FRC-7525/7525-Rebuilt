@@ -229,7 +229,7 @@ public class Drive extends Subsystem<DriveStates> {
 				}
 				break;
 			case SNAKE_DRIVE:
-				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getLeftX(), DRIVER_CONTROLLER.getLeftY());
+				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());
 				Rotation2d leftStickDir = !Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
 				if (leftStickVector.getNorm() < CLOSE_TO_ZERO) leftStickDir = getPose().getRotation();
 
