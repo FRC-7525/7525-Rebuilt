@@ -390,7 +390,6 @@ public class Drive extends Subsystem<DriveStates> {
 		targetSpeeds.vyMetersPerSecond = targetSpeeds.vyMetersPerSecond + yController.calculate(currentPose.getY(), sample.y);
 
 		if (allowAutoAimlock) {
-
 			if (Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) >= SWITCH_DIST.in(Degrees)) {
 				targetSpeeds.omegaRadiansPerSecond = shooterYawControllerFast.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI);
 			} else {
