@@ -1,31 +1,5 @@
 package frc.robot.Subsystems.Drive;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.GlobalConstants.Controllers.DEADBAND;
-import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
-import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
-import static frc.robot.GlobalConstants.FIELD;
-import static frc.robot.GlobalConstants.ROBOT_MODE;
-import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
-import static frc.robot.Subsystems.Drive.DriveConstants.ANGLE_AUTO_CONTROLLER;
-import static frc.robot.Subsystems.Drive.DriveConstants.ANGULAR_VELOCITY_LIMIT;
-import static frc.robot.Subsystems.Drive.DriveConstants.BLUE_ALLIANCE_PERSPECTIVE_ROTATION;
-import static frc.robot.Subsystems.Drive.DriveConstants.CLOSE_TO_ZERO;
-import static frc.robot.Subsystems.Drive.DriveConstants.RED_ALLIANCE_PERSPECTIVE_ROTATION;
-import static frc.robot.Subsystems.Drive.DriveConstants.SLOW_MODE_MULTIPLIER;
-import static frc.robot.Subsystems.Drive.DriveConstants.SNAKE_DRIVE_CONTROLLER;
-import static frc.robot.Subsystems.Drive.DriveConstants.SUBSYSTEM_NAME;
-import static frc.robot.Subsystems.Drive.DriveConstants.X_AUTO_CONTROLLER;
-import static frc.robot.Subsystems.Drive.DriveConstants.Y_AUTO_CONTROLLER;
-import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
-
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -60,6 +34,23 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static frc.robot.GlobalConstants.Controllers.DEADBAND;
+import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
+import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
+import static frc.robot.GlobalConstants.FIELD;
+import static frc.robot.GlobalConstants.ROBOT_MODE;
+import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
+import static frc.robot.Subsystems.Drive.DriveConstants.*;
+import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
 
 public class Drive extends Subsystem<DriveStates> {
 
@@ -382,7 +373,6 @@ public class Drive extends Subsystem<DriveStates> {
 		return true;
 	}
 
-	// Util
 	public Pose2d getPose() {
 		return driveIO.getDrive().getState().Pose;
 	}
@@ -486,21 +476,6 @@ public class Drive extends Subsystem<DriveStates> {
 			turnMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getSteerMotor()));
 		}
 		return turnMotors;
-	}
-
-	public boolean isAtAllianceShootingPosition() {
-		return true;
-		// var allianceOpt = DriverStation.getAlliance();
-		// if (allianceOpt.isEmpty()) {
-		// 	// Alliance not yet known (e.g., early init). Treat as not at alliance shooting position.
-		// 	return false;
-		// }
-		// Alliance alliance = allianceOpt.get();
-		// if (alliance == Alliance.Red) {
-		// 	return getPose().getTranslation().getX() > ALLIANCE_SHOOTING_POSITION_THRESHOLD_RED.in(Meters);
-		// } else {
-		// 	return getPose().getTranslation().getX() < -ALLIANCE_SHOOTING_POSITION_THRESHOLD_BLUE.in(Meters);
-		// }
 	}
 
 	public void setAutoAimlock(boolean allowed) {

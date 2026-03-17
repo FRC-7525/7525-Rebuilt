@@ -1,11 +1,10 @@
 package frc.robot.Subsystems.Hopper;
 
-import static frc.robot.GlobalConstants.ROBOT_MODE;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
+import static frc.robot.GlobalConstants.ROBOT_MODE;
 
 public class Hopper extends Subsystem<HopperStates> {
 

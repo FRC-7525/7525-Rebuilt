@@ -1,11 +1,5 @@
 package frc.robot.Subsystems.Drive.AutoAlign;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.FeetPerSecond;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,6 +20,11 @@ import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 public final class AutoAlignConstants {
 
@@ -34,9 +33,9 @@ public final class AutoAlignConstants {
 	public static final Angle MIN_HEADING_ANGLE = Degrees.of(-180);
 	public static final Angle MAX_HEADING_ANGLE = Degrees.of(180);
 
-	// TODO update max speed once robot is built
 	public static final LinearVelocity MAX_SPEED = FeetPerSecond.of(15);
 	public static final boolean USE_GOAL = true;
+
 	// Sim
 	public static final Distance DISTANCE_ERROR_MARGIN = Meters.of(0.0208);
 	public static final Distance DISTANCE_ERROR_MARGIN2 = Meters.of(0.5);
@@ -53,14 +52,14 @@ public final class AutoAlignConstants {
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
 
-	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(0.1, 0, 0);
 			case SIM -> new PIDController(1, 0, .01);
 			default -> new PIDController(20, 1, 0);
 		};
-	public static final Angle SWITCH_DIST = Degrees.of(5);
-	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () -> // TODO: TUNE
+	public static final Angle SWITCH_DIST = Degrees.of(5); // When to switch from fast(below) to slow(above) controller
+	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(1, 0, 0);
 			case SIM -> new PIDController(2, 0, .01);
@@ -97,23 +96,17 @@ public final class AutoAlignConstants {
 
 	// Aliance zones
 	public static final PosePair BLUE_ALLIANCE_ZONE = new PosePair(new Pose2d(0, 0, Rotation2d.kZero), new Pose2d(4.625, FIELD_WIDTH, Rotation2d.kZero));
-
 	public static final PosePair RED_ALLIANCE_ZONE = new PosePair(new Pose2d(11.92, 0, Rotation2d.kZero), new Pose2d(FIELD_LENGTH, FIELD_WIDTH, Rotation2d.kZero));
 
 	// Aimlock Positions
 	public static final PosePair AIMLOCK_LEFT_DEEP_POSES = new PosePair(new Pose2d(15.5, 2.000, Rotation2d.kZero), new Pose2d(1, 6, Rotation2d.kZero));
-
 	public static final PosePair AIMLOCK_LEFT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 2.000, Rotation2d.kZero), new Pose2d(3, 6, Rotation2d.kZero));
-
 	public static final PosePair AIMLOCK_RIGHT_DEEP_POSES = new PosePair(new Pose2d(15.5, 6.000, Rotation2d.kZero), new Pose2d(1, 2, Rotation2d.kZero));
-
 	public static final PosePair AIMLOCK_RIGHT_SHALLOW_POSES = new PosePair(new Pose2d(13.5, 6.000, Rotation2d.kZero), new Pose2d(3, 2, Rotation2d.kZero));
-
 	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 
 	// AA Poses
 	public static final PosePair TOWER_LEFT = new PosePair(new Pose2d(14.946, 4.898, new Rotation2d(180)), new Pose2d(1.554, 3.102, new Rotation2d(0)));
-
 	public static final PosePair TOWER_RIGHT = new PosePair(new Pose2d(14.946, 4.119, new Rotation2d(180)), new Pose2d(1.554, 3.881, new Rotation2d(0)));
 
 	public static final class Obstacles {

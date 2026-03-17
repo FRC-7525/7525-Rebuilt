@@ -8,7 +8,6 @@ import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
@@ -25,10 +24,8 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Drive drive;
 	private Shooter shooter;
 	private Hopper hopper;
-	private CurrentLimiter currentLimiter;
 	private Intake intake;
 
-	//private Climber climber;
 	private Vision vision;
 
 	public static Manager getInstance() {
@@ -41,13 +38,10 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Manager() {
 		super(SUBSYSTEM_NAME, ManagerStates.IDLE);
 		instance = this;
-		// currentLimiter = CurrentLimiter.getInstance();
 		drive = Drive.getInstance();
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
-		// currentLimiter.periodic();
-		//climber = Climber.getInstance();
 		vision = Vision.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
@@ -80,7 +74,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> shooter.readyToShoot() && !drive.isAtAllianceShootingPosition());
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> shooter.readyToShoot() && !drive.isInTeamAllianceZone(drive.getPose())); // If we're not in the alliance zone, we should be shooting alliance shots not hub shots so shuttle instead of shoot directly from winding up
 
 		// SHOOTING --> EXTENDED_IDLE
 		addTrigger(ManagerStates.SHOOTING_HUB, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getYButtonPressed);
@@ -115,24 +109,20 @@ public class Manager extends Subsystem<ManagerStates> {
 		}
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE", getState().getStateString());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/InAllianceShootingPosition", drive.isAtAllianceShootingPosition());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
 
 		// Set subsystem states
-		// currentLimiter.setState(getState().getCurrentLimiterState());
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		//climber.setState(getState().getClimberState());
 
-		Tracer.traceFunc("ShooterPeriodic", shooter::periodic); // SHould these be used with Tracer? idk what that does fr
+		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
 		Tracer.traceFunc("IntakePeriodic", intake::periodic);
-		//Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
-		// Tracer.traceFunc("CurrentLimiterPeriodic", CurrentLimiter.getInstance()::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
+
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);
@@ -140,7 +130,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	}
 
 	public boolean isHubActive() {
-		return true; // TODO: implement this idk how
+		return true; // TODO: implement this
 	}
 
 	@Override

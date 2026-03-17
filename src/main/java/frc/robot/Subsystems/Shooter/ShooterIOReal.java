@@ -1,9 +1,5 @@
 package frc.robot.Subsystems.Shooter;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -17,6 +13,9 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.List;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 public class ShooterIOReal implements ShooterIO {
 
@@ -93,8 +92,6 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		//TODO: Switch to this after done testing
-		//TODO: Find a better way to do this lowkey cooked
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		} else {
@@ -122,7 +119,6 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public boolean zeroHoodMotor() {
 		hoodMotor.set(-.3);
-
 		if (!limitSwitch.get()) {
 			hoodMotor.setPosition(0);
 			hoodMotor.set(0);

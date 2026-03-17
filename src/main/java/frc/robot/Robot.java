@@ -1,9 +1,6 @@
 package frc.robot;
 
-import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
-import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
-
 import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,6 +20,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
+import static frc.robot.FieldConstants.*;
 
 public class Robot extends LoggedRobot {
 
@@ -32,6 +30,7 @@ public class Robot extends LoggedRobot {
 
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
+
 
 	@Override
 	public void robotInit() {
@@ -48,15 +47,16 @@ public class Robot extends LoggedRobot {
 				break;
 		}
 
-		// Lots and lots of trolling
+		// Startup tasks
 		Logger.start();
 		CommandsUtil.logCommands();
 		DriverStation.silenceJoystickConnectionWarning(true);
-		RobotController.setBrownoutVoltage(5.5);
+		RobotController.setBrownoutVoltage(5.5); // This is a sketchy fix. Lowest value is 4.5V, Default is 6.7V.
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
 
+		// Auto routine chooser setup
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
 		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
 		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);

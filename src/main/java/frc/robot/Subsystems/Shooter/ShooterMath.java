@@ -10,7 +10,6 @@ import edu.wpi.first.units.measure.Angle;
 import frc.robot.Robot;
 
 public class ShooterMath {
-
 	public static Angle solveHubShot(Pose2d currentPose) {
 		return Degrees.of(
 			Robot.isRedAlliance ? ShooterTables.ALLIANCE_TABLE.get(RED_HUB_POSE.relativeTo(currentPose.transformBy(ROBOT_TO_SHOOTER_2D)).getTranslation().getNorm()) : ShooterTables.ALLIANCE_TABLE.get(BLUE_HUB_POSE.relativeTo(currentPose.transformBy(ROBOT_TO_SHOOTER_2D)).getTranslation().getNorm())
