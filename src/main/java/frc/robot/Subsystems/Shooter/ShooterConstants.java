@@ -1,17 +1,14 @@
 package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.GlobalConstants;
 import java.util.function.Supplier;
 
@@ -32,6 +29,8 @@ public final class ShooterConstants {
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
 	public static final int SOLVER_ITERATIONS = 4;
+
+	public static final double ZEROING_SPEED = -0.3;
 
 	// Tolerances
 	public static final double WHEEL_VELOCITY_TOLERANCE = 50.0; // in RotationsPerSecond units
@@ -59,29 +58,26 @@ public final class ShooterConstants {
 			case REAL -> new PIDController(0.04, 0.0002, 0.0); //.0384 good alr
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(0, 0, 0);
-		}; //TODO: tune
+		};
 	public static final Supplier<PIDController> HOOD_DOWN_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(0.03, 0.0002, 0.0); //.0384 good alr
 			case SIM -> new PIDController(0.04, 0, 0.001); // Tuned in sim
 			case TESTING -> new PIDController(0, 0, 0);
-		}; //TODO: tune
+		};
 	public static final Supplier<PIDController> WHEEL_PID = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(0.5, 0, 0);
 			case SIM -> new PIDController(0.0077, 0, 0);
 			case TESTING -> new PIDController(0.1, 0, 0);
-		}; //TODO: tune
+		};
 	public static final Supplier<SimpleMotorFeedforward> WHEEL_FEEDFORWARD = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12); // Recalc fakes :wilted_rose:
+			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12);
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
-		}; //TODO: tune
+		};
 
-	// Placeholder positions; replace with real field measurements, Define based on alliance side
-	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
-	public static final Transform2d ROBOT_TO_SHOOTER_2D = new Transform2d(-0.2270125, -0.1119715947, Rotation2d.kCCW_90deg);
-	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
-	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
+	// Important positions and transforms
+	public static final Distance TRENCH_RADIUS = Meters.of(1.0); // radius around trench where hood is forced down
 }

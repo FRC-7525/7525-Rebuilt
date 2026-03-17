@@ -93,8 +93,6 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		//TODO: Switch to this after done testing
-		//TODO: Find a better way to do this lowkey cooked
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		} else {
@@ -121,8 +119,7 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public boolean zeroHoodMotor() {
-		hoodMotor.set(-.3);
-
+		hoodMotor.set(ZEROING_SPEED);
 		if (!limitSwitch.get()) {
 			hoodMotor.setPosition(0);
 			hoodMotor.set(0);

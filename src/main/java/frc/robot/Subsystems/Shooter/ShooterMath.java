@@ -1,9 +1,8 @@
 package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER_2D;
+import static frc.robot.FieldConstants.*;
+import static frc.robot.GlobalConstants.ROBOT_TO_SHOOTER_2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;

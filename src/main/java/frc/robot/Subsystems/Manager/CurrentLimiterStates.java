@@ -1,75 +1,40 @@
 package frc.robot.Subsystems.Manager;
 
-import org.team7525.subsystem.SubsystemStates;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
-public enum CurrentLimiterStates implements SubsystemStates {
-	IDLE(80, 40, 40, 40, 40, 40, 40, 40, 40),
-	EXTENDED_IDLE(80, 40, 40, 40, 40, 40, 40, 40, 40),
-	INTAKING(40, 20, 40, 20, 20, 40, 40, 40, 40),
-	WINDING_UP(60, 30, 30, 40, 40, 40, 40, 40, 40),
-	WINDING_UP_FIXED_SHOT(60, 30, 30, 40, 40, 40, 40, 40, 40),
-	SHUTTLING(30, 30, 89, 20, 40, 20, 20, 30, 10),
-	SHOOTING_HUB(30, 30, 89, 20, 40, 20, 20, 30, 10),
-	SHOOTING_FIXED(30, 30, 60, 20, 40, 20, 20, 30, 10),
-	EXTENDING_CLIMBER(80, 40, 40, 40, 40, 40, 40, 40, 40),
-	RETRACTING_CLIMBER(80, 40, 40, 40, 40, 40, 40, 40, 40),
-	INTAKING_AND_SHOOTING_AUTO(60, 20, 89, 20, 30, 40, 40, 30, 10);
+public enum CurrentLimiterStates {
+	// Only has shooter, drive, and turn bc these are the only ones that change
+	IDLE(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
+	EXTENDED_IDLE(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
+	INTAKING(CurrentLimitConstants.LOW_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.INTAKE_WHEEL_LIMITS),
+	WINDING_UP(CurrentLimitConstants.MEDIUM_DRIVE_LIMITS, CurrentLimitConstants.MEDIUM_TURN_LIMITS, CurrentLimitConstants.WINDUP_SHOOTER_LIMITS),
+	WINDING_UP_FIXED_SHOT(CurrentLimitConstants.MEDIUM_DRIVE_LIMITS, CurrentLimitConstants.MEDIUM_TURN_LIMITS, CurrentLimitConstants.WINDUP_SHOOTER_LIMITS),
+	SHUTTLING(CurrentLimitConstants.LOW_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.FIRING_SHOOTER_LIMITS),
+	SHOOTING_HUB(CurrentLimitConstants.SHOOTING_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.FIRING_SHOOTER_LIMITS),
+	SHOOTING_FIXED(CurrentLimitConstants.SHOOTING_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.FIRING_SHOOTER_LIMITS),
+	EXTENDING_CLIMBER(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
+	RETRACTING_CLIMBER(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
+	INTAKING_AND_SHOOTING_AUTO(CurrentLimitConstants.LOW_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.FIRING_SHOOTER_LIMITS);
 
-	private int driveLimit;
-	private int turnLimit;
-	private int shooterLimit;
-	private int pivotLimit;
-	private int intakeWheelLimit;
-	private int hoodLimit;
-	private int spindexerLimit;
-	private int kickerLimit;
-	private int kickerLimit2;
+	private CurrentLimitsConfigs driveLimit;
+	private CurrentLimitsConfigs turnLimit;
+	private CurrentLimitsConfigs shooterLimit;
 
-	private CurrentLimiterStates(int driveLimit, int turnLimit, int shooterLimit, int pivotLimit, int intakeWheelLimit, int hoodLimit, int spindexerLimit, int kickerLimit, int kickerLimit2) {
+	private CurrentLimiterStates(CurrentLimitsConfigs driveLimit, CurrentLimitsConfigs turnLimit, CurrentLimitsConfigs shooterLimit) {
 		this.driveLimit = driveLimit;
 		this.turnLimit = turnLimit;
 		this.shooterLimit = shooterLimit;
-		this.pivotLimit = pivotLimit;
-		this.intakeWheelLimit = intakeWheelLimit;
-		this.hoodLimit = hoodLimit;
-		this.spindexerLimit = spindexerLimit;
-		this.kickerLimit = kickerLimit;
-		this.kickerLimit2 = kickerLimit2;
 	}
 
-	public int getDriveLimit() {
+	public CurrentLimitsConfigs getDriveLimit() {
 		return driveLimit;
 	}
 
-	public int getTurnLimit() {
+	public CurrentLimitsConfigs getTurnLimit() {
 		return turnLimit;
 	}
 
-	public int getShooterLimit() {
+	public CurrentLimitsConfigs getShooterLimit() {
 		return shooterLimit;
-	}
-
-	public int getPivotLimit() {
-		return pivotLimit;
-	}
-
-	public int getIntakeWheelLimit() {
-		return intakeWheelLimit;
-	}
-
-	public int getHoodLimit() {
-		return hoodLimit;
-	}
-
-	public int getSpindexerLimit() {
-		return spindexerLimit;
-	}
-
-	public int getKickerLimit() {
-		return kickerLimit;
-	}
-
-	public int getKickerLimit2() {
-		return kickerLimit2;
 	}
 }

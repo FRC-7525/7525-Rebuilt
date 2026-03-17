@@ -1,7 +1,6 @@
 package frc.robot;
 
-import static frc.robot.GlobalConstants.BLUE_ALLIANCE_BOUNDS;
-import static frc.robot.GlobalConstants.RED_ALLIANCE_BOUNDS;
+import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import choreo.auto.AutoChooser;
@@ -48,15 +47,16 @@ public class Robot extends LoggedRobot {
 				break;
 		}
 
-		// Lots and lots of trolling
+		// Startup tasks
 		Logger.start();
 		CommandsUtil.logCommands();
 		DriverStation.silenceJoystickConnectionWarning(true);
-		RobotController.setBrownoutVoltage(5.5);
+		RobotController.setBrownoutVoltage(5.5); // This is a sketchy fix. Lowest value is 4.5V, Default is 6.7V.
 		CommandScheduler.getInstance().unregisterAllSubsystems();
 		System.gc();
 		Drive.getInstance().zeroGyro();
 
+		// Auto routine chooser setup
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
 		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
 		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);
