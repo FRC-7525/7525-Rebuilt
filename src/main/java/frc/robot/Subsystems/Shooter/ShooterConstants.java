@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -20,11 +21,15 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
-	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(85);
+	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	//TODO: Change standby values to actual values after testing is done
 	public static final Angle STANDBY_ANGLE = Degrees.of(10.5);
-	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(85);
+	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65);
+
+	//TODO: Change later if we actually add a table to do alliance shots
+	public static final Angle ALLIANCE_SHOT_ANGLE = Degrees.of(45);
+	public static final AngularVelocity ALLIANCE_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;

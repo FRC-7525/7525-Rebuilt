@@ -14,7 +14,7 @@ public enum ShooterStates implements SubsystemStates {
 	IDLE("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
 	ZEROING("ZEROING", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),
 	SHOOT_HUB("SHOOT HUB", () -> ShooterMath.solveHubShot(Drive.getInstance().getPose()), () -> FIXED_SHOT_SPEED),
-	SHOOT_ALLIANCE("SHOOT ALLIANCE", () -> ShooterMath.solveAllianceShot(Drive.getInstance().getPose()), () -> FIXED_SHOT_SPEED),
+	SHOOT_ALLIANCE("SHOOT ALLIANCE", () -> ALLIANCE_SHOT_ANGLE, () -> ALLIANCE_SHOT_SPEED),
 	SHOOT_FIXED("SHOOT FIXED", () -> FIXED_SHOT_ANGLE, () -> FIXED_SHOT_SPEED),
 	STANDBY("STANDBY", () -> STANDBY_ANGLE, () -> STANDBY_SPEED);
 

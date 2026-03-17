@@ -73,23 +73,22 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> DRIVER_CONTROLLER.getYButtonPressed() && drive.isInTeamAllianceZone(drive.getPose()));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> shooter.readyToShoot() && !drive.isInTeamAllianceZone(drive.getPose())); // If we're not in the alliance zone, we should be shooting alliance shots not hub shots so shuttle instead of shoot directly from winding up
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> DRIVER_CONTROLLER.getYButtonPressed() && !drive.isInTeamAllianceZone(drive.getPose())); // If we're not in the alliance zone, we should be shooting alliance shots not hub shots so shuttle instead of shoot directly from winding up
 
-		// SHOOTING --> EXTENDED_IDLE
-		addTrigger(ManagerStates.SHOOTING_HUB, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.SHUTTLING, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getBButtonPressed);
+		// SHOOTING --> WINDING_UP
+		//Done to simplify control and reduce wind-up time when needing to move in between shots (like if the hub is in the way while shuttling)
+		addTrigger(ManagerStates.SHOOTING_HUB, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.SHUTTLING, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
-		// IDLE <---> EXTENDING_CLIMBER
-		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
+		// // IDLE <---> EXTENDING_CLIMBER
+		// addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
-		// EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
-		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
-		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
-
-		addTrigger(ManagerStates.IDLE, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getAButtonPressed);
+		// // EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
+		// addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
+		// addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
