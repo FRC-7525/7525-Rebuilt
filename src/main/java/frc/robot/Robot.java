@@ -1,6 +1,8 @@
 package frc.robot;
 
+import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
+
 import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,7 +22,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
-import static frc.robot.FieldConstants.*;
 
 public class Robot extends LoggedRobot {
 
@@ -30,7 +31,6 @@ public class Robot extends LoggedRobot {
 
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
-
 
 	@Override
 	public void robotInit() {

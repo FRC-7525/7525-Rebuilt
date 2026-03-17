@@ -1,5 +1,17 @@
 package frc.robot.Subsystems.Drive;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static frc.robot.FieldConstants.*;
+import static frc.robot.GlobalConstants.*;
+import static frc.robot.GlobalConstants.Controllers.*;
+import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
+import static frc.robot.Subsystems.Drive.DriveConstants.*;
+import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -34,17 +46,6 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.GlobalConstants.Controllers.*;
-import static frc.robot.GlobalConstants.*;
-import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
-import static frc.robot.Subsystems.Drive.DriveConstants.*;
-import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
-import static frc.robot.FieldConstants.*;
 
 public class Drive extends Subsystem<DriveStates> {
 

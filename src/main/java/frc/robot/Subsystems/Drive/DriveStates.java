@@ -1,10 +1,11 @@
 package frc.robot.Subsystems.Drive;
 
+import static frc.robot.FieldConstants.*;
+import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Subsystems.Drive.AutoAlign.PosePair;
 import org.team7525.subsystem.SubsystemStates;
-import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
-import static frc.robot.FieldConstants.*;
 
 public enum DriveStates implements SubsystemStates {
 	NORMAL("Driving Normally", new PosePair(Pose2d.kZero, Pose2d.kZero)),

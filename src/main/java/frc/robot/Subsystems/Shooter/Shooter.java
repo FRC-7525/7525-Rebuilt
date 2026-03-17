@@ -1,5 +1,11 @@
 package frc.robot.Subsystems.Shooter;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static frc.robot.FieldConstants.*;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -11,13 +17,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
-import static frc.robot.FieldConstants.*;
 
 public class Shooter extends Subsystem<ShooterStates> {
+
 	private static Shooter instance;
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;

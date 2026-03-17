@@ -1,5 +1,11 @@
 package frc.robot.Subsystems.Drive.AutoAlign;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,11 +26,6 @@ import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.FeetPerSecond;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 public final class AutoAlignConstants {
 
