@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-import frc.robot.GlobalConstants; 
+import frc.robot.GlobalConstants;
 import java.util.function.Supplier;
 
 public final class ShooterConstants {

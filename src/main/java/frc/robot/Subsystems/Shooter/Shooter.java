@@ -51,7 +51,13 @@ public class Shooter extends Subsystem<ShooterStates> {
 	@Override
 	public void runState() {
 		if (getState() != ShooterStates.ZEROING) {
-			if (trenchProtection && (Drive.getInstance().getPose().relativeTo(TRENCH_POSE_LEFT_BLUE).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) || Drive.getInstance().getPose().relativeTo(TRENCH_POSE_RIGHT_BLUE).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) || Drive.getInstance().getPose().relativeTo(TRENCH_POSE_LEFT_RED).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) || Drive.getInstance().getPose().relativeTo(TRENCH_POSE_RIGHT_RED).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters))) {
+			if (
+				trenchProtection &&
+				(Drive.getInstance().getPose().relativeTo(TRENCH_POSE_LEFT_BLUE).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) ||
+					Drive.getInstance().getPose().relativeTo(TRENCH_POSE_RIGHT_BLUE).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) ||
+					Drive.getInstance().getPose().relativeTo(TRENCH_POSE_LEFT_RED).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters) ||
+					Drive.getInstance().getPose().relativeTo(TRENCH_POSE_RIGHT_RED).getTranslation().getNorm() < TRENCH_RADIUS.in(Meters))
+			) {
 				io.setHoodAngle(ShooterStates.IDLE.getHoodAngle());
 			} else {
 				io.setHoodAngle(getState().getHoodAngle());

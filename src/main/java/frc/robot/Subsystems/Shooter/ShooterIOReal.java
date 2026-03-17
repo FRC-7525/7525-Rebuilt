@@ -99,7 +99,7 @@ public class ShooterIOReal implements ShooterIO {
 				hoodPID.reset();
 				hoodDownPID.reset();
 				return;
-			} 
+			}
 			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		}
 	}
