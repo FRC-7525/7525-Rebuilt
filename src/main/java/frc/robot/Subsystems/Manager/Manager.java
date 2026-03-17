@@ -6,6 +6,7 @@ import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
+import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
@@ -94,6 +95,17 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		addTrigger(ManagerStates.WINDING_TO_SCORE_AUTO, ManagerStates.SCORING_AUTO, () -> Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) && Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees));
 		addTrigger(SCORING_AUTO, WINDING_TO_SCORE_AUTO, () -> !Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) || !(Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees)));
+
+		// -----------------------------------------------  CURRENT LIMITS SETUP  -------------------------------------------------------
+		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply( getState().getCurrentLimiterState().getDriveLimit()));
+		drive.getTurnMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
+		shooter.getShooterMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
+		shooter.getHoodMotor().getConfigurator().apply(HOOD_LIMITS);
+		hopper.getSpinMotor().getConfigurator().apply(SPINDEXER_LIMITS);
+		intake.getPivotMotor().getConfigurator().apply(INTAKE_PIVOT_LIMITS);
+		intake.getSpinMotor().getConfigurator().apply(INTAKE_WHEEL_LIMITS);
+		hopper.getKickerMotor1().getConfigurator().apply(KICKER_LIMITS);
+		hopper.getKickerMotor2().getConfigurator().apply(KICKER_LIMITS_2);
 	}
 
 	@Override
@@ -131,6 +143,14 @@ public class Manager extends Subsystem<ManagerStates> {
 
 	public boolean isHubActive() {
 		return true; // TODO: implement this
+	}
+
+	@Override
+	protected void stateInit() {
+		// Update current limits for drive, turn, and shooter based on the current limiter state of the new manager state
+		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply( getState().getCurrentLimiterState().getDriveLimit()));
+		drive.getTurnMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
+		shooter.getShooterMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
 	}
 
 	@Override
