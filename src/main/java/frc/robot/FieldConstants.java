@@ -15,8 +15,8 @@ public class FieldConstants {
 	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
 	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
 	public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
-	public static final Pose2d TRENCH_POSE_LEFT_BLUE = FIELD_LAYOUT.getTagPose(7).get().toPose2d();
-	public static final Pose2d TRENCH_POSE_RIGHT_BLUE = FIELD_LAYOUT.getTagPose(12).get().toPose2d();
-	public static final Pose2d TRENCH_POSE_LEFT_RED = FIELD_LAYOUT.getTagPose(23).get().toPose2d();
-	public static final Pose2d TRENCH_POSE_RIGHT_RED = FIELD_LAYOUT.getTagPose(28).get().toPose2d();
+	public static final Pose2d TRENCH_POSE_LEFT_BLUE = FIELD_LAYOUT.getTagPose(23).get().toPose2d();
+	public static final Pose2d TRENCH_POSE_RIGHT_BLUE = FIELD_LAYOUT.getTagPose(28).get().toPose2d();
+	public static final Pose2d TRENCH_POSE_LEFT_RED = FIELD_LAYOUT.getTagPose(7).get().toPose2d();
+	public static final Pose2d TRENCH_POSE_RIGHT_RED = FIELD_LAYOUT.getTagPose(12).get().toPose2d();
 }
