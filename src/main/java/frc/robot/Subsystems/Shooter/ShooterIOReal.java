@@ -54,7 +54,6 @@ public class ShooterIOReal implements ShooterIO {
 
 		hoodMotor = new TalonFX(HOOD_MOTOR_ID);
 		hoodMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		//hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
 		hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
 		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Opposed)); // Might need to be inverted
@@ -94,24 +93,18 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		hoodSetpoint = Degrees.of(SmartDashboard.getNumber("HOOD_ANGLE_TUNING", 0));
-		SmartDashboard.putNumber("HOOD_ANGLE_TUNING", hoodSetpoint.in(Degrees));
-		//TODO: Switch to this after done testing
-		//TODO: Find a better way to do this lowkey cooked
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		} else {
-			if (!limitSwitch.get()) {
-				hoodMotor.setPosition(0);
+			if (!limitSwitch.get() && hoodMotor.getPosition().getValue().in(Degrees) != 0) {
 				hoodMotor.set(0);
+				hoodMotor.setPosition(0);
 				hoodPID.reset();
 				hoodDownPID.reset();
 				return;
 			}
 			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		}
-		// hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees)));
-
 	}
 
 	@Override
@@ -126,8 +119,7 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public boolean zeroHoodMotor() {
-		hoodMotor.set(-.3);
-
+		hoodMotor.set(ZEROING_SPEED);
 		if (!limitSwitch.get()) {
 			hoodMotor.setPosition(0);
 			hoodMotor.set(0);

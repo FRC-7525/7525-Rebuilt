@@ -1,10 +1,13 @@
 package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
+import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Intake.IntakeConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import frc.robot.GlobalConstants.Controllers;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -34,10 +37,8 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-		io.setSpinVelocity(getState().getSpinSpeed());
-
 		//TODO: Find better implementation this is kinda geeked
-		if (getState() == IntakeStates.AGITATING) {
+		if (DRIVER_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) {
 			if (getStateTime() - prevTime > AGITATION_TIME) {
 				agitatingIn = !agitatingIn;
 				prevTime = getStateTime();
@@ -45,7 +46,12 @@ public class Intake extends Subsystem<IntakeStates> {
 
 			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
 			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
-		} else io.setAngularPosition(getState().getAngle());
+
+			io.setSpinVelocity(SPIN_SPEED_INTAKE);
+		} else {
+			io.setSpinVelocity(getState().getSpinSpeed());
+			io.setAngularPosition(getState().getAngle());
+		}
 
 		io.logOutputs(outputs);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocity);

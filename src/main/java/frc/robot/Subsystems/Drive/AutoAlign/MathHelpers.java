@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class MathHelpers {
 
-	// 254 stuff
 	public static final Pose2d kPose2dZero = new Pose2d();
 
 	public static final Pose2d pose2dFromRotation(Rotation2d rotation) {

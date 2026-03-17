@@ -1,16 +1,12 @@
 package frc.robot.Subsystems.Drive;
 
+import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Subsystems.Drive.AutoAlign.PosePair;
 import org.team7525.subsystem.SubsystemStates;
 
-/**
- * An enumeration representing different drive states for a robot's drive subsystem.
- */
 public enum DriveStates implements SubsystemStates {
 	NORMAL("Driving Normally", new PosePair(Pose2d.kZero, Pose2d.kZero)),
 	AIMLOCK_HUB("Locking Aim To Hub", new PosePair(RED_HUB_POSE, BLUE_HUB_POSE)),
@@ -27,12 +23,6 @@ public enum DriveStates implements SubsystemStates {
 	private String stateString;
 	private PosePair targetPosePair;
 
-	/**
-	 * Constructs a DriveStates enum value with the specified state string and field-relative flag.
-	 *
-	 * @param stateString    the string representation of the drive state
-	 * @param Runnable  runnable that gets called to drive the robot
-	 */
 	DriveStates(String stateString, PosePair targetPosePair) {
 		this.stateString = stateString;
 		this.targetPosePair = targetPosePair;
