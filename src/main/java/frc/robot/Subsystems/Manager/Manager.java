@@ -40,7 +40,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		super(SUBSYSTEM_NAME, ManagerStates.IDLE);
 		instance = this;
 		drive = Drive.getInstance();
-		shooter = Shooter.getInstance(); 
+		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
 		vision = Vision.getInstance();
