@@ -37,7 +37,6 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-
 		//TODO: Find better implementation this is kinda geeked
 		if (DRIVER_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) {
 			if (getStateTime() - prevTime > AGITATION_TIME) {
