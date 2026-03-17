@@ -15,7 +15,7 @@ public enum CurrentLimiterStates {
 	EXTENDING_CLIMBER(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
 	RETRACTING_CLIMBER(CurrentLimitConstants.NORMAL_DRIVE_LIMITS, CurrentLimitConstants.NORMAL_TURN_LIMITS, CurrentLimitConstants.IDLE_SHOOTER_LIMITS),
 	INTAKING_AND_SHOOTING_AUTO(CurrentLimitConstants.LOW_DRIVE_LIMITS, CurrentLimitConstants.LOW_TURN_LIMITS, CurrentLimitConstants.FIRING_SHOOTER_LIMITS);
-	
+
 	private CurrentLimitsConfigs driveLimit;
 	private CurrentLimitsConfigs turnLimit;
 	private CurrentLimitsConfigs shooterLimit;

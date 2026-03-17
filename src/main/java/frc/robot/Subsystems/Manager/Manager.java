@@ -3,10 +3,10 @@ package frc.robot.Subsystems.Manager;
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
+import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
-import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
@@ -97,7 +97,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(SCORING_AUTO, WINDING_TO_SCORE_AUTO, () -> !Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) || !(Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees)));
 
 		// -----------------------------------------------  CURRENT LIMITS SETUP  -------------------------------------------------------
-		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply( getState().getCurrentLimiterState().getDriveLimit()));
+		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getDriveLimit()));
 		drive.getTurnMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
 		shooter.getShooterMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
 		shooter.getHoodMotor().getConfigurator().apply(HOOD_LIMITS);
@@ -148,7 +148,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	@Override
 	protected void stateInit() {
 		// Update current limits for drive, turn, and shooter based on the current limiter state of the new manager state
-		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply( getState().getCurrentLimiterState().getDriveLimit()));
+		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getDriveLimit()));
 		drive.getTurnMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
 		shooter.getShooterMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
 	}
