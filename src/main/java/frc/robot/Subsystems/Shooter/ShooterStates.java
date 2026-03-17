@@ -8,7 +8,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.Subsystems.Drive.Drive;
 import java.util.function.Supplier;
-import org.team7525.subsystem.SubsystemStates;
+import org.team7525.subsystem.SubsystemStates; 
 
 public enum ShooterStates implements SubsystemStates {
 	IDLE("IDLE", () -> Degrees.of(0), () -> RotationsPerSecond.of(0)),

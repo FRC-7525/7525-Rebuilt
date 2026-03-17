@@ -138,6 +138,7 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
+		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), () -> DRIVER_CONTROLLER.getRightBumperButtonPressed());
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
@@ -235,6 +236,9 @@ public class Drive extends Subsystem<DriveStates> {
 				break;
 			case AUTO:
 				break;
+			case LOCKED_X_POSE:
+				LockXPose();
+				break;
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
@@ -242,6 +246,11 @@ public class Drive extends Subsystem<DriveStates> {
 		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
 			setState(DriveStates.NORMAL);
 		}
+	}
+
+	public void LockXPose() {
+		SwerveRequest.SwerveDriveBrake request = new SwerveRequest.SwerveDriveBrake();
+		driveIO.setControl(request);
 	}
 
 	/**
