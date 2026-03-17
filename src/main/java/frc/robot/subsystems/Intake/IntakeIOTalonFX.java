@@ -53,11 +53,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 	public void setAngularPosition(Angle setpoint) {
 		this.setpoint = setpoint;
 		pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
-
-		if (pivotMotor.getStatorCurrent().getValueAsDouble() > OUT_CURRENT_LIMIT) {
-			pivotMotor.set(0);
-			pivotMotor.setPosition(setpoint.in(Rotations));
-		}
 	}
 
 	@Override

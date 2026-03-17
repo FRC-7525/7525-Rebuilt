@@ -29,8 +29,6 @@ public class IntakeConstants {
 
 	public static final double SPIN_SPEED_INTAKE = -0.75;
 
-	public static final double OUT_CURRENT_LIMIT = 1000; //TODO: CHANGE TO ACTUAL VALUE LATER
-
 	public static class Real {
 
 		public static final int SPIN_MOTOR_ID = 35; //make real

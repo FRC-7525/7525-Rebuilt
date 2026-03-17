@@ -20,8 +20,8 @@ public final class ShooterConstants {
 
 	public static final String SUBSYSTEM_NAME = "Shooter";
 	// Preset positions
-	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772); // TODO: get real value
-	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544); // TODO: get real value
+	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772);
+	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544);
 
 	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
@@ -84,7 +84,7 @@ public final class ShooterConstants {
 			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12);
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
-		}; //TODO: tune
+		};
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
 	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.119366, 19, new Rotation3d(0, 0, Math.PI / 2));

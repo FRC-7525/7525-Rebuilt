@@ -36,21 +36,21 @@ public class DriveConstants {
 	public static final Rotation2d BLUE_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(0);
 	public static final Rotation2d RED_ALLIANCE_PERSPECTIVE_ROTATION = Rotation2d.fromDegrees(180);
 
-	public static final Supplier<PIDController> X_AUTO_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<PIDController> X_AUTO_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(5, 0, 0);
 			case SIM -> new PIDController(5, 0, 0);
 			default -> new PIDController(20, 1, 0);
 		};
 
-	public static final Supplier<PIDController> Y_AUTO_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<PIDController> Y_AUTO_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(5, 0, 0);
 			case SIM -> new PIDController(5, 0, 0);
 			default -> new PIDController(20, 1, 0);
 		};
 
-	public static final Supplier<PIDController> ANGLE_AUTO_CONTROLLER = () -> // TODO: TUNE
+	public static final Supplier<PIDController> ANGLE_AUTO_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(3, 0, 0);
 			case SIM -> new PIDController(12, 0, 0);
