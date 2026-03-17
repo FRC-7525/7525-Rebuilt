@@ -30,6 +30,8 @@ public final class ShooterConstants {
 	public static final double SOLVER_EPSILON = 1e-6;
 	public static final int SOLVER_ITERATIONS = 4;
 
+	public static final double ZEROING_SPEED = -0.3;
+
 	// Tolerances
 	public static final double WHEEL_VELOCITY_TOLERANCE = 50.0; // in RotationsPerSecond units
 	public static final double HOOD_ANGLE_TOLERANCE_DEGREES = 0.01; // degrees

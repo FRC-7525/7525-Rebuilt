@@ -119,7 +119,7 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public boolean zeroHoodMotor() {
-		hoodMotor.set(-.3);
+		hoodMotor.set(ZEROING_SPEED);
 		if (!limitSwitch.get()) {
 			hoodMotor.setPosition(0);
 			hoodMotor.set(0);
