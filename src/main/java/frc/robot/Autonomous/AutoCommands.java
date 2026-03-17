@@ -41,7 +41,6 @@ public class AutoCommands {
 		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(true));
 	}
 
-
 	public Command disallowAimlock() {
 		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(false)).andThen(new PrintCommand("aimlock disabled"));
 	}
