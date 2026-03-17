@@ -57,7 +57,7 @@ public class DriveConstants {
 	public static final Supplier<PIDController> ANGLE_AUTO_CONTROLLER = () -> // TODO: TUNE
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(3, 0, 0);
-			case SIM -> new PIDController(5, 0, 0);
+			case SIM -> new PIDController(12, 0, 0);
 			default -> new PIDController(20, 1, 0);
 		};
 	// Weird syntax because we have our own PIDConstants class (literally just the PP one :skull: copy pasted) so we can use it without installing PP Lib

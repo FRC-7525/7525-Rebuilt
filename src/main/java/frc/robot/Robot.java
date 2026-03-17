@@ -79,6 +79,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void autonomousInit() {
 		Drive.getInstance().setState(DriveStates.AUTO);
+		Drive.getInstance().setAutoAimlock(false);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package frc.robot.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
@@ -32,12 +33,17 @@ public class AutoCommands {
 		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.WINDING_TO_SHUTTLE_AUTO));
 	}
 
+	public Command startScoring() {
+		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.SCORING_AUTO));
+	}
+
 	public Command allowAimlock() {
 		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(true));
 	}
 
+
 	public Command disallowAimlock() {
-		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(false));
+		return new InstantCommand(() -> Drive.getInstance().setAutoAimlock(false)).andThen(new PrintCommand("aimlock disabled"));
 	}
 
 	public Command stopRobot() {
