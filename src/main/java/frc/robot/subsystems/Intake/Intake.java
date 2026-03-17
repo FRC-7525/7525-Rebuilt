@@ -37,10 +37,9 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	@Override
 	protected void runState() {
-		io.setSpinVelocity(getState().getSpinSpeed());
 
 		//TODO: Find better implementation this is kinda geeked
-		if (DRIVER_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) {
+		if (DRIVER_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) {
 			if (getStateTime() - prevTime > AGITATION_TIME) {
 				agitatingIn = !agitatingIn;
 				prevTime = getStateTime();
@@ -48,7 +47,12 @@ public class Intake extends Subsystem<IntakeStates> {
 
 			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
 			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
-		} else io.setAngularPosition(getState().getAngle());
+
+			io.setSpinVelocity(SPIN_SPEED_INTAKE);
+		} else {
+			io.setSpinVelocity(getState().getSpinSpeed());
+			io.setAngularPosition(getState().getAngle());
+		}
 
 		io.logOutputs(outputs);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocity);
