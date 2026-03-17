@@ -6,6 +6,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -85,13 +89,6 @@ public final class ShooterConstants {
 
 	// Shot sample data for lookup tables (placeholder/example values)
 	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
-
-	public static final java.util.List<ShotSampleData> HUB_SHOT_SAMPLES = java.util.List.of(
-		new ShotSampleData(2.0, Degrees.of(30), RotationsPerSecond.of(20), 0.50),
-		new ShotSampleData(3.0, Degrees.of(35), RotationsPerSecond.of(25), 0.55),
-		new ShotSampleData(4.0, Degrees.of(40), RotationsPerSecond.of(30), 0.60),
-		new ShotSampleData(5.0, Degrees.of(45), RotationsPerSecond.of(35), 0.65)
-	);
 
 	// Important positions and transforms
 	public static final Distance TRENCH_RADIUS = Meters.of(1.0); // radius around trench where hood is forced down
