@@ -7,6 +7,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -81,7 +85,15 @@ public final class ShooterConstants {
 			case REAL -> new SimpleMotorFeedforward(0.35, 0.125, 0.12);
 			case SIM -> new SimpleMotorFeedforward(0.11, 0.1, 0.0);
 			case TESTING -> new SimpleMotorFeedforward(0.1, 0.01, 0.001);
-		};
+		}; //TODO: tune
+
+	// Placeholder positions; replace with real field measurements, Define based on alliance side
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.119366, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.625, 4.08, Rotation2d.kZero);
+	public static final Pose2d RED_HUB_POSE = new Pose2d(11.92, 4.08, Rotation2d.kZero);
+
+	// Shot sample data for lookup tables (placeholder/example values)
+	public static record ShotSampleData(double distanceMeters, Angle hoodAngle, AngularVelocity flywheelSpeed, double timeOfFlightSeconds) {}
 
 	// Important positions and transforms
 	public static final Distance TRENCH_RADIUS = Meters.of(1.0); // radius around trench where hood is forced down

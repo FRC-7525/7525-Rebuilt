@@ -418,11 +418,12 @@ public class Drive extends Subsystem<DriveStates> {
 		targetSpeeds.vyMetersPerSecond = targetSpeeds.vyMetersPerSecond + yController.calculate(currentPose.getY(), sample.y);
 
 		if (allowAutoAimlock) {
-			if (Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) >= SWITCH_DIST.in(Degrees)) {
-				targetSpeeds.omegaRadiansPerSecond = shooterYawControllerFast.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI);
-			} else {
-				targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
-			}
+			targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
+			// if (Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) >= SWITCH_DIST.in(Degrees)) {
+			// 	targetSpeeds.omegaRadiansPerSecond = shooterYawControllerFast.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI);
+			// } else {
+			// 	targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
+			// }
 		} else targetSpeeds.omegaRadiansPerSecond = headingController.calculate(currentPose.getRotation().getRadians(), sample.heading);
 
 		Logger.recordOutput("aimlock enabled", allowAutoAimlock);
