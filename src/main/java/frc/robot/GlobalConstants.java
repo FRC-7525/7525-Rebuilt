@@ -1,6 +1,11 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,6 +18,9 @@ public class GlobalConstants {
 	public static final LinearAcceleration GRAVITY = MetersPerSecondPerSecond.of(9.81);
 	public static final double SIMULATION_PERIOD = 0.02;
 	public static final Mass ROBOT_MASS = Pounds.of(135);
+
+	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.1119715947, 19, new Rotation3d(0, 0, Math.PI / 2));
+	public static final Transform2d ROBOT_TO_SHOOTER_2D = new Transform2d(-0.2270125, -0.1119715947, Rotation2d.kCCW_90deg);
 
 	public static final Field2d FIELD = new Field2d();
 

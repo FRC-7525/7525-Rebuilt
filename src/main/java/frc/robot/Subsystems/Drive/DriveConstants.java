@@ -1,11 +1,8 @@
 package frc.robot.Subsystems.Drive;
 
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
@@ -67,16 +64,4 @@ public class DriveConstants {
 			case SIM -> new PIDController(10, 0, .01);
 			default -> new PIDController(20, 1, 0);
 		};
-
-	public static RobotConfig getRobotConfig() {
-		try {
-			return RobotConfig.fromGUISettings();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// Dummy robot config, unsure of if this is good or bad
-			return new RobotConfig(1, 1, new ModuleConfig(1, 1, 1, DCMotor.getKrakenX60(1), 1, 1), 1);
-		}
-	}
-
-	public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
 }

@@ -34,23 +34,17 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.GlobalConstants.Controllers.DEADBAND;
-import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
-import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
-import static frc.robot.GlobalConstants.FIELD;
-import static frc.robot.GlobalConstants.ROBOT_MODE;
+import static frc.robot.GlobalConstants.Controllers.*;
+import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.BLUE_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.RED_HUB_POSE;
-import static frc.robot.Subsystems.Shooter.ShooterConstants.ROBOT_TO_SHOOTER;
+import static frc.robot.FieldConstants.*;
 
 public class Drive extends Subsystem<DriveStates> {
 
