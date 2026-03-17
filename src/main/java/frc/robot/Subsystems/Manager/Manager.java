@@ -91,6 +91,9 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		addTrigger(ManagerStates.IDLE, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getAButtonPressed);
 
+		// Operator override HoodSnapDown
+		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
+
 		// ----------------------------------------------  AUTO EXCLUSIVE TRIGGERS  -------------------------------------------------------
 
 		addTrigger(ManagerStates.WINDING_TO_SCORE_AUTO, ManagerStates.SCORING_AUTO, () -> Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) && Math.abs(Drive.getInstance().getAngleDiffBetweenShooterAndTarget().in(Degrees)) > AutoAlignConstants.MAX_YAW_ERROR.in(Degrees));

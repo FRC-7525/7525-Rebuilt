@@ -42,8 +42,8 @@ public class Shooter extends Subsystem<ShooterStates> {
 		return instance;
 	}
 
-	public void disableTrenchProtection() {
-		trenchProtection = false;
+	public void toggleTrenchProtection() {
+		trenchProtection = !trenchProtection;
 	}
 
 	private Shooter(ShooterIO io) {
