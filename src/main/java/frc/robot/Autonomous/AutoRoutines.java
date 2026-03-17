@@ -21,8 +21,9 @@ public class AutoRoutines {
 		autoFactory.bind("Intake And Pass", autoCommands.intakeAndPass());
 		autoFactory.bind("Wind To Shuttle", autoCommands.windToShuttle());
 		autoFactory.bind("Wind To Score", autoCommands.windToScore());
-		autoFactory.bind("Allow Aimlock", autoCommands.allowAimlock());
-		autoFactory.bind("Disallow Aimlock", autoCommands.disallowAimlock());
+		autoFactory.bind("Start Scoring", autoCommands.startScoring());
+		// autoFactory.bind("Allow Aimlock", autoCommands.allowAimlock());
+		// autoFactory.bind("Disallow Aimlock", autoCommands.disallowAimlock());
 		autoFactory.bind("StopRobot", autoCommands.stopRobot());
 		autoFactory.bind("PrintTest", autoCommands.printTest());
 	}
@@ -32,7 +33,13 @@ public class AutoRoutines {
 		AutoTrajectory part1 = ChoreoTraj.Right2Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.Right2Cycle_P2.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(part1.resetOdometry()).andThen(part1.cmd()).andThen(new WaitCommand(4)).andThen(part2.cmd()).andThen(new WaitCommand(4)));
+		routine.active().onTrue(Commands.print("AUTO STARTED")
+		.andThen(part1.resetOdometry())
+		.andThen(part1.cmd())
+		.andThen(new WaitCommand(4))
+		.andThen(autoCommands.disallowAimlock())
+		.andThen(part2.cmd())
+		.andThen(new WaitCommand(4)));
 
 		return routine;
 	}
@@ -42,7 +49,15 @@ public class AutoRoutines {
 		AutoTrajectory part1 = ChoreoTraj.Left2Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.Left2Cycle_P2.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(part1.resetOdometry()).andThen(part1.cmd()).andThen(new WaitCommand(4)).andThen(part2.cmd()).andThen(new WaitCommand(4)));
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(4))
+			.andThen(autoCommands.disallowAimlock())
+			.andThen(part2.cmd())
+			.andThen(new WaitCommand(4))
+		);
 
 		return routine;
 	}
@@ -52,7 +67,15 @@ public class AutoRoutines {
 		AutoTrajectory part1 = ChoreoTraj.SweeperRight1Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.SweeperRight1Cycle_P2.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(part1.resetOdometry()).andThen(part1.cmd()).andThen(new WaitCommand(4)).andThen(part2.cmd()).andThen(new WaitCommand(4)));
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(4))
+			.andThen(autoCommands.disallowAimlock())
+			.andThen(part2.cmd())
+			.andThen(new WaitCommand(4))
+		);
 
 		return routine;
 	}
@@ -62,7 +85,15 @@ public class AutoRoutines {
 		AutoTrajectory part1 = ChoreoTraj.SweeperLeft1Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.SweeperLeft1Cycle_P2.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(part1.resetOdometry()).andThen(part1.cmd()).andThen(new WaitCommand(4)).andThen(part2.cmd()).andThen(new WaitCommand(4)));
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(4))
+			.andThen(autoCommands.disallowAimlock())
+			.andThen(part2.cmd())
+			.andThen(new WaitCommand(4))
+		);
 
 		return routine;
 	}
@@ -71,7 +102,11 @@ public class AutoRoutines {
 		AutoRoutine routine = autoFactory.newRoutine("Right1CycleDepot");
 		AutoTrajectory traj = ChoreoTraj.Right1CycleDepot.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(traj.resetOdometry())
+			.andThen(traj.cmd())
+		);
 
 		return routine;
 	}
@@ -80,7 +115,11 @@ public class AutoRoutines {
 		AutoRoutine routine = autoFactory.newRoutine("Drive1");
 		AutoTrajectory traj = ChoreoTraj.Drive1.asAutoTraj(routine);
 
-		routine.active().onTrue(Commands.print("AUTO STARTED").andThen(traj.resetOdometry()).andThen(traj.cmd()));
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(traj.resetOdometry())
+			.andThen(traj.cmd())
+		);
 
 		return routine;
 	}
