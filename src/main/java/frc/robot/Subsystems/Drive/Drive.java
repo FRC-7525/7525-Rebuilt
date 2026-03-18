@@ -60,6 +60,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private Pose2d targetPose = Pose2d.kZero;
 	private Pose2d sotmTarget = Pose2d.kZero;
 	private double lastTime = 0;
+	private DriveStates cachedState = DriveStates.NORMAL;
 
 	private boolean usedRepulsor = false;
 	private final RepulsorFieldPlanner repulsor = new RepulsorFieldPlanner(Obstacles.FIELD_OBSTACLES, Obstacles.WALLS, (ROBOT_MODE == RobotMode.SIM));
@@ -138,11 +139,13 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
-		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), () -> DRIVER_CONTROLLER.getPOV() == 0);
-		addRunnableTrigger(() -> setState(DriveStates.NORMAL), () -> getState() == DriveStates.LOCKED_X_POSE && !(DRIVER_CONTROLLER.getLeftX() < DEADBAND && DRIVER_CONTROLLER.getLeftY() < DEADBAND && DRIVER_CONTROLLER.getRightX() < DEADBAND));
+		addRunnableTrigger(() -> cachedState = getState(), DRIVER_CONTROLLER::getRightStickButtonPressed);
+		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), DRIVER_CONTROLLER::getRightStickButton);
+		addRunnableTrigger(() -> setState(cachedState), DRIVER_CONTROLLER::getRightStickButtonReleased);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
