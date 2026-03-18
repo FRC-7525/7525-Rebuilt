@@ -132,7 +132,7 @@ public class Drive extends Subsystem<DriveStates> {
 			OPERATOR_CONTROLLER::getBackButtonPressed
 		);
 
-		addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
+		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addRunnableTrigger(
 			() -> {
 				driveIO.zeroGyro();
@@ -206,7 +206,7 @@ public class Drive extends Subsystem<DriveStates> {
 				} else {
 					turnValue = Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0;
 				}
-				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), turnValue, true);
+				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, turnValue, true);
 				Logger.recordOutput("shooter/target", target);
 				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getDegrees());
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
