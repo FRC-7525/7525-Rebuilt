@@ -129,11 +129,11 @@ public class Manager extends Subsystem<ManagerStates> {
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
-		intake.setState(getState().getIntakeState());
+		// intake.setState(getState().getIntakeState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 

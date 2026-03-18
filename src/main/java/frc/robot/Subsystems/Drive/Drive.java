@@ -182,8 +182,8 @@ public class Drive extends Subsystem<DriveStates> {
 		switch (getState()) {
 			case NORMAL:
 				executeDriveInstruction(
-					DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-					DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
 					-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
 					isFieldRelative
 				);
@@ -202,7 +202,7 @@ public class Drive extends Subsystem<DriveStates> {
 				} else {
 					turnValue = Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0;
 				}
-				executeAutoAlignDriveInstruction(DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), turnValue, true);
+				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond), -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond), turnValue, true);
 				Logger.recordOutput("shooter/target", target);
 				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getDegrees());
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
@@ -224,12 +224,12 @@ public class Drive extends Subsystem<DriveStates> {
 				break;
 			case SNAKE_DRIVE:
 				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());
-				Rotation2d leftStickDir = !Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
+				Rotation2d leftStickDir = Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
 				if (leftStickVector.getNorm() < CLOSE_TO_ZERO) leftStickDir = getPose().getRotation();
 
 				executeAutoAlignDriveInstruction(
-					DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-					DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
 					snakeDriveController.calculate(getPose().getRotation().getRadians(), leftStickDir.getRadians()),
 					true
 				);
