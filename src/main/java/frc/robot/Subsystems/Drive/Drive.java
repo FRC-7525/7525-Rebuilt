@@ -138,7 +138,8 @@ public class Drive extends Subsystem<DriveStates> {
 			},
 			DRIVER_CONTROLLER::getBackButtonPressed
 		);
-		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), () -> DRIVER_CONTROLLER.getRightBumperButtonPressed());
+		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), () -> DRIVER_CONTROLLER.getPOV() == 0);
+		addRunnableTrigger(() -> setState(DriveStates.NORMAL), () -> getState() == DriveStates.LOCKED_X_POSE && !(DRIVER_CONTROLLER.getLeftX() < DEADBAND && DRIVER_CONTROLLER.getLeftY() < DEADBAND && DRIVER_CONTROLLER.getRightX() < DEADBAND));
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
