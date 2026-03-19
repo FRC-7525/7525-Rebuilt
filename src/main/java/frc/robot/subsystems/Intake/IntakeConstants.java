@@ -28,6 +28,9 @@ public class IntakeConstants {
 	public static final double AGITATION_TIME = 0.5;
 
 	public static final double SPIN_SPEED_INTAKE = -0.75;
+	public static final int LIMIT_SWITCH_PORT = 6;
+
+	public static final double TOLERANCE = 0.05; 
 
 	public static class Real {
 

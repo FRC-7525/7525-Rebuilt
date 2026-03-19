@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Intake.IntakeConstants.Real;
 
@@ -19,6 +20,8 @@ public class IntakeIOTalonFX implements IntakeIO {
 	protected final TalonFXConfiguration pivotMotorConfiguration = new TalonFXConfiguration();
 	private final PIDController pivotController;
 	private Angle setpoint;
+	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+
 
 	public IntakeIOTalonFX() {
 		pivotController = PIVOT_PID.get();
@@ -51,6 +54,9 @@ public class IntakeIOTalonFX implements IntakeIO {
 
 	@Override
 	public void setAngularPosition(Angle setpoint) {
+		if (!limitSwitch.get() && !(pivotMotor.getPosition().getValueAsDouble() < TOLERANCE)) { // If the limit switch is pressed and we're not near 0;
+			pivotMotor.setPosition(0);
+		}
 		this.setpoint = setpoint;
 		pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
 	}
