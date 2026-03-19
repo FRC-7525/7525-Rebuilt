@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
@@ -106,16 +106,18 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
-		addRunnableTrigger(() -> {
-			var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
-			if (redWon && Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red won and we are red
-			if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
-			if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
-			if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
+		addRunnableTrigger(
+			() -> {
+				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
+				if (redWon && Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red won and we are red
+				if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
+				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
+				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
 
-			currentGameState = gameStates[gameStateIndex];
-			
-		}, () -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS));
+				currentGameState = gameStates[gameStateIndex];
+			},
+			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
+		);
 
 		// ----------------------------------------------  AUTO EXCLUSIVE TRIGGERS  -------------------------------------------------------
 
