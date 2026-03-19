@@ -95,6 +95,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void teleopInit() {
 		CommandScheduler.getInstance().cancelAll();
+		Manager.getInstance().initalizeShiftTimer();
 		manager.setState(IDLE);
 		Drive.getInstance().setState(DriveStates.NORMAL);
 	}

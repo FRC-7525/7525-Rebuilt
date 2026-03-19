@@ -9,6 +9,10 @@ import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
@@ -26,8 +30,18 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Shooter shooter;
 	private Hopper hopper;
 	private Intake intake;
-
 	private Vision vision;
+
+	private Timer shiftTimer = new Timer();
+	private double nextTransitionTime = 10;
+	private GameStates[] gameStates = UNKNOWN_ALLIANCE_WON;
+	private GameStates currentGameState = GameStates.UNKNOWN;
+	private int gameStateIndex = 0;
+
+	private static final String USE_FMS = "FMS";
+	private static final String FORCE_RED = "RED";
+	private static final String FORCE_BLUE = "BLUE";
+	private SendableChooser<String> autoWinnerChooser = new SendableChooser<>();
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -92,6 +106,18 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
+		addRunnableTrigger(
+			() -> {
+				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
+				if (redWon && Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red won and we are red
+				if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
+				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
+				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
+
+				currentGameState = gameStates[gameStateIndex];
+			},
+			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
+		);
 
 		// ----------------------------------------------  AUTO EXCLUSIVE TRIGGERS  -------------------------------------------------------
 
@@ -108,6 +134,12 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake.getSpinMotor().getConfigurator().apply(INTAKE_WHEEL_LIMITS);
 		hopper.getKickerMotor1().getConfigurator().apply(KICKER_LIMITS);
 		hopper.getKickerMotor2().getConfigurator().apply(KICKER_LIMITS_2);
+
+		autoWinnerChooser.setDefaultOption("Use FMS", USE_FMS);
+		autoWinnerChooser.addOption("Force Red Auto Win", FORCE_RED);
+		autoWinnerChooser.addOption("Force Blue Auto Win", FORCE_BLUE);
+
+		SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
 	}
 
 	@Override
@@ -141,10 +173,44 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);
 		}
+
+		if (shiftTimer.hasElapsed(nextTransitionTime)) {
+			currentGameState = gameStates[gameStateIndex];
+			// gameStates.length
+			if (gameStateIndex < gameStates.length - 1) gameStateIndex++;
+			nextTransitionTime += currentGameState.getStateDuration();
+		}
+
+		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", nextTransitionTime - shiftTimer.get());
+		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
+		if (gameStateIndex < gameStates.length) Logger.recordOutput("Manager/NEXT SHIFT", gameStates[gameStateIndex].getStateString());
 	}
 
 	public boolean isHubActive() {
 		return true; // TODO: implement this
+	}
+
+	public void initalizeShiftTimer() {
+		String gameData = DriverStation.getGameSpecificMessage();
+		boolean redWon = true;
+		if (gameData.length() > 0) {
+			if (gameData.charAt(0) == 'R') redWon = true;
+			if (gameData.charAt(0) == 'B') redWon = false;
+			else {
+				gameStates = UNKNOWN_ALLIANCE_WON;
+				return;
+			}
+		}
+
+		if (redWon && Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red won and we are red
+		if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
+		if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
+		if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
+
+		currentGameState = gameStates[0];
+		gameStateIndex++;
+
+		shiftTimer.start();
 	}
 
 	@Override

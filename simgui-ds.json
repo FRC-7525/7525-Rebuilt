@@ -37,6 +37,11 @@
       "ypos": "29"
     }
   },
+  "System Joysticks": {
+    "window": {
+      "enabled": false
+    }
+  },
   "Window": {
     "###/AdvantageKit/RealOutputs/Alerts": {
       "Collapsed": "0",
