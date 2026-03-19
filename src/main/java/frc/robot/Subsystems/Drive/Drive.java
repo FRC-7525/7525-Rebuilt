@@ -89,7 +89,7 @@ public class Drive extends Subsystem<DriveStates> {
 	 * @param driveIO The DriveIO object used for controlling the drive system.
 	 */
 	private Drive() {
-		super("Drive", DriveStates.NORMAL);
+		super("Drive", DriveStates.SNAKE_DRIVE);
 		this.driveIO = switch (ROBOT_MODE) {
 			case REAL -> new DriveIOReal();
 			case SIM -> new DriveIOSim();
@@ -146,7 +146,7 @@ public class Drive extends Subsystem<DriveStates> {
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
-		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.NORMAL, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
 	}

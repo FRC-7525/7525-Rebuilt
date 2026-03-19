@@ -89,7 +89,7 @@ public class Robot extends LoggedRobot {
 	public void autonomousExit() {
 		CommandScheduler.getInstance().cancelAll();
 		manager.setState(IDLE);
-		Drive.getInstance().setState(DriveStates.NORMAL);
+		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().cancelAll();
 		Manager.getInstance().initalizeShiftTimer();
 		manager.setState(IDLE);
-		Drive.getInstance().setState(DriveStates.NORMAL);
+		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
 	}
 
 	@Override
