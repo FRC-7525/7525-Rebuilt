@@ -22,7 +22,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 	private Angle setpoint;
 	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
-
 	public IntakeIOTalonFX() {
 		pivotController = PIVOT_PID.get();
 		spinMotor = new TalonFX(Real.SPIN_MOTOR_ID);
