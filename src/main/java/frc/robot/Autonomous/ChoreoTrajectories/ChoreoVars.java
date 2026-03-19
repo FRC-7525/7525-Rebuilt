@@ -21,6 +21,8 @@ public final class ChoreoVars {
         public static final Pose2d LeftNeutralTrenchStraighten = new Pose2d(5.397, 7.519, Rotation2d.kZero);
         public static final Pose2d RightAllianceTrenchStraighten = new Pose2d(3.87, 0.551, Rotation2d.kZero);
         public static final Pose2d RightNeutralTrenchStraighten = new Pose2d(5.397, 0.551, Rotation2d.kZero);
+        public static final Pose2d RightStartingPos = new Pose2d(3.585, 0.551, Rotation2d.kZero);
+        public static final Pose2d LeftStartingPos = new Pose2d(3.585, 7.519, Rotation2d.kZero);
 
         private Poses() {}
     }
