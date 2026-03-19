@@ -176,12 +176,12 @@ public class Manager extends Subsystem<ManagerStates> {
 			currentGameState = gameStates[gameStateIndex];
 			// gameStates.length
 			if (gameStateIndex < gameStates.length - 1) gameStateIndex++;
-			// (gameStateIndex < gameStates.length.) ? gameStateIndex++ : System.out.println("hi");
 			nextTransitionTime += currentGameState.getStateDuration();
 		}
 
-		Logger.recordOutput("Manager/TIME UNTILL NEXT SHIFT", nextTransitionTime - shiftTimer.get());
+		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", nextTransitionTime - shiftTimer.get());
 		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
+		if (gameStateIndex < gameStates.length) Logger.recordOutput("Manager/NEXT SHIFT", gameStates[gameStateIndex].getStateString());
 	}
 
 	public boolean isHubActive() {
@@ -195,7 +195,6 @@ public class Manager extends Subsystem<ManagerStates> {
 			if (gameData.charAt(0) == 'R') redWon = true;
 			if (gameData.charAt(0) == 'B') redWon = false;
 			else {
-				System.out.println("test \n test \n test \n test \n test \n test");
 				gameStates = UNKNOWN_ALLIANCE_WON;
 				return;
 			}
