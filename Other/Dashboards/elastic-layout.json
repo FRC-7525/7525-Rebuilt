@@ -1,6 +1,6 @@
 {
   "version": 1.0,
-  "grid_size": 128,
+  "grid_size": 123,
   "tabs": [
     {
       "name": "Driver Dash",
@@ -9,31 +9,31 @@
         "containers": [
           {
             "title": "Field",
-            "x": 896.0,
+            "x": 615.0,
             "y": 0.0,
-            "width": 640.0,
-            "height": 384.0,
+            "width": 615.0,
+            "height": 369.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.06,
               "field_game": "Rebuilt",
-              "robot_width": 0.85,
-              "robot_length": 0.85,
+              "robot_width": 1.5,
+              "robot_length": 1.5,
               "show_other_objects": true,
               "show_trajectories": true,
-              "field_rotation": 0.0,
-              "robot_color": 4294198070,
+              "field_rotation": -180.0,
+              "robot_color": 4281574651,
               "trajectory_color": 4294967295,
               "show_robot_outside_widget": true
             }
           },
           {
             "title": "autoChooser",
-            "x": 640.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
+            "x": 0.0,
+            "y": 246.0,
+            "width": 123.0,
+            "height": 123.0,
             "type": "ComboBox Chooser",
             "properties": {
               "topic": "/SmartDashboard/autoChooser",
@@ -43,10 +43,10 @@
           },
           {
             "title": "HUB ACTIVE",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 492.0,
+            "y": 123.0,
+            "width": 123.0,
+            "height": 123.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Manager/HUB ACTIVE",
@@ -60,10 +60,10 @@
           },
           {
             "title": "NEXT SHIFT",
-            "x": 256.0,
+            "x": 369.0,
             "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
+            "width": 246.0,
+            "height": 123.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Manager/NEXT SHIFT",
@@ -73,10 +73,10 @@
           },
           {
             "title": "TIME UNTIL NEXT SHIFT",
-            "x": 128.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 256.0,
+            "x": 123.0,
+            "y": 123.0,
+            "width": 246.0,
+            "height": 123.0,
             "type": "Match Time",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Manager/TIME UNTIL NEXT SHIFT",
@@ -88,11 +88,11 @@
             }
           },
           {
-            "title": "STATE",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
+            "title": "Manager State",
+            "x": 123.0,
+            "y": 246.0,
+            "width": 246.0,
+            "height": 123.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Manager/STATE",
@@ -102,10 +102,10 @@
           },
           {
             "title": "CURRENT HUB STATE",
-            "x": 0.0,
+            "x": 123.0,
             "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
+            "width": 246.0,
+            "height": 123.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Manager/CURRENT HUB STATE",
@@ -115,10 +115,10 @@
           },
           {
             "title": "MatchTime",
-            "x": 384.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 256.0,
+            "x": 369.0,
+            "y": 123.0,
+            "width": 123.0,
+            "height": 123.0,
             "type": "Match Time",
             "properties": {
               "topic": "/AdvantageKit/DriverStation/MatchTime",
@@ -130,45 +130,11 @@
             }
           },
           {
-            "title": "BackLeftTarget?",
-            "x": 0.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/photonvision/Back Left Camera/hasTarget",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "BackRightTarget?",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/photonvision/Back Right Camera/hasTarget",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "State",
-            "x": 256.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
+            "title": "Drive State",
+            "x": 369.0,
+            "y": 246.0,
+            "width": 246.0,
+            "height": 123.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Drive/State",
@@ -177,14 +143,70 @@
             }
           },
           {
-            "title": "Auto Chooser PP",
-            "x": 640.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
+            "title": "AngularDegrees",
+            "x": 1230.0,
+            "y": 0.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Intake/AngularDegrees",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "HoodAngle",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/HoodAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "HoodSetpoint",
+            "x": 0.0,
+            "y": 123.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/HoodSetpoint",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "RightWheelVelocity",
+            "x": 1230.0,
+            "y": 246.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/RightWheelVelocity",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Auto Winner Override",
+            "x": 1230.0,
+            "y": 123.0,
+            "width": 123.0,
+            "height": 123.0,
             "type": "ComboBox Chooser",
             "properties": {
-              "topic": "/SmartDashboard/Auto Chooser PP",
+              "topic": "/SmartDashboard/Auto Winner Override",
               "period": 0.06,
               "sort_options": false
             }
@@ -200,9 +222,9 @@
           {
             "title": "Back Left Drive Spark(2)",
             "x": 0.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
+            "y": 246.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Back Left Drive Spark(2)",
@@ -216,10 +238,10 @@
           },
           {
             "title": "Back Left Turn Spark(10)",
-            "x": 128.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 123.0,
+            "y": 369.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Back Left Turn Spark(10)",
@@ -233,10 +255,10 @@
           },
           {
             "title": "Back Right Drive Spark(35)",
-            "x": 384.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 369.0,
+            "y": 246.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Back Right Drive Spark(35)",
@@ -250,10 +272,10 @@
           },
           {
             "title": "Back Right Turn Spark(1)",
-            "x": 256.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 246.0,
+            "y": 369.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Back Right Turn Spark(1)",
@@ -268,9 +290,9 @@
           {
             "title": "Front Left Drive Spark(7)",
             "x": 0.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
+            "y": 123.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Front Left Drive Spark(7)",
@@ -284,10 +306,10 @@
           },
           {
             "title": "Front Left Turn Spark(33)",
-            "x": 128.0,
+            "x": 123.0,
             "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Front Left Turn Spark(33)",
@@ -301,10 +323,10 @@
           },
           {
             "title": "Front Right Drive Spark(11)",
-            "x": 256.0,
+            "x": 246.0,
             "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Front Right Drive Spark(11)",
@@ -318,10 +340,10 @@
           },
           {
             "title": "Front Right Turn Spark(8)",
-            "x": 384.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 369.0,
+            "y": 123.0,
+            "width": 124.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Front Right Turn Spark(8)",
@@ -335,10 +357,10 @@
           },
           {
             "title": "Climer Spark(16)",
-            "x": 640.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 128.0,
+            "x": 615.0,
+            "y": 123.0,
+            "width": 246.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Climer Spark(16)",
@@ -352,10 +374,10 @@
           },
           {
             "title": "Coral and Algae Wheel Spark(5)",
-            "x": 640.0,
-            "y": 256.0,
-            "width": 256.0,
-            "height": 128.0,
+            "x": 615.0,
+            "y": 246.0,
+            "width": 246.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Coral and Algae Wheel Spark(5)",
@@ -369,10 +391,10 @@
           },
           {
             "title": "Pivot Spark(15)",
-            "x": 640.0,
+            "x": 615.0,
             "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
+            "width": 246.0,
+            "height": 124.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/FaultManager/Alive CAN Devices/Main CAN/Pivot Spark(15)",
@@ -385,6 +407,13 @@
             }
           }
         ]
+      }
+    },
+    {
+      "name": "Tab 3",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
       }
     }
   ]
