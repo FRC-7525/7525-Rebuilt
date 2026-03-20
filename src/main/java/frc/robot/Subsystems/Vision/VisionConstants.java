@@ -85,8 +85,12 @@ public class VisionConstants {
     public static final Set<Short> APRIL_TAG_IGNORE = Set.of((short) 16, (short) 15, (short) 31, (short) 32);
 
     // Alliance-specific trench/score tags for single-tag forced mode (WINDUP + SCORE_AUTO)
-    public static final Set<Integer> RED_TRENCH_SCORE_TAGS  = Set.of(7, 12);
-    public static final Set<Integer> BLUE_TRENCH_SCORE_TAGS = Set.of(23, 28);
+    public static final Set<Short> RED_TRENCH_SCORE_TAGS  = Set.of((short) 7, (short) 12);
+    public static final Set<Short> BLUE_TRENCH_SCORE_TAGS = Set.of((short) 23, (short) 28);
+
+    public static final Set<Integer> RED_TRENCH_SCORE_TAGS_INTEGERS  = Set.of( 7, 12);
+    public static final Set<Integer> BLUE_TRENCH_SCORE_TAGS_INTEGERS = Set.of( 23,  28);
+
 
     // Depth of each alliance zone from the field wall (meters)
     public static final double ALLIANCE_ZONE_DEPTH = 4.03;
