@@ -32,6 +32,7 @@ public class AutoRoutines {
 		AutoRoutine routine = autoFactory.newRoutine("Right2CycleRoutine");
 		AutoTrajectory part1 = ChoreoTraj.Right2Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.Right2Cycle_P2.asAutoTraj(routine);
+		AutoTrajectory part3 = ChoreoTraj.Right2Cycle_P3.asAutoTraj(routine);
 
 		routine.active().onTrue(Commands.print("AUTO STARTED")
 		.andThen(part1.resetOdometry())
@@ -39,7 +40,9 @@ public class AutoRoutines {
 		.andThen(new WaitCommand(4))
 		.andThen(autoCommands.disallowAimlock())
 		.andThen(part2.cmd())
-		.andThen(new WaitCommand(4)));
+		.andThen(new WaitCommand(4))
+		.andThen(part3.cmd())
+		);
 
 		return routine;
 	}
@@ -48,6 +51,7 @@ public class AutoRoutines {
 		AutoRoutine routine = autoFactory.newRoutine("Left2CycleRoutine");
 		AutoTrajectory part1 = ChoreoTraj.Left2Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.Left2Cycle_P2.asAutoTraj(routine);
+		AutoTrajectory part3 = ChoreoTraj.Right2Cycle_P3.asAutoTraj(routine);
 
 		routine.active().onTrue(
 			Commands.print("AUTO STARTED")
@@ -57,6 +61,7 @@ public class AutoRoutines {
 			.andThen(autoCommands.disallowAimlock())
 			.andThen(part2.cmd())
 			.andThen(new WaitCommand(4))
+			.andThen(part3.cmd())
 		);
 
 		return routine;

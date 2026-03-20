@@ -1,5 +1,5 @@
 {
- "name":"Left2Cycle_P2",
+ "name":"Left2Cycle_P3",
  "version":3,
  "snapshot":{
   "waypoints":[
@@ -24,19 +24,15 @@
   "waypoints":[
     {"x":{"exp":"2.521347761154175 m", "val":2.521347761154175}, "y":{"exp":"7.23332775354 m", "val":7.23332775354}, "heading":{"exp":"-149.725 deg", "val":-2.61319422254851}, "intervals":48, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"LeftNeutralTrenchStraighten.x", "val":5.39705429077148}, "y":{"exp":"LeftNeutralTrenchStraighten.y", "val":7.51882797599}, "heading":{"exp":"LeftNeutralTrenchStraighten.heading", "val":0.0}, "intervals":35, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"5.88628625869751 m", "val":5.88628625869751}, "y":{"exp":"6.183466911315918 m", "val":6.183466911315918}, "heading":{"exp":"-90 deg", "val":-1.5707963267948966}, "intervals":32, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"5.88628625869751 m", "val":5.88628625869751}, "y":{"exp":"3.646789761 m", "val":3.646789761}, "heading":{"exp":"-90 deg", "val":-1.5707963267948966}, "intervals":50, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"5.59705429077148 m", "val":5.59705429077148}, "y":{"exp":"LeftNeutralTrenchStraighten.y", "val":7.51882797599}, "heading":{"exp":"180 deg", "val":3.141592653589793}, "intervals":42, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"2.521347761154175 m", "val":2.521347761154175}, "y":{"exp":"7.23332775354 m", "val":7.23332775354}, "heading":{"exp":"-149.725 deg", "val":-2.61319422254851}, "intervals":31, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"7.262885570526123 m", "val":7.262885570526123}, "y":{"exp":"6.223767586 m", "val":6.223767586}, "heading":{"exp":"-1.1525720838125844 rad", "val":-1.1525720838125844}, "intervals":31, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"16.541 m", "val":16.541}, "h":{"exp":"8.0692 m", "val":8.0692}}}, "enabled":true},
     {"from":"first", "to":1, "data":{"type":"KeepOutCircle", "props":{"x":{"exp":"4.603233922272921 m", "val":4.603233922272921}, "y":{"exp":"5.72074598417 m", "val":5.72074598417}, "r":{"exp":"1.3600021082733031 m", "val":1.3600021082733031}}}, "enabled":true},
-    {"from":0, "to":5, "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"4 m / s ^ 2", "val":4.0}}}, "enabled":true},
-    {"from":3, "to":2, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true},
-    {"from":2, "to":3, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"0.1 rad / s", "val":0.1}}}, "enabled":true},
-    {"from":1, "to":5, "data":{"type":"KeepOutCircle", "props":{"x":{"exp":"3.779213909059763 m", "val":3.779213909059763}, "y":{"exp":"5.751698121894151 m", "val":5.751698121894151}, "r":{"exp":"1 m", "val":1.0}}}, "enabled":true}],
+    {"from":0, "to":2, "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"4 m / s ^ 2", "val":4.0}}}, "enabled":true},
+    {"from":2, "to":1, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true},
+    {"from":1, "to":2, "data":{"type":"KeepOutCircle", "props":{"x":{"exp":"3.779213909059763 m", "val":3.779213909059763}, "y":{"exp":"5.751698121894151 m", "val":5.751698121894151}, "r":{"exp":"1 m", "val":1.0}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05
@@ -281,8 +277,8 @@
  },
  "events":[
    {"name":"Intake", "from":{"target":1, "targetTimestamp":1.46392, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Wind To Score", "from":{"target":3, "targetTimestamp":3.26426, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"StopRobot", "from":{"target":5, "targetTimestamp":6.6136, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Allow Aimlock", "from":{"target":4, "targetTimestamp":5.17721, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Start Scoring", "from":{"target":5, "targetTimestamp":6.6136, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"Wind To Score", "from":{"target":null, "targetTimestamp":3.26426, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"StopRobot", "from":{"target":2, "targetTimestamp":6.6136, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Allow Aimlock", "from":{"target":null, "targetTimestamp":5.17721, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Start Scoring", "from":{"target":2, "targetTimestamp":6.6136, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }

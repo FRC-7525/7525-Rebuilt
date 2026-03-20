@@ -34,14 +34,14 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Left2Cycle_P1 = new ChoreoTraj(
 	    "Left2Cycle_P1",
 	    OptionalInt.empty(),
-	    5.12611,
+	    5.39614,
 	    new Pose2d(3.585, 7.519, Rotation2d.fromRadians(0)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
 	public static final ChoreoTraj Left2Cycle_P2 = new ChoreoTraj(
 	    "Left2Cycle_P2",
 	    OptionalInt.empty(),
-	    5.47315,
+	    6.6136,
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
@@ -62,7 +62,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Right2Cycle_P2 = new ChoreoTraj(
 	    "Right2Cycle_P2",
 	    OptionalInt.empty(),
-	    5.48941,
+	    6.83704,
 	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634)),
 	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634))
 	);
@@ -94,6 +94,20 @@ public record ChoreoTraj(
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.5)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
+	public static final ChoreoTraj Right2Cycle_P3 = new ChoreoTraj(
+	    "Right2Cycle_P3",
+	    OptionalInt.empty(),
+	    1.64928,
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634)),
+	    new Pose2d(7.263, 1.846, Rotation2d.fromRadians(1.153))
+	);
+	public static final ChoreoTraj Left2Cycle_P3 = new ChoreoTraj(
+	    "Left2Cycle_P3",
+	    OptionalInt.empty(),
+	    6.6136,
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -109,7 +123,9 @@ public record ChoreoTraj(
 		Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
 		Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2),
 		Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
-		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2)
+		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
+		Map.entry("Right2Cycle_P3", Right2Cycle_P3),
+		Map.entry("Left2Cycle_P3", Left2Cycle_P3)
     );
 
     /**
