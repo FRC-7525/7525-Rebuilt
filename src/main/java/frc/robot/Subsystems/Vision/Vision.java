@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Manager.Manager;
+import frc.robot.Subsystems.Manager.ManagerStates;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
 import java.util.LinkedList;
@@ -35,7 +37,7 @@ public class Vision extends SubsystemBase {
 	List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
 	List<Pose3d> allRobotPosesRejected = new LinkedList<>();
 
-	Set<Short> allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+	Set<Integer> allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
 
 	private static Vision instance;
 
@@ -86,6 +88,15 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		var managerState = Manager.getInstance().getState();
+		Set<Integer> targetTags = Set.of();
+		if (managerState == ManagerStates.WINDING_UP || managerState == ManagerStates.SCORING_AUTO) {
+			targetTags = PRIORITY_TAGS;
+		}
+		for (VisionIO visionIO : io) {
+			visionIO.setTargetTagIds(targetTags);
+		}
+
 		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
 
 		for (int i = 0; i < io.length; i++) {
@@ -176,7 +187,7 @@ public class Vision extends SubsystemBase {
 		boolean observedLadder = false;
 		boolean observedOutpost = false;
 
-		for (Short tagObserved : observation.tagsObserved()) {
+		for (Integer tagObserved : observation.tagsObserved()) {
 			if (APRIL_TAG_IGNORE.contains(tagObserved)) {
 				observedLadder = true;
 				break;
@@ -184,7 +195,7 @@ public class Vision extends SubsystemBase {
 			if (observedLadder) break;
 		}
 
-		for (Short tagObserved : observation.tagsObserved()) {
+		for (Integer tagObserved : observation.tagsObserved()) {
 			if (HUMAN_TAGS.contains(tagObserved)) {
 				observedOutpost = true;
 				break;

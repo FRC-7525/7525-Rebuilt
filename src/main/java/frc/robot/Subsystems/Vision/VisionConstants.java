@@ -66,14 +66,14 @@ public class VisionConstants {
 	public static final int LATENCY_STD_DEV_MS = 10;
 
 	//April Tag Lists
-	public static final Set<Short> HUMAN_TAGS = Set.of((short) 14, (short) 13, (short) 29, (short) 30);
-	public static final Set<Short> RED_HUB_TAGS = Set.of((short) 8, (short) 5, (short) 4, (short) 3, (short) 9, (short) 10, (short) 11, (short) 2);
-	public static final Set<Short> BLUE_HUB_TAGS = Set.of((short) 18, (short) 27, (short) 26, (short) 25, (short) 21, (short) 24, (short) 19, (short) 20);
-	public static final Set<Short> TRENCH_TAGS = Set.of((short) 7, (short) 6, (short) 12, (short) 1, (short) 17, (short) 28, (short) 22, (short) 23);
-	public static final Set<Short> APRIL_TAG_IGNORE = Set.of((short) 16, (short) 15, (short) 31, (short) 32);
+	public static final Set<Integer> HUMAN_TAGS = Set.of(14, 13, 29, 30);
+	public static final Set<Integer> RED_HUB_TAGS = Set.of(8, 5, 4, 3, 9, 10, 11, 2);
+	public static final Set<Integer> BLUE_HUB_TAGS = Set.of(18, 27, 26, 25, 21, 24, 19, 20);
+	public static final Set<Integer> TRENCH_TAGS = Set.of(7, 6, 12, 1, 17, 28, 22, 23);
+	public static final Set<Integer> APRIL_TAG_IGNORE = Set.of(16, 15, 31, 32);
+	public static final Set<Integer> PRIORITY_TAGS = Set.of(7, 12, 28, 23);
 
 	// AKIT TEMPLATE STUFF
-
 	// Basic filtering thresholds
 	public static final double maxAmbiguity = 0.3;
 	public static final double maxZError = 0.75;
