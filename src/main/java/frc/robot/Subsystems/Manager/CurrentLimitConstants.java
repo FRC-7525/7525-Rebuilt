@@ -44,7 +44,7 @@ public class CurrentLimitConstants {
 
 		HOOD_LIMITS.SupplyCurrentLimit = 20;
 		SPINDEXER_LIMITS.SupplyCurrentLimit = 20;
-		KICKER_LIMITS.SupplyCurrentLimit = 35;
+		KICKER_LIMITS.SupplyCurrentLimit = 40;
 		KICKER_LIMITS_2.SupplyCurrentLimit = 10;
 	}
 }
