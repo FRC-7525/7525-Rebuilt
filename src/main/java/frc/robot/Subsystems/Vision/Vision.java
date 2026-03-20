@@ -140,6 +140,8 @@ public class Vision extends SubsystemBase {
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Ambiguous", (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity));
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field X", observation.pose().getX() < 0.0 || observation.pose().getX() > APRIL_TAG_FIELD_LAYOUT.getFieldLength());
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field Y", observation.pose().getY() < 0.0 || observation.pose().getY() > APRIL_TAG_FIELD_LAYOUT.getFieldWidth());
+				Logger.recordOutput("Vision/Camera" + cameraIndex + "/SeenTrenchTags", seenTrenchTags(observation));
+
 
 				// Add pose to log
 				robotPoses.add(observation.pose());
@@ -165,7 +167,6 @@ public class Vision extends SubsystemBase {
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted", robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected", robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
-			Logger.recordOutput("Vision/Camera" + cameraIndex + "/SeenTrenchTags", seenTrenchTags(observation));
 
 			allTagPoses.addAll(tagPoses);
 			allRobotPoses.addAll(robotPoses);
