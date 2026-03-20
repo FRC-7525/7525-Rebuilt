@@ -152,7 +152,6 @@ public class Drive extends Subsystem<DriveStates> {
 		}, () -> 
 			isInAimlockActivationZone(getPose()) 
 			&& Manager.getInstance().getState() == ManagerStates.WINDING_UP
-			&& Manager.getInstance().isHubActive()
 		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);

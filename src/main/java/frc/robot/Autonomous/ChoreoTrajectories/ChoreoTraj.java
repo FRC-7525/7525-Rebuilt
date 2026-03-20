@@ -34,14 +34,14 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Left2Cycle_P1 = new ChoreoTraj(
 	    "Left2Cycle_P1",
 	    OptionalInt.empty(),
-	    5.39614,
+	    5.47867,
 	    new Pose2d(3.585, 7.519, Rotation2d.fromRadians(0)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
 	public static final ChoreoTraj Left2Cycle_P2 = new ChoreoTraj(
 	    "Left2Cycle_P2",
 	    OptionalInt.empty(),
-	    6.6136,
+	    6.79027,
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
@@ -55,16 +55,16 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Right2Cycle_P1 = new ChoreoTraj(
 	    "Right2Cycle_P1",
 	    OptionalInt.empty(),
-	    5.27888,
+	    5.36467,
 	    new Pose2d(3.585, 0.551, Rotation2d.fromRadians(0)),
-	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634))
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.669))
 	);
 	public static final ChoreoTraj Right2Cycle_P2 = new ChoreoTraj(
 	    "Right2Cycle_P2",
 	    OptionalInt.empty(),
-	    6.83704,
-	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634)),
-	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.634))
+	    6.99235,
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.669)),
+	    new Pose2d(2.521, 0.837, Rotation2d.fromRadians(-0.669))
 	);
 	public static final ChoreoTraj SweeperLeft1Cycle_P1 = new ChoreoTraj(
 	    "SweeperLeft1Cycle_P1",
@@ -104,9 +104,9 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Left2Cycle_P3 = new ChoreoTraj(
 	    "Left2Cycle_P3",
 	    OptionalInt.empty(),
-	    6.6136,
+	    2.61762,
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
-	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
+	    new Pose2d(7.263, 6.224, Rotation2d.fromRadians(-1.153))
 	);
 
     /**

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Autonomous.AutoRoutines;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.DriveStates;
+import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Manager.Manager;
 import kotlin.Pair;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -90,6 +91,7 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().cancelAll();
 		manager.setState(IDLE);
 		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
+		Intake.getInstance().setAllowAutonomousAgitation(false);
 	}
 
 	@Override
