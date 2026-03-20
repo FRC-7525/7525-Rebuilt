@@ -55,7 +55,7 @@ public class DriveConstants {
 
 	public static final Supplier<PIDController> ANGLE_AUTO_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(3, 0, 0);
+			case REAL -> new PIDController(4, 0, 0);
 			case SIM -> new PIDController(12, 0, 0);
 			default -> new PIDController(20, 1, 0);
 		};
