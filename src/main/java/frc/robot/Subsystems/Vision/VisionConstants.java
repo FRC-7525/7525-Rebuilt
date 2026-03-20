@@ -71,7 +71,9 @@ public class VisionConstants {
 	public static final Set<Short> BLUE_HUB_TAGS = Set.of((short) 18, (short) 27, (short) 26, (short) 25, (short) 21, (short) 24, (short) 19, (short) 20);
 	public static final Set<Short> TRENCH_TAGS = Set.of((short) 7, (short) 6, (short) 12, (short) 1, (short) 17, (short) 28, (short) 22, (short) 23);
 	public static final Set<Short> APRIL_TAG_IGNORE = Set.of((short) 16, (short) 15, (short) 31, (short) 32);
-	public static final Set<Short> TRENCH_SCORE_TAGS = Set.of((short) 7, (short) 12, (short) 23, (short) 28);
+	public static final Set<Short> RED_TRENCH_SCORE_TAGS = Set.of((short) 7, (short) 12);
+	public static final Set<Short> BLUE_TRENCH_SCORE_TAGS = Set.of((short) 17, (short) 22);
+
 	// AKIT TEMPLATE STUFF
 
 	// Basic filtering thresholds
