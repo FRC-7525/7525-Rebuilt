@@ -140,6 +140,8 @@ public class Vision extends SubsystemBase {
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Ambiguous", (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity));
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field X", observation.pose().getX() < 0.0 || observation.pose().getX() > APRIL_TAG_FIELD_LAYOUT.getFieldLength());
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field Y", observation.pose().getY() < 0.0 || observation.pose().getY() > APRIL_TAG_FIELD_LAYOUT.getFieldWidth());
+				Logger.recordOutput("Vision/Camera" + cameraIndex + "/SeenTrenchTags", seenTrenchTags(observation));
+
 
 				// Add pose to log
 				robotPoses.add(observation.pose());
@@ -157,8 +159,9 @@ public class Vision extends SubsystemBase {
 
 				// Send vision observation
 				Drive.getInstance().addVisionMeasurement(observation.pose().toPose2d(), observation.timestamp(), visionStandardDev);
-			}
 
+			}
+			
 			// Log camera datadata
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses", tagPoses.toArray(new Pose3d[tagPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
@@ -232,7 +235,17 @@ public class Vision extends SubsystemBase {
 		}
 	}
 
+	private boolean seenTrenchTags(PoseObservation observation) {
+    if (observation.tagsObserved().isEmpty()) return false;
+
+    for (Short tagObserved : observation.tagsObserved()) {
+        if (TRENCH_SCORE_TAGS.contains(tagObserved)) {
+            return true;
+        }
+    }
+    return false;
+	}
 	private boolean seenReefTags(PoseObservation observation) {
-		return allianceHubTags.contains(observation.tagsObserved().toArray()[0]);
+		return allianceHubTags.contains(observation.tagsObserved().toArray()[]);
 	}
 }
