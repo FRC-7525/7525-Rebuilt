@@ -119,6 +119,7 @@ public class Drive extends Subsystem<DriveStates> {
 		this.translationalController.setTolerance(DISTANCE_ERROR_MARGIN.in(Meters));
 		this.repulsorRotationalController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 		this.rotationController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
+		this.headingController.setTolerance(1);
 
 		this.snakeDriveController.enableContinuousInput(-Math.PI, Math.PI);
 		this.shooterYawController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
