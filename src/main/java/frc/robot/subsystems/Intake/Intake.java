@@ -45,7 +45,7 @@ public class Intake extends Subsystem<IntakeStates> {
 				prevTime = getStateTime();
 			}
 
-			if (agitatingIn || allowAutonomousAgitation) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
+			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
 			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
 
 			io.setSpinVelocity(SPIN_SPEED_INTAKE);
