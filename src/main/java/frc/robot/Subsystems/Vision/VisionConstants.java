@@ -14,6 +14,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Subsystems.Drive.Drive;
 import java.util.Set;
 
@@ -28,7 +29,9 @@ public class VisionConstants {
 	// This is comp dependent
 	public static final boolean USE_WELDED_FIELD = true;
 
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField("2026-Trench_Feeder_Tag_Layout.json");
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = new AprilTagFieldLayout(Filesystem.getDeployDirectory().getAbsolutePath() + "src\\main\\deploy\\2026-Trench_Feeder_Tag_Layout.json");
+	
+	// AprilTagFieldLayout.loadField(2026-Trench_Feeder_Tag_Layout.json");
 
 	public record VisionMeasurment(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 
