@@ -7,6 +7,7 @@ import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
+import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,6 +36,8 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
 	private GameStates currentGameState = GameStates.UNKNOWN;
+	private int gameStateIndex = 0;
+	private int numTimesYPressed = 0;
 	
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
 	private double remainingPeriodTime = 10;
@@ -43,6 +46,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private static final String FORCE_RED = "RED";
 	private static final String FORCE_BLUE = "BLUE";
 	private SendableChooser<String> autoWinnerChooser = new SendableChooser<>();
+	private boolean test = false;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -75,27 +79,34 @@ public class Manager extends Subsystem<ManagerStates> {
 		// INTAKING --> EXTENDED_IDLE
 		addTrigger(ManagerStates.INTAKING, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getXButtonPressed);
 
+		addRunnableTrigger(() -> {
+			numTimesYPressed++;
+
+			if (numTimesYPressed == 3) {
+				setState(WINDING_UP);
+				numTimesYPressed = 1;
+			}
+		}, () -> DRIVER_CONTROLLER.getYButtonPressed() || OPERATOR_CONTROLLER.getYButtonPressed());
+
 		// IDLE/EXTENDED_IDLE --> WINDING_UP
-		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, OPERATOR_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
+		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
+		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// INTAKING --> WINDING_UP
-		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, OPERATOR_CONTROLLER::getYButtonPressed);
+		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
+		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> DRIVER_CONTROLLER.getYButtonPressed() && drive.isInTeamAllianceZone(drive.getPose()));
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2 && drive.isInTeamAllianceZone(drive.getPose()));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> DRIVER_CONTROLLER.getYButtonPressed() && !drive.isInTeamAllianceZone(drive.getPose())); // If we're not in the alliance zone, we should be shooting alliance shots not hub shots so shuttle instead of shoot directly from winding up
+		//TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
 
 		// SHOOTING --> WINDING_UP
-		//Done to simplify control and reduce wind-up time when needing to move in between shots (like if the hub is in the way while shuttling)
-		addTrigger(ManagerStates.SHOOTING_HUB, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
-		addTrigger(ManagerStates.SHUTTLING, ManagerStates.WINDING_UP, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// // IDLE <---> EXTENDING_CLIMBER
@@ -107,6 +118,7 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
+		
 		addRunnableTrigger(
 			() -> {
 				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
@@ -157,6 +169,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/test", test);
 
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
@@ -168,10 +181,10 @@ public class Manager extends Subsystem<ManagerStates> {
 		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
-
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);
+			numTimesYPressed = 0;
 		}
 
 		double currentTime = shiftTimer.get();
@@ -205,6 +218,10 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
 		Logger.recordOutput("Manager/NEXT HUB STATE", nextGameState.getStateString());
 
+	}
+
+	public GameStates getCurrentGameState() {
+		return currentGameState;
 	}
 
 	public boolean isHubActive() {

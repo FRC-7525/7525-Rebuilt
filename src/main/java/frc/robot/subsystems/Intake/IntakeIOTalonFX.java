@@ -19,11 +19,13 @@ public class IntakeIOTalonFX implements IntakeIO {
 	protected final TalonFX pivotMotor;
 	protected final TalonFXConfiguration pivotMotorConfiguration = new TalonFXConfiguration();
 	private final PIDController pivotController;
+	private final PIDController pivotBounceController;
 	private Angle setpoint;
 	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
 	public IntakeIOTalonFX() {
 		pivotController = PIVOT_PID.get();
+		pivotBounceController = PIVOT_BOUNCE_PID.get();
 		spinMotor = new TalonFX(Real.SPIN_MOTOR_ID);
 		spinMotor.setNeutralMode(NeutralModeValue.Coast);
 		spinMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 20;
@@ -53,11 +55,13 @@ public class IntakeIOTalonFX implements IntakeIO {
 
 	@Override
 	public void setAngularPosition(Angle setpoint) {
-		if (!limitSwitch.get() && !(pivotMotor.getPosition().getValueAsDouble() < TOLERANCE)) { // If the limit switch is pressed and we're not near 0;
-			pivotMotor.setPosition(0);
-		}
+		// if (!limitSwitch.get() && !(pivotMotor.getPosition().getValueAsDouble() < TOLERANCE)) { // If the limit switch is pressed and we're not near 0;
+		// 	pivotMotor.setPosition(0);
+		// }
 		this.setpoint = setpoint;
-		pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
+		if (setpoint.in(Degrees) == INTAKE_OUT_POS.in(Degrees) && Math.abs(pivotMotor.getPosition().getValue().minus(setpoint).in(Degrees)) < BOUNCE_ACTIVATION_TOLERANCE.in(Degrees)) {
+			pivotMotor.set(pivotBounceController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
+		} else pivotMotor.set(pivotController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
 	}
 
 	@Override

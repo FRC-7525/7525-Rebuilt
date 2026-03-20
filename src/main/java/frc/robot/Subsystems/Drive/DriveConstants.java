@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
@@ -22,6 +23,8 @@ public class DriveConstants {
 	public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
 	public static final double CLOSE_TO_ZERO = Math.pow(10, -4);
+
+	public static final Translation2d ALLIANCE_ZONE_OFFSET = new Translation2d(1, 1);
 
 	public static final LinearAcceleration MAX_LINEAR_ACCELERATION = MetersPerSecondPerSecond.of(11.7);
 

@@ -62,7 +62,7 @@ public final class AutoAlignConstants {
 	public static final Angle SWITCH_DIST = Degrees.of(5); // When to switch from fast(below) to slow(above) controller
 	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(1, 0, 0);
+			case REAL -> new PIDController(5, 0, 0); //TODO: lowkey need to tune but should work
 			case SIM -> new PIDController(2, 0, .01);
 			default -> new PIDController(20, 1, 0);
 		};

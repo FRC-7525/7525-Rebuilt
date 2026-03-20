@@ -56,11 +56,6 @@ public enum ManagerStates implements SubsystemStates {
 	}
 
 	public ShooterStates getShooterState() {
-		// Could be in shooter but would lead to wierd states i think
-		// shhoter doesn't change between winding up and shooting only hopper does
-		if (this == WINDING_UP && shooterState == null) {
-			return Drive.getInstance().isInTeamAllianceZone(Drive.getInstance().getPose()) ? ShooterStates.SHOOT_ALLIANCE : ShooterStates.SHOOT_HUB;
-		}
 		return shooterState;
 	}
 

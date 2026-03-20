@@ -11,6 +11,7 @@ import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
 
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
@@ -41,6 +42,9 @@ import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
+import frc.robot.Subsystems.Manager.GameStates;
+import frc.robot.Subsystems.Manager.Manager;
+import frc.robot.Subsystems.Manager.ManagerStates;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -142,6 +146,13 @@ public class Drive extends Subsystem<DriveStates> {
 		addRunnableTrigger(() -> cachedState = getState(), DRIVER_CONTROLLER::getRightStickButtonPressed);
 		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), DRIVER_CONTROLLER::getRightStickButton);
 		addRunnableTrigger(() -> setState(cachedState), DRIVER_CONTROLLER::getRightStickButtonReleased);
+		addRunnableTrigger(() -> {
+			setState(DriveStates.AIMLOCK_HUB);
+		}, () -> 
+			isInAimlockActivationZone(getPose()) 
+			&& Manager.getInstance().getState() == ManagerStates.WINDING_UP
+			&& Manager.getInstance().isHubActive()
+		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
@@ -228,8 +239,9 @@ public class Drive extends Subsystem<DriveStates> {
 				break;
 			case SNAKE_DRIVE:
 				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());
-				Rotation2d leftStickDir = Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
+				Rotation2d leftStickDir = Rotation2d.kZero;
 				if (leftStickVector.getNorm() < CLOSE_TO_ZERO) leftStickDir = getPose().getRotation();
+				else leftStickDir = Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
 
 				executeAutoAlignDriveInstruction(
 					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
@@ -248,7 +260,7 @@ public class Drive extends Subsystem<DriveStates> {
 		SmartDashboard.putData("Field", field);
 
 		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
-			setState(DriveStates.NORMAL);
+			setState(DriveStates.SNAKE_DRIVE);
 		}
 	}
 
@@ -378,6 +390,18 @@ public class Drive extends Subsystem<DriveStates> {
 		double y = currentPose.getY();
 		if (!(x > Robot.allianceZone.getFirst().getX() && x < Robot.allianceZone.getSecond().getX())) return false;
 		if (!(y > Robot.allianceZone.getFirst().getY() && y < Robot.allianceZone.getSecond().getY())) return false;
+		return true;
+	}
+
+	public boolean isInAimlockActivationZone(Pose2d currentPose) {
+		double x = currentPose.getX();
+		double y = currentPose.getY();
+		
+		Translation2d aimlockActivationZoneFirst = Robot.allianceZone.getFirst().plus(ALLIANCE_ZONE_OFFSET);
+		Translation2d aimlockActivationZoneSecond = Robot.allianceZone.getSecond().minus(ALLIANCE_ZONE_OFFSET);
+
+		if (!(x > aimlockActivationZoneFirst.getX() && x < aimlockActivationZoneSecond.getX())) return false;
+		if (!(y > aimlockActivationZoneFirst.getY() && y < aimlockActivationZoneSecond.getY())) return false;
 		return true;
 	}
 
