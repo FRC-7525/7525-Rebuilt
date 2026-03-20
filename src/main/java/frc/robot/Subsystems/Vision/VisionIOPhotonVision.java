@@ -19,7 +19,7 @@ public class VisionIOPhotonVision implements VisionIO {
     protected final PhotonCamera camera;
     protected final Transform3d robotToCamera;
     private Set<Integer> targetTagIds = new HashSet<>();
-
+    private Set<Integer> observationTagIDs = new HashSet<>();
     /**
      * Creates a new VisionIOPhotonVision.
      *
@@ -92,12 +92,17 @@ public class VisionIOPhotonVision implements VisionIO {
                     totalTagArea += target.getArea();
                 }
 
-                // Set tag id to set
+                // Se   t tag id to set
                 Set<Short> observationTagIds = new HashSet<>();
                 for (int id : multitagResult.fiducialIDsUsed) {
                     observationTagIds.add((short) id);
                 }
-                tagIds.addAll(multitagResult.fiducialIDsUsed);
+                for (int id : multitagResult.fiducialIDsUsed) {
+                    observationTagIDs.add(id);
+                }
+                for (Short s : observationTagIds) {
+                    tagIds.add(s.intValue());
+                }
 
                 poseObservations.add(
                     new PoseObservation(
