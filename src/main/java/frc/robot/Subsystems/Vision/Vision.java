@@ -187,7 +187,7 @@ public class Vision extends SubsystemBase {
 		boolean observedLadder = false;
 		boolean observedOutpost = false;
 
-		for (Integer tagObserved : observation.tagsObserved()) {
+		for (Short tagObserved : observation.tagsObserved()) {
 			if (APRIL_TAG_IGNORE.contains(tagObserved)) {
 				observedLadder = true;
 				break;
@@ -195,7 +195,7 @@ public class Vision extends SubsystemBase {
 			if (observedLadder) break;
 		}
 
-		for (Integer tagObserved : observation.tagsObserved()) {
+		for (Short tagObserved : observation.tagsObserved()) {
 			if (HUMAN_TAGS.contains(tagObserved)) {
 				observedOutpost = true;
 				break;

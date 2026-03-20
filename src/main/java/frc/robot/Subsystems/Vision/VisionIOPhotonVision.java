@@ -110,6 +110,7 @@ public class VisionIOPhotonVision implements VisionIO {
                 var tagPose = APRIL_TAG_FIELD_LAYOUT.getTagPose(target.getFiducialId());
                 if (tagPose.isPresent()) {
                     // Calculate robot pose 
+                    Transform3d cameraToTarget = target.getBestCameraToTarget();
                     Pose3d robotPose = tagPose.get()
                             .transformBy(target.getBestCameraToTarget().inverse())
                             .transformBy(robotToCamera.inverse());
@@ -122,7 +123,7 @@ public class VisionIOPhotonVision implements VisionIO {
                             robotPose,
                             target.getPoseAmbiguity(),
                             1,
-                            cameraToTarget.getTranslation().getNorm(),
+                            target.getBestCameraToTarget().getTranslation().getNorm(),
                             PoseObservationType.PHOTONVISION,
                             target.getArea(),
                             Set.of(target.getFiducialId())
