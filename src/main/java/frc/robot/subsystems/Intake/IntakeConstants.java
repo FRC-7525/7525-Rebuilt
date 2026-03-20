@@ -19,6 +19,13 @@ public class IntakeConstants {
 			case REAL, TESTING -> new PIDController(0.05, 0.0, 0.0);
 		};
 
+	//TODO: Pretty sure this is lowkey useless but whatever
+	public static final Supplier<PIDController> PIVOT_BOUNCE_PID = () ->
+		switch (ROBOT_MODE) {
+			case SIM -> new PIDController(0.0, 0.0, 0.0);
+			case REAL, TESTING -> new PIDController(0.01, 0.0, 0.0);
+		};
+
 	// States
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
 	public static final Angle INTAKE_OUT_POS = Degrees.of(-180);
@@ -27,7 +34,9 @@ public class IntakeConstants {
 	public static final Angle INTAKE_AGITATING_OUT_POS = Degrees.of(-120);
 	public static final double AGITATION_TIME = 0.5;
 
-	public static final double SPIN_SPEED_INTAKE = -0.75;
+	public static final Angle BOUNCE_ACTIVATION_TOLERANCE = Degrees.of(0.5);
+
+	public static final double SPIN_SPEED_INTAKE = -.85;
 	public static final int LIMIT_SWITCH_PORT = 6;
 
 	public static final double TOLERANCE = 0.05;

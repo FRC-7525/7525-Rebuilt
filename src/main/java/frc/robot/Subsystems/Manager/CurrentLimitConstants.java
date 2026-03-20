@@ -40,7 +40,7 @@ public class CurrentLimitConstants {
 		FIRING_SHOOTER_LIMITS.SupplyCurrentLimit = 90;
 
 		INTAKE_PIVOT_LIMITS.SupplyCurrentLimit = 20;
-		INTAKE_WHEEL_LIMITS.SupplyCurrentLimit = 20;
+		INTAKE_WHEEL_LIMITS.SupplyCurrentLimit = 60; //TODO: Might need to decrease
 
 		HOOD_LIMITS.SupplyCurrentLimit = 20;
 		SPINDEXER_LIMITS.SupplyCurrentLimit = 20;
