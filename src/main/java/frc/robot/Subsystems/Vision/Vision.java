@@ -36,8 +36,11 @@ public class Vision extends SubsystemBase {
     List<Pose3d> allRobotPoses = new LinkedList<>();
     List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
     List<Pose3d> allRobotPosesRejected = new LinkedList<>();
+	List<Pose3d> allTagPosesAccepted = new LinkedList<>();
 
     Set<Short> allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+	Set<Short> allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
+
 
     private static Vision instance;
 
@@ -107,6 +110,7 @@ public class Vision extends SubsystemBase {
         }
 
         allTagPoses = new LinkedList<>();
+		allTagPosesAccepted = new LinkedList<>();
         allRobotPoses = new LinkedList<>();
         allRobotPosesAccepted = new LinkedList<>();
         allRobotPosesRejected = new LinkedList<>();
@@ -117,6 +121,7 @@ public class Vision extends SubsystemBase {
         Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[0]));
         Logger.recordOutput("Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
         Logger.recordOutput("Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
+		Logger.recordOutput("Vision/Summary/TagPosesAccepted", allTagPosesAccepted.toArray(new Pose3d[0]));
     }
 
   
@@ -167,7 +172,14 @@ public class Vision extends SubsystemBase {
                     robotPosesRejected.add(observation.pose());
                 } else {
                     robotPosesAccepted.add(observation.pose());
-                }
+
+					for (Short id : observation.tagsObserved()) {
+						var tagPose = APRIL_TAG_FIELD_LAYOUT.getTagPose(id);
+						if (tagPose.isPresent() && allianceTrenchTags.contains(id)) {
+							allTagPosesAccepted.add(tagPose.get());
+						}
+					}
+				}
 
                 if (rejectPose) continue;
 
@@ -185,8 +197,10 @@ public class Vision extends SubsystemBase {
             allRobotPoses.addAll(robotPoses);
             allRobotPosesAccepted.addAll(robotPosesAccepted);
             allRobotPosesRejected.addAll(robotPosesRejected);
+			allTagPosesAccepted.addAll(tagPoses);
         }
-    }
+	}
+    
 
     private boolean shouldBeRejected(PoseObservation observation) {
     boolean observedTower = false;
