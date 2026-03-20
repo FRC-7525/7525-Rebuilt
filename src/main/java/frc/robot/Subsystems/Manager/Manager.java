@@ -34,11 +34,13 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Vision vision;
 
 	private Timer shiftTimer = new Timer();
-	private double nextTransitionTime = 10;
-	private GameStates[] gameStates = UNKNOWN_ALLIANCE_WON;
+	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
 	private GameStates currentGameState = GameStates.UNKNOWN;
 	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
+	
+	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
+	private double remainingPeriodTime = 10;
 
 	private static final String USE_FMS = "FMS";
 	private static final String FORCE_RED = "RED";
@@ -125,7 +127,6 @@ public class Manager extends Subsystem<ManagerStates> {
 				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
 
-				currentGameState = gameStates[gameStateIndex];
 			},
 			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
 		);
@@ -186,16 +187,37 @@ public class Manager extends Subsystem<ManagerStates> {
 			numTimesYPressed = 0;
 		}
 
-		if (shiftTimer.hasElapsed(nextTransitionTime)) {
-			currentGameState = gameStates[gameStateIndex];
-			// gameStates.length
-			if (gameStateIndex < gameStates.length - 1) gameStateIndex++;
-			nextTransitionTime += currentGameState.getStateDuration();
+		double currentTime = shiftTimer.get();
+	
+		if (currentTime < 10) {
+			currentGameState = gameStates[0];
+			nextGameState = gameStates[1];
+			remainingPeriodTime = 10 - currentTime;
+		} else if (currentTime < 35) {
+			currentGameState = gameStates[1];
+			nextGameState = gameStates[2];
+			remainingPeriodTime = 35 - currentTime;
+		} else if (currentTime < 60) {
+			currentGameState = gameStates[2];
+			nextGameState = gameStates[3];
+			remainingPeriodTime = 60 - currentTime;
+		} else if (currentTime < 85) {
+			currentGameState = gameStates[3];
+			nextGameState = gameStates[4];
+			remainingPeriodTime = 85 - currentTime;
+		} else if (currentTime < 110) {
+			currentGameState = gameStates[4];
+			nextGameState = gameStates[5];
+			remainingPeriodTime = 110 - currentTime;
+		} else if (currentTime < 140) {
+			currentGameState = gameStates[5];
+			remainingPeriodTime = 140 - currentTime;
 		}
 
-		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", nextTransitionTime - shiftTimer.get());
+		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", remainingPeriodTime);
 		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
-		if (gameStateIndex < gameStates.length) Logger.recordOutput("Manager/NEXT SHIFT", gameStates[gameStateIndex].getStateString());
+		Logger.recordOutput("Manager/NEXT HUB STATE", nextGameState.getStateString());
+
 	}
 
 	public GameStates getCurrentGameState() {
@@ -203,7 +225,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	}
 
 	public boolean isHubActive() {
-		return true; // TODO: implement this
+		return !(currentGameState == GameStates.HUB_NOT_ACTIVE);
 	}
 
 	public void initalizeShiftTimer() {
@@ -223,8 +245,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 		if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
 
-		currentGameState = gameStates[0];
-		gameStateIndex++;
 
 		shiftTimer.start();
 	}
