@@ -246,6 +246,6 @@ public class Vision extends SubsystemBase {
     return false;
 	}
 	private boolean seenReefTags(PoseObservation observation) {
-		return allianceHubTags.contains(observation.tagsObserved().toArray()[]);
+		return allianceHubTags.contains(observation.tagsObserved().toArray());
 	}
 }
