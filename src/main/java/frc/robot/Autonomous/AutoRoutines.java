@@ -35,13 +35,18 @@ public class AutoRoutines {
 		AutoTrajectory part3 = ChoreoTraj.Right2Cycle_P3.asAutoTraj(routine);
 
 		routine.active().onTrue(Commands.print("AUTO STARTED")
-		.andThen(part1.resetOdometry())
-		.andThen(part1.cmd())
-		.andThen(new WaitCommand(4))
-		.andThen(autoCommands.disallowAimlock())
-		.andThen(part2.cmd())
-		.andThen(new WaitCommand(4))
-		.andThen(part3.cmd())
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part2.cmd())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part3.cmd())
 		);
 
 		return routine;
@@ -57,10 +62,15 @@ public class AutoRoutines {
 			Commands.print("AUTO STARTED")
 			.andThen(part1.resetOdometry())
 			.andThen(part1.cmd())
-			.andThen(new WaitCommand(4))
-			.andThen(autoCommands.disallowAimlock())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
 			.andThen(part2.cmd())
-			.andThen(new WaitCommand(4))
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
 			.andThen(part3.cmd())
 		);
 

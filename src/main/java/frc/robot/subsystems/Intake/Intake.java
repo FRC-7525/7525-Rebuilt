@@ -18,6 +18,7 @@ public class Intake extends Subsystem<IntakeStates> {
 	private final IntakeIO.IntakeIOOutputs outputs = new IntakeIO.IntakeIOOutputs();
 	private double prevTime = 0;
 	private boolean agitatingIn = false;
+	private boolean allowAutonomousAgitation = false;
 
 	private Intake() {
 		super(SUBSYSTEM_NAME, IntakeStates.IN);
@@ -38,13 +39,13 @@ public class Intake extends Subsystem<IntakeStates> {
 	@Override
 	protected void runState() {
 		//TODO: Find better implementation this is kinda geeked
-		if (DRIVER_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) {
+		if (DRIVER_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT || allowAutonomousAgitation ) {
 			if (getStateTime() - prevTime > AGITATION_TIME) {
 				agitatingIn = !agitatingIn;
 				prevTime = getStateTime();
 			}
 
-			if (agitatingIn) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
+			if (agitatingIn || allowAutonomousAgitation) io.setAngularPosition(INTAKE_AGITATING_IN_POS);
 			else io.setAngularPosition(INTAKE_AGITATING_OUT_POS);
 
 			io.setSpinVelocity(SPIN_SPEED_INTAKE);
@@ -73,5 +74,9 @@ public class Intake extends Subsystem<IntakeStates> {
 
 	public double getStateTime() {
 		return super.getStateTime();
+	}
+
+	public void setAllowAutonomousAgitation(boolean allow) {
+		this.allowAutonomousAgitation = allow;
 	}
 }

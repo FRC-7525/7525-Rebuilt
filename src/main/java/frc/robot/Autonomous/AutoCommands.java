@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
+import frc.robot.Subsystems.Shooter.Shooter;
 
 public class AutoCommands {
 
@@ -51,5 +53,13 @@ public class AutoCommands {
 
 	public Command printTest() {
 		return new InstantCommand(() -> System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"));
+	}
+
+	public Command enableAgitation() {
+		return new InstantCommand(() -> Intake.getInstance().setAllowAutonomousAgitation(true));
+	}
+
+	public Command disableAgitation() {
+		return new InstantCommand(() -> Intake.getInstance().setAllowAutonomousAgitation(false));
 	}
 }
