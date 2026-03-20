@@ -157,13 +157,15 @@ public class Vision extends SubsystemBase {
 
 				// Send vision observation
 				Drive.getInstance().addVisionMeasurement(observation.pose().toPose2d(), observation.timestamp(), visionStandardDev);
-			}
 
+			}
+			
 			// Log camera datadata
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses", tagPoses.toArray(new Pose3d[tagPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted", robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected", robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
+			Logger.recordOutput("Vision/Camera" + cameraIndex + "/SeenTrenchTags", seenTrenchTags(observation));
 
 			allTagPoses.addAll(tagPoses);
 			allRobotPoses.addAll(robotPoses);
@@ -232,7 +234,17 @@ public class Vision extends SubsystemBase {
 		}
 	}
 
+	private boolean seenTrenchTags(PoseObservation observation) {
+    if (observation.tagsObserved().isEmpty()) return false;
+
+    for (Short tagObserved : observation.tagsObserved()) {
+        if (TRENCH_SCORE_TAGS.contains(tagObserved)) {
+            return true;
+        }
+    }
+    return false;
+	}
 	private boolean seenReefTags(PoseObservation observation) {
-		return allianceHubTags.contains(observation.tagsObserved().toArray()[0]);
+		return allianceHubTags.contains(observation.tagsObserved().toArray()[]);
 	}
 }
