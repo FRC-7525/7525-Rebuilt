@@ -132,12 +132,10 @@ public class Vision extends SubsystemBase {
         double fieldLength = APRIL_TAG_FIELD_LAYOUT.getFieldLength(); // 16.54m
 
         if (Robot.isRedAlliance) {
-            // Red alliance zone: left wall side, X < 4.03m
-            return (robotX < ALLIANCE_ZONE_DEPTH) ? RED_TRENCH_SCORE_TAGS : Set.of();
-        } else {
-            // Blue alliance zone: right wall side, X > 12.51m
-            return (robotX > fieldLength - ALLIANCE_ZONE_DEPTH) ? BLUE_TRENCH_SCORE_TAGS : Set.of();
-        }
+    	return (robotX > fieldLength - ALLIANCE_ZONE_DEPTH) ? RED_TRENCH_SCORE_TAGS : Set.of();
+		} else {
+    	return (robotX < ALLIANCE_ZONE_DEPTH) ? BLUE_TRENCH_SCORE_TAGS : Set.of();
+		}
     }
 
     private void processVision() {
@@ -247,7 +245,7 @@ public class Vision extends SubsystemBase {
         } else {
             xyStds = 0.5;
             degStds = 6;
-            return VecBuilder.fill(xyStds, xyStds, degStds);
+            return VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds));
         }
     }
 
