@@ -36,6 +36,7 @@ public class Vision extends SubsystemBase {
 	List<Pose3d> allRobotPosesRejected = new LinkedList<>();
 
 	Set<Short> allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+	Set<Short> allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
 
 	private static Vision instance;
 
@@ -87,6 +88,8 @@ public class Vision extends SubsystemBase {
 	@Override
 	public void periodic() {
 		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
+		allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
+
 
 		for (int i = 0; i < io.length; i++) {
 			io[i].logOutputs(outputs[i]);
@@ -239,13 +242,13 @@ public class Vision extends SubsystemBase {
     if (observation.tagsObserved().isEmpty()) return false;
 
     for (Short tagObserved : observation.tagsObserved()) {
-        if (TRENCH_SCORE_TAGS.contains(tagObserved)) {
+        if (allianceTrenchTags.contains(tagObserved)) {
             return true;
         }
     }
     return false;
 	}
 	private boolean seenReefTags(PoseObservation observation) {
-		return allianceHubTags.contains(observation.tagsObserved().toArray()[]);
+		return allianceHubTags.contains(observation.tagsObserved().toArray());
 	}
 }
