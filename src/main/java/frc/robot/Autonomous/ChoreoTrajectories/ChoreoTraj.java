@@ -41,9 +41,16 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Left2Cycle_P2 = new ChoreoTraj(
 	    "Left2Cycle_P2",
 	    OptionalInt.empty(),
-	    6.79027,
+	    7.00112,
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
+	);
+	public static final ChoreoTraj Left2Cycle_P3 = new ChoreoTraj(
+	    "Left2Cycle_P3",
+	    OptionalInt.empty(),
+	    2.61762,
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
+	    new Pose2d(7.263, 6.224, Rotation2d.fromRadians(-1.153))
 	);
 	public static final ChoreoTraj Right1CycleDepot = new ChoreoTraj(
 	    "Right1CycleDepot",
@@ -62,9 +69,16 @@ public record ChoreoTraj(
 	public static final ChoreoTraj Right2Cycle_P2 = new ChoreoTraj(
 	    "Right2Cycle_P2",
 	    OptionalInt.empty(),
-	    7.63525,
+	    8.0932,
 	    new Pose2d(1.194, 0.789, Rotation2d.fromRadians(-0.854)),
 	    new Pose2d(1.194, 0.789, Rotation2d.fromRadians(-0.854))
+	);
+	public static final ChoreoTraj Right2Cycle_P3 = new ChoreoTraj(
+	    "Right2Cycle_P3",
+	    OptionalInt.empty(),
+	    1.91979,
+	    new Pose2d(1.194, 0.789, Rotation2d.fromRadians(-0.854)),
+	    new Pose2d(7.263, 1.846, Rotation2d.fromRadians(1.153))
 	);
 	public static final ChoreoTraj SweeperLeft1Cycle_P1 = new ChoreoTraj(
 	    "SweeperLeft1Cycle_P1",
@@ -94,20 +108,6 @@ public record ChoreoTraj(
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.5)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
-	public static final ChoreoTraj Right2Cycle_P3 = new ChoreoTraj(
-	    "Right2Cycle_P3",
-	    OptionalInt.empty(),
-	    1.91979,
-	    new Pose2d(1.194, 0.789, Rotation2d.fromRadians(-0.854)),
-	    new Pose2d(7.263, 1.846, Rotation2d.fromRadians(1.153))
-	);
-	public static final ChoreoTraj Left2Cycle_P3 = new ChoreoTraj(
-	    "Left2Cycle_P3",
-	    OptionalInt.empty(),
-	    2.61762,
-	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
-	    new Pose2d(7.263, 6.224, Rotation2d.fromRadians(-1.153))
-	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -117,15 +117,15 @@ public record ChoreoTraj(
     	Map.entry("Drive1", Drive1),
 		Map.entry("Left2Cycle_P1", Left2Cycle_P1),
 		Map.entry("Left2Cycle_P2", Left2Cycle_P2),
+		Map.entry("Left2Cycle_P3", Left2Cycle_P3),
 		Map.entry("Right1CycleDepot", Right1CycleDepot),
 		Map.entry("Right2Cycle_P1", Right2Cycle_P1),
 		Map.entry("Right2Cycle_P2", Right2Cycle_P2),
+		Map.entry("Right2Cycle_P3", Right2Cycle_P3),
 		Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
 		Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2),
 		Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
-		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
-		Map.entry("Right2Cycle_P3", Right2Cycle_P3),
-		Map.entry("Left2Cycle_P3", Left2Cycle_P3)
+		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2)
     );
 
     /**
