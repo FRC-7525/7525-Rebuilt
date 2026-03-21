@@ -36,7 +36,7 @@ public class IntakeConstants {
 
 	public static final Angle BOUNCE_ACTIVATION_TOLERANCE = Degrees.of(0.5);
 
-	public static final double SPIN_SPEED_INTAKE = -.85;
+	public static final double SPIN_SPEED_INTAKE = -1;
 	public static final int LIMIT_SWITCH_PORT = 6;
 
 	public static final double TOLERANCE = 0.05;
