@@ -217,11 +217,9 @@ public class Vision extends SubsystemBase {
 		double degStds;
 		if (observation.tagCount() == 1) {
 			double poseDifference = observation.pose().getTranslation().toTranslation2d().getDistance(Drive.getInstance().getPose().getTranslation());
-			if (seenReefTags(observation) && observation.avgTagArea() > 0.2) {
-				xyStds = 0.5;
-			}
+			
 			// 1 target with large area and close to estimated pose
-			else if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
+			if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
 				xyStds = 0.5;
 			}
 			// 1 target farther away and estimated pose is close
@@ -247,8 +245,5 @@ public class Vision extends SubsystemBase {
         }
     }
     return false;
-	}
-	private boolean seenReefTags(PoseObservation observation) {
-		return allianceHubTags.contains(observation.tagsObserved().toArray());
 	}
 }
