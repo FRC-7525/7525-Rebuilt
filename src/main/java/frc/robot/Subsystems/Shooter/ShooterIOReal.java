@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.List;
 
@@ -89,6 +90,9 @@ public class ShooterIOReal implements ShooterIO {
 
 	@Override
 	public void setHoodAngle(Angle angle) {
+		if (DriverStation.isAutonomous() && angle.in(Degrees) > 2) {
+			angle = angle.minus(Degrees.of(2));
+		}
 		hoodSetpoint = angle;
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
