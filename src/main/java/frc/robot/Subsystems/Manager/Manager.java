@@ -91,7 +91,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		// IDLE/EXTENDED_IDLE --> WINDING_UP
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
-		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
@@ -233,7 +232,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		boolean redWon = true;
 		if (gameData.length() > 0) {
 			if (gameData.charAt(0) == 'R') redWon = true;
-			if (gameData.charAt(0) == 'B') redWon = false;
+			else if (gameData.charAt(0) == 'B') redWon = false;
 			else {
 				gameStates = UNKNOWN_ALLIANCE_WON;
 				return;

@@ -18,7 +18,7 @@ public class Hopper extends Subsystem<HopperStates> {
 		outputs = new HopperIOOutputs();
 		this.io = switch (ROBOT_MODE) {
 			case REAL -> new HopperIOReal();
-			case SIM -> new HopperIOReal();
+			case SIM -> new HopperIOSim();
 			case TESTING -> new HopperIOReal();
 		};
 	}
