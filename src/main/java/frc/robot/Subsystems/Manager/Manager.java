@@ -38,7 +38,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private GameStates currentGameState = GameStates.UNKNOWN;
 	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
-	
+
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
 	private double remainingPeriodTime = 10;
 
@@ -79,14 +79,17 @@ public class Manager extends Subsystem<ManagerStates> {
 		// INTAKING --> EXTENDED_IDLE
 		addTrigger(ManagerStates.INTAKING, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getXButtonPressed);
 
-		addRunnableTrigger(() -> {
-			numTimesYPressed++;
+		addRunnableTrigger(
+			() -> {
+				numTimesYPressed++;
 
-			if (numTimesYPressed == 3) {
-				setState(WINDING_UP);
-				numTimesYPressed = 1;
-			}
-		}, () -> DRIVER_CONTROLLER.getYButtonPressed() || OPERATOR_CONTROLLER.getYButtonPressed());
+				if (numTimesYPressed == 3) {
+					setState(WINDING_UP);
+					numTimesYPressed = 1;
+				}
+			},
+			() -> DRIVER_CONTROLLER.getYButtonPressed() || OPERATOR_CONTROLLER.getYButtonPressed()
+		);
 
 		// IDLE/EXTENDED_IDLE --> WINDING_UP
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
@@ -118,7 +121,7 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
-		
+
 		addRunnableTrigger(
 			() -> {
 				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
@@ -126,7 +129,6 @@ public class Manager extends Subsystem<ManagerStates> {
 				if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
 				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
-
 			},
 			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
 		);
@@ -188,7 +190,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		}
 
 		double currentTime = shiftTimer.get();
-	
+
 		if (currentTime < 10) {
 			currentGameState = gameStates[0];
 			nextGameState = gameStates[1];
@@ -217,7 +219,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", remainingPeriodTime);
 		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
 		Logger.recordOutput("Manager/NEXT HUB STATE", nextGameState.getStateString());
-
 	}
 
 	public GameStates getCurrentGameState() {
@@ -244,7 +245,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
 		if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 		if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
-
 
 		shiftTimer.start();
 	}

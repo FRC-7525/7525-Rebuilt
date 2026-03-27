@@ -42,10 +42,10 @@ import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
+import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.GameStates;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
-import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
@@ -147,11 +147,11 @@ public class Drive extends Subsystem<DriveStates> {
 		addRunnableTrigger(() -> cachedState = getState(), DRIVER_CONTROLLER::getRightStickButtonPressed);
 		addRunnableTrigger(() -> setState(DriveStates.LOCKED_X_POSE), DRIVER_CONTROLLER::getRightStickButton);
 		addRunnableTrigger(() -> setState(cachedState), DRIVER_CONTROLLER::getRightStickButtonReleased);
-		addRunnableTrigger(() -> {
-			setState(DriveStates.AIMLOCK_HUB);
-		}, () -> 
-			isInAimlockActivationZone(getPose()) 
-			&& Manager.getInstance().getState() == ManagerStates.WINDING_UP
+		addRunnableTrigger(
+			() -> {
+				setState(DriveStates.AIMLOCK_HUB);
+			},
+			() -> isInAimlockActivationZone(getPose()) && Manager.getInstance().getState() == ManagerStates.WINDING_UP
 		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
@@ -396,7 +396,7 @@ public class Drive extends Subsystem<DriveStates> {
 	public boolean isInAimlockActivationZone(Pose2d currentPose) {
 		double x = currentPose.getX();
 		double y = currentPose.getY();
-		
+
 		Translation2d aimlockActivationZoneFirst = Robot.allianceZone.getFirst().plus(ALLIANCE_ZONE_OFFSET);
 		Translation2d aimlockActivationZoneSecond = Robot.allianceZone.getSecond().minus(ALLIANCE_ZONE_OFFSET);
 

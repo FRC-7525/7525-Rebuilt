@@ -44,14 +44,8 @@ public class Vision extends SubsystemBase {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] { 
-						new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1),
-						new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) 
-					};
-					case SIM -> new VisionIO[] {
-						new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose),
-						new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose),
-					};
+					case REAL -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
+					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose) };
 					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
 				}
 			);
@@ -89,7 +83,6 @@ public class Vision extends SubsystemBase {
 	public void periodic() {
 		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
 		allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
-
 
 		for (int i = 0; i < io.length; i++) {
 			io[i].logOutputs(outputs[i]);
@@ -145,7 +138,6 @@ public class Vision extends SubsystemBase {
 				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field Y", observation.pose().getY() < 0.0 || observation.pose().getY() > APRIL_TAG_FIELD_LAYOUT.getFieldWidth());
 				Logger.recordOutput("Vision/Camera" + cameraIndex + "/SeenTrenchTags", seenTrenchTags(observation));
 
-
 				// Add pose to log
 				robotPoses.add(observation.pose());
 				if (rejectPose) {
@@ -162,9 +154,8 @@ public class Vision extends SubsystemBase {
 
 				// Send vision observation
 				Drive.getInstance().addVisionMeasurement(observation.pose().toPose2d(), observation.timestamp(), visionStandardDev);
-
 			}
-			
+
 			// Log camera datadata
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses", tagPoses.toArray(new Pose3d[tagPoses.size()]));
 			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
@@ -217,7 +208,7 @@ public class Vision extends SubsystemBase {
 		double degStds;
 		if (observation.tagCount() == 1) {
 			double poseDifference = observation.pose().getTranslation().toTranslation2d().getDistance(Drive.getInstance().getPose().getTranslation());
-			
+
 			// 1 target with large area and close to estimated pose
 			if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
 				xyStds = 0.5;
@@ -237,13 +228,13 @@ public class Vision extends SubsystemBase {
 	}
 
 	private boolean seenTrenchTags(PoseObservation observation) {
-    if (observation.tagsObserved().isEmpty()) return false;
+		if (observation.tagsObserved().isEmpty()) return false;
 
-    for (Short tagObserved : observation.tagsObserved()) {
-        if (allianceTrenchTags.contains(tagObserved)) {
-            return true;
-        }
-    }
-    return false;
+		for (Short tagObserved : observation.tagsObserved()) {
+			if (allianceTrenchTags.contains(tagObserved)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
