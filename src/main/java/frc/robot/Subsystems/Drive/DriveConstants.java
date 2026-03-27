@@ -20,7 +20,7 @@ public class DriveConstants {
 
 	public static final double MIN_SCALE_FACTOR = 0.1;
 
-	public static final double SLOW_MODE_MULTIPLIER = 0.5;
+	public static final double SLOW_MODE_MULTIPLIER = 0.75;
 
 	public static final double CLOSE_TO_ZERO = Math.pow(10, -4);
 
