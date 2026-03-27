@@ -1,0 +1,198 @@
+{
+ "name":"2026Autos",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{
+   "AvoidRadius":{
+    "dimension":"Number",
+    "var":{
+     "exp":"1.31826984978596",
+     "val":1.31826984978596
+    }
+   },
+   "AvoidX":{
+    "dimension":"Number",
+    "var":{
+     "exp":"4.603233922272921",
+     "val":4.603233922272921
+    }
+   },
+   "LowerAvoidY":{
+    "dimension":"Number",
+    "var":{
+     "exp":"2.3492540158331394",
+     "val":2.3492540158331394
+    }
+   },
+   "UpperAvoidY":{
+    "dimension":"Number",
+    "var":{
+     "exp":"5.72074598417",
+     "val":5.72074598417
+    }
+   }
+  },
+  "poses":{
+   "LeftAllianceTrenchStraighten":{
+    "x":{
+     "exp":"3.869765043258667 m",
+     "val":3.869765043258667
+    },
+    "y":{
+     "exp":"7.51882797599 m",
+     "val":7.51882797599
+    },
+    "heading":{
+     "exp":"pi rad",
+     "val":3.141592653589793
+    }
+   },
+   "LeftNeutralTrenchStraighten":{
+    "x":{
+     "exp":"5.39705429077148 m",
+     "val":5.39705429077148
+    },
+    "y":{
+     "exp":"7.51882797599 m",
+     "val":7.51882797599
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "LeftStartingPos":{
+    "x":{
+     "exp":"3.5847322940826416 m",
+     "val":3.5847322940826416
+    },
+    "y":{
+     "exp":"7.51882797599 m",
+     "val":7.51882797599
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "RightAllianceTrenchStraighten":{
+    "x":{
+     "exp":"3.869765043258667 m",
+     "val":3.869765043258667
+    },
+    "y":{
+     "exp":"0.5511720240116119 m",
+     "val":0.5511720240116119
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "RightNeutralTrenchStraighten":{
+    "x":{
+     "exp":"5.39705429077148 m",
+     "val":5.39705429077148
+    },
+    "y":{
+     "exp":"0.551172024011612 m",
+     "val":0.551172024011612
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "RightStartingPos":{
+    "x":{
+     "exp":"3.5847322940826416 m",
+     "val":3.5847322940826416
+    },
+    "y":{
+     "exp":"0.5511720240116119 m",
+     "val":0.5511720240116119
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"11 in",
+    "val":0.2794
+   },
+   "y":{
+    "exp":"11 in",
+    "val":0.2794
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-11 in",
+    "val":-0.2794
+   },
+   "y":{
+    "exp":"11 in",
+    "val":0.2794
+   }
+  },
+  "mass":{
+   "exp":"150 lbs",
+   "val":68.0388555
+  },
+  "inertia":{
+   "exp":"6 kg m ^ 2",
+   "val":6.0
+  },
+  "gearing":{
+   "exp":"6.5",
+   "val":6.5
+  },
+  "radius":{
+   "exp":"2 in",
+   "val":0.0508
+  },
+  "vmax":{
+   "exp":"6000 RPM",
+   "val":628.3185307179587
+  },
+  "tmax":{
+   "exp":"1.2 N * m",
+   "val":1.2
+  },
+  "cof":{
+   "exp":"1.5",
+   "val":1.5
+  },
+  "bumper":{
+   "front":{
+    "exp":"17.0625 in",
+    "val":0.4333875
+   },
+   "side":{
+    "exp":"17.0625 in",
+    "val":0.4333875
+   },
+   "back":{
+    "exp":"17.0625 in",
+    "val":0.4333875
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":"..\\..\\java\\frc\\robot\\Autonomous\\ChoreoTrajectories",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}

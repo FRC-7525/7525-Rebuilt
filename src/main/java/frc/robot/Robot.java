@@ -1,53 +1,123 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import static frc.robot.FieldConstants.*;
+import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
-public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {}
+import choreo.auto.AutoChooser;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.Autonomous.AutoRoutines;
+import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Drive.DriveStates;
+import frc.robot.Subsystems.Intake.Intake;
+import frc.robot.Subsystems.Manager.Manager;
+import kotlin.Pair;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.team7525.misc.CommandsUtil;
+import org.team7525.misc.Tracer;
 
-  @Override
-  public void robotPeriodic() {}
+public class Robot extends LoggedRobot {
 
-  @Override
-  public void autonomousInit() {}
+	private final AutoChooser autoChooser = new AutoChooser();
+	private final AutoRoutines autoRoutines = new AutoRoutines();
+	private final Manager manager = Manager.getInstance();
 
-  @Override
-  public void autonomousPeriodic() {}
+	public static boolean isRedAlliance = true;
+	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
 
-  @Override
-  public void teleopInit() {}
+	@Override
+	public void robotInit() {
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL:
+				Logger.addDataReceiver(new NT4Publisher());
+				Logger.addDataReceiver(new WPILOGWriter());
+				break;
+			case SIM:
+				Logger.addDataReceiver(new NT4Publisher());
+				break;
+			case TESTING:
+				Logger.addDataReceiver(new NT4Publisher());
+				break;
+		}
 
-  @Override
-  public void teleopPeriodic() {}
+		// Startup tasks
+		Logger.start();
+		CommandsUtil.logCommands();
+		DriverStation.silenceJoystickConnectionWarning(true);
+		RobotController.setBrownoutVoltage(5.5); // This is a sketchy fix. Lowest value is 4.5V, Default is 6.7V.
+		CommandScheduler.getInstance().unregisterAllSubsystems();
+		System.gc();
+		Drive.getInstance().zeroGyro();
 
-  @Override
-  public void disabledInit() {}
+		// Auto routine chooser setup
+		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
+		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
+		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);
+		autoChooser.addRoutine("left Sweeper 1 Cycle", autoRoutines::sweeperLeft1Cycle);
+		autoChooser.addRoutine("Right 1 Cycle Depot", autoRoutines::right1CycleDepot);
+		autoChooser.addRoutine("Drive Straight", autoRoutines::driveStraight);
+		SmartDashboard.putData("autoChooser", autoChooser);
 
-  @Override
-  public void disabledPeriodic() {}
+		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+	}
 
-  @Override
-  public void testInit() {}
+	@Override
+	public void robotPeriodic() {
+		Tracer.startTrace("RobotPeriodic");
+		CommandScheduler.getInstance().run();
+		Tracer.traceFunc("SubsystemManager", manager::periodic);
+		Tracer.endTrace();
+	}
 
-  @Override
-  public void testPeriodic() {}
+	@Override
+	public void autonomousInit() {
+		Drive.getInstance().setState(DriveStates.AUTO);
+		Drive.getInstance().setAutoAimlock(false);
+	}
 
-  @Override
-  public void simulationInit() {}
+	@Override
+	public void autonomousPeriodic() {}
 
-  @Override
-  public void simulationPeriodic() {}
+	@Override
+	public void autonomousExit() {
+		CommandScheduler.getInstance().cancelAll();
+		manager.setState(IDLE);
+		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
+		Intake.getInstance().setAllowAutonomousAgitation(false);
+	}
+
+	@Override
+	public void teleopInit() {
+		CommandScheduler.getInstance().cancelAll();
+		Manager.getInstance().initalizeShiftTimer();
+		manager.setState(IDLE);
+		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
+	}
+
+	@Override
+	public void teleopPeriodic() {}
+
+	@Override
+	public void disabledInit() {
+		System.gc();
+	}
+
+	@Override
+	public void disabledPeriodic() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+		allianceZone = isRedAlliance ? RED_ALLIANCE_BOUNDS : BLUE_ALLIANCE_BOUNDS;
+	}
+
+	@Override
+	public void disabledExit() {
+		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
 }

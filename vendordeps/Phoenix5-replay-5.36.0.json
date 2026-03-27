@@ -1,0 +1,200 @@
+{
+    "fileName": "Phoenix5-replay-5.36.0.json",
+    "name": "CTRE-Phoenix (v5)",
+    "version": "5.36.0",
+    "frcYear": "2026",
+    "uuid": "fbc886a4-2cec-40c0-9835-71086a8cc3df",
+    "mavenUrls": [
+        "https://maven.ctr-electronics.com/release/"
+    ],
+    "javaDependencies": [
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "api-java",
+            "version": "5.36.0"
+        },
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "wpiapi-java",
+            "version": "5.36.0"
+        }
+    ],
+    "jniDependencies": [
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "cci",
+            "version": "5.36.0",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "cci-replay",
+            "version": "5.36.0",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.sim",
+            "artifactId": "cci-sim",
+            "version": "5.36.0",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "swsim"
+        }
+    ],
+    "cppDependencies": [
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "wpiapi-cpp",
+            "version": "5.36.0",
+            "libName": "CTRE_Phoenix_WPI",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "api-cpp",
+            "version": "5.36.0",
+            "libName": "CTRE_Phoenix",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "cci",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixCCI",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "wpiapi-cpp-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_Phoenix_WPIReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "api-cpp-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.replay",
+            "artifactId": "cci-replay",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixCCIReplay",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.sim",
+            "artifactId": "wpiapi-cpp-sim",
+            "version": "5.36.0",
+            "libName": "CTRE_Phoenix_WPISim",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "swsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.sim",
+            "artifactId": "api-cpp-sim",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixSim",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "swsim"
+        },
+        {
+            "groupId": "com.ctre.phoenix.sim",
+            "artifactId": "cci-sim",
+            "version": "5.36.0",
+            "libName": "CTRE_PhoenixCCISim",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxarm64",
+                "osxuniversal"
+            ],
+            "simMode": "swsim"
+        }
+    ]
+}
