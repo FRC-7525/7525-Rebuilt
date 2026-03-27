@@ -32,6 +32,7 @@ public class Robot extends LoggedRobot {
 
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
+	public static boolean isDisabled = false;
 
 	@Override
 	public void robotInit() {
@@ -75,6 +76,8 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
+
+		isDisabled = isDisabled(); //TODO: This might cook runtime if run every loop?
 	}
 
 	@Override

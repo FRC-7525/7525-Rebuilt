@@ -87,6 +87,8 @@ public class Drive extends Subsystem<DriveStates> {
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
 	private double driveMultiplier = 1;
 
+	public double shooterToTargetAngle = 0;
+
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
 	 *
@@ -218,6 +220,8 @@ public class Drive extends Subsystem<DriveStates> {
 					turnValue = Math.abs(shooterToTarget.getTranslation().getAngle().getDegrees()) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI) : 0;
 				}
 				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, turnValue, true);
+				
+				shooterToTargetAngle = shooterToTarget.getTranslation().getAngle().getDegrees();
 				Logger.recordOutput("shooter/target", target);
 				Logger.recordOutput("shooter/Angle Diff To Target", shooterToTarget.getTranslation().getAngle().getDegrees());
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);

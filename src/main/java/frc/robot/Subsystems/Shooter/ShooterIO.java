@@ -33,4 +33,6 @@ public interface ShooterIO {
 	public abstract List<TalonFX> getShooterMotors();
 
 	public abstract TalonFX getHoodMotor();
+
+	public abstract AngularVelocity getWheelVelocity();
 }

@@ -1,48 +1,81 @@
 package frc.robot.Subsystems.LEDs;
 
 import static frc.robot.Subsystems.LEDs.LEDsConstants.*;
+
 import org.team7525.subsystem.Subsystem;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.AddressableLEDBufferView;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.GlobalConstants;
+import frc.robot.Robot;
+import frc.robot.Subsystems.Drive.Drive;
 
 public class LEDs extends Subsystem<LEDStates> {
     private static LEDs instance;
-    private AddressableLED ledStrip;
-    private AddressableLEDBuffer ledBuffer;
-    private AddressableLEDBufferView managerLEDBuffer;
-    private AddressableLEDBufferView driveLEDBuffer;
+    private final LEDIO io;
 
     public static LEDs getInstance() {
         if (instance == null) {
-            new LEDs();
+			switch (GlobalConstants.ROBOT_MODE) {
+				case REAL -> instance = new LEDs(new LEDIOReal());
+				case SIM -> instance = new LEDs(new LEDIOSim());
+				case TESTING -> instance = new LEDs(new LEDIOReal());
+			}
         }
         return instance;
     }
 
-    private LEDs() {
+    private LEDs(LEDIO io) {
         super(SUBSYSTEM_NAME, LEDStates.IDLE);
-
-        ledStrip = new AddressableLED(LED_INDEX);
-        ledBuffer = new AddressableLEDBuffer(DRIVE_LEDS_LENGTH + MANAGER_LEDS_LENGTH);
-
-        managerLEDBuffer = ledBuffer.createView(0, MANAGER_LEDS_LENGTH - 1);
-        driveLEDBuffer = ledBuffer.createView(MANAGER_LEDS_LENGTH, DRIVE_LEDS_LENGTH - 1);
-
-        ledStrip.setData(ledBuffer);
-        ledStrip.start();
+        this.io = io;
     }
     
     @Override
     public void runState() {
-        //TODO: Might move these pattern applies to stateInit, cuz idk how expensive they are
-        getState().getPattern().applyTo(managerLEDBuffer);
-        //TODO: I think just make an if statement for drive patterns and dont use subsystem states, but seems like a cooked way to do it
-        getState().getPattern().applyTo(driveLEDBuffer); 
+        if (!Robot.isDisabled) {
+            io.setManagerPattern(getState().getPattern());
+        } else {
+            io.setManagerPattern(DISABLED_PATTERN);
+        }
 
-        ledStrip.setData(ledBuffer);
+        //TODO: lowkey seems like a geeked way of doing this but idk how else i would do it
+        switch (Drive.getInstance().getState()) {
+            case NORMAL:
+                io.setDrivePattern(NORMAL_PATTERN);
+				break;
+			case AIMLOCK_ALLIANCE_LEFT_SHALLOW:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AIMLOCK_ALLIANCE_LEFT_DEEP:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AIMLOCK_HUB:
+                if (Drive.getInstance().shooterToTargetAngle > LOCKED_IN_DEGREES) io.setDrivePattern(AIMLOCKING_PATTERN);
+                else io.setDrivePattern(AIMLOCKED_PATTERN);
+				break;
+			case AA_NEUTRAL:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AA_TOWER_LEFT:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case AA_TOWER_RIGHT:
+                io.setDrivePattern(AUTOALIGN_PATTERN);
+				break;
+			case SNAKE_DRIVE:
+                io.setDrivePattern(SNAKE_PATTERN);
+				break;
+			case AUTO:
+				break;
+			case LOCKED_X_POSE:
+                io.setDrivePattern(X_POSE_PATTERN);
+				break;
+        }
+
+        io.setLEDData();
     }
 }

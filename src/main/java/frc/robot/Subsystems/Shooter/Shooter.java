@@ -7,6 +7,8 @@ import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.GlobalConstants;
@@ -104,6 +106,14 @@ public class Shooter extends Subsystem<ShooterStates> {
 	@Override
 	protected void stateExit() {
 		cache = getState();
+	}
+
+	public AngularVelocity getWheelSetpoint() {
+		return getState().getWheelVelocity();
+	}
+
+	public AngularVelocity getWheelVelocity() {
+		return io.getWheelVelocity();
 	}
 
 	public List<TalonFX> getShooterMotors() {
