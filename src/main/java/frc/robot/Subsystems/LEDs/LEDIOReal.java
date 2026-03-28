@@ -1,8 +1,6 @@
 package frc.robot.Subsystems.LEDs;
 
-import static frc.robot.Subsystems.LEDs.LEDsConstants.DRIVE_LEDS_LENGTH;
-import static frc.robot.Subsystems.LEDs.LEDsConstants.LED_INDEX;
-import static frc.robot.Subsystems.LEDs.LEDsConstants.MANAGER_LEDS_LENGTH;
+import static frc.robot.Subsystems.LEDs.LEDsConstants.*;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -12,15 +10,21 @@ import edu.wpi.first.wpilibj.LEDPattern;
 public class LEDIOReal implements LEDIO {
     private AddressableLED ledStrip;
     private AddressableLEDBuffer ledBuffer;
-    private AddressableLEDBufferView managerLEDBuffer;
-    private AddressableLEDBufferView driveLEDBuffer;
+    private AddressableLEDBufferView underglowBuffer;
+    private AddressableLEDBufferView leftSideBuffer;
+    private AddressableLEDBufferView spindexerBuffer;
+    private AddressableLEDBufferView rightSideBuffer;
 
     public LEDIOReal() {
         ledStrip = new AddressableLED(LED_INDEX);
-        ledBuffer = new AddressableLEDBuffer(DRIVE_LEDS_LENGTH + MANAGER_LEDS_LENGTH);
+        ledBuffer = new AddressableLEDBuffer(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + SPINDEXER_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
 
-        managerLEDBuffer = ledBuffer.createView(0, MANAGER_LEDS_LENGTH - 1);
-        driveLEDBuffer = ledBuffer.createView(MANAGER_LEDS_LENGTH, DRIVE_LEDS_LENGTH - 1);
+        ledStrip.setLength(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + SPINDEXER_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
+
+        underglowBuffer = ledBuffer.createView(0, UNDERGLOW_LEDS_LENGTH - 1);
+        leftSideBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH - 1);
+        spindexerBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + SPINDEXER_LEDS_LENGTH - 1);
+        rightSideBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + SPINDEXER_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + SPINDEXER_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
 
         ledStrip.setData(ledBuffer);
         ledStrip.start();
@@ -28,12 +32,14 @@ public class LEDIOReal implements LEDIO {
 
     @Override
     public void setManagerPattern(LEDPattern pattern) {
-        pattern.applyTo(managerLEDBuffer);
+        pattern.applyTo(leftSideBuffer);
+        pattern.applyTo(spindexerBuffer);
+        pattern.applyTo(rightSideBuffer);
     }
 
     @Override
     public void setDrivePattern(LEDPattern pattern) {
-        pattern.applyTo(driveLEDBuffer);
+        pattern.applyTo(underglowBuffer);
     }
 
     @Override
