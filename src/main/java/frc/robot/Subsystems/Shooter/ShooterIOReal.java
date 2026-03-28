@@ -38,6 +38,8 @@ public class ShooterIOReal implements ShooterIO {
 	public ShooterIOReal() {
 		hoodPID = HOOD_PID.get();
 		hoodPID.setSetpoint(0);
+		hoodPID.setTolerance(0.1);
+		hoodPID.setIZone(.5);
 		hoodDownPID = HOOD_DOWN_PID.get();
 		wheelPID = WHEEL_PID.get();
 		wheelFeedforward = WHEEL_FEEDFORWARD.get();
@@ -46,9 +48,11 @@ public class ShooterIOReal implements ShooterIO {
 		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		leftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		leftMotorConfig.Slot0.kP = wheelPID.getP();
+		leftMotorConfig.Slot0.kP = 3.399E+34;
 		leftMotorConfig.Slot0.kI = wheelPID.getI();
 		leftMotorConfig.Slot0.kD = wheelPID.getD();
+		leftMotorConfig.Voltage.PeakReverseVoltage = 0;
+		leftMotorConfig.CurrentLimits.StatorCurrentLimit = 160;
 		leftMotor.getConfigurator().apply(leftMotorConfig);
 
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
@@ -85,14 +89,11 @@ public class ShooterIOReal implements ShooterIO {
 			leftMotor.stopMotor();
 			return;
 		}
-		leftMotor.setControl(wheelControlReq.withVelocity(velocity).withFeedForward(wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond))));
+		leftMotor.setControl(wheelControlReq.withVelocity(velocity));
 	}
 
 	@Override
 	public void setHoodAngle(Angle angle) {
-		if (DriverStation.isAutonomous() && angle.in(Degrees) > 2) {
-			angle = angle.minus(Degrees.of(2));
-		}
 		hoodSetpoint = angle;
 		if (angle.in(Degrees) != 0) {
 			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
