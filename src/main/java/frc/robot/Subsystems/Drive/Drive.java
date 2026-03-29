@@ -160,6 +160,9 @@ public class Drive extends Subsystem<DriveStates> {
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
+
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AA_TRENCH_LEFT, () -> DRIVER_CONTROLLER.getPOV() == 0);
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AA_TRENCH_RIGHT, () -> DRIVER_CONTROLLER.getPOV() == 180);
 	}
 
 	/**
@@ -223,9 +226,13 @@ public class Drive extends Subsystem<DriveStates> {
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
 				break;
 			case AA_NEUTRAL:
-			case AA_TOWER_LEFT:
-			case AA_TOWER_RIGHT:
+			case AA_TRENCH_LEFT:
+			case AA_TRENCH_RIGHT:
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
+
+				
+				Rotation2d targetRot = targetPose.getRotation();
+				if (Math.abs(getPose().getRotation().minus(targetRot).getDegrees()) > CLOSE_TO_ANGLE) targetPose = new Pose2d(getPose().getTranslation(), targetRot);
 				if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
 					executeRepulsorAutoAlign();
 					usedRepulsor = true;
@@ -379,7 +386,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		// Apply drive commands with alliance compensation
 		if (Robot.isRedAlliance) {
-			executeAutoAlignDriveInstruction(-translationVelocity.getX(), translationVelocity.getY(), thetaVelocity, false);
+			executeAutoAlignDriveInstruction(-translationVelocity.getX(), -translationVelocity.getY(), thetaVelocity, false);
 		} else {
 			executeAutoAlignDriveInstruction(translationVelocity.getX(), translationVelocity.getY(), thetaVelocity, false);
 		}
