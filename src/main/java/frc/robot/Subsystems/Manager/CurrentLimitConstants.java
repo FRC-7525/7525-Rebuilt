@@ -36,7 +36,7 @@ public class CurrentLimitConstants {
 		LOW_TURN_LIMITS.SupplyCurrentLimit = 20;
 
 		IDLE_SHOOTER_LIMITS.SupplyCurrentLimit = 10;
-		WINDUP_SHOOTER_LIMITS.SupplyCurrentLimit = 30;
+		WINDUP_SHOOTER_LIMITS.SupplyCurrentLimit = 40;
 		FIRING_SHOOTER_LIMITS.SupplyCurrentLimit = 90;
 
 		INTAKE_PIVOT_LIMITS.SupplyCurrentLimit = 20;
