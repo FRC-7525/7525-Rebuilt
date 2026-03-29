@@ -47,8 +47,8 @@ public final class AutoAlignConstants {
 	public static final Angle MAX_YAW_ERROR = Degrees.of(0.5);
 
 	public static final double GOAL_STRENGTH = 0.1;
-	static final double FIELD_LENGTH = 16.42;
-	static final double FIELD_WIDTH = 8.2;
+	public static final double FIELD_LENGTH = 16.42;
+	public static final double FIELD_WIDTH = 8.2;
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
@@ -107,8 +107,11 @@ public final class AutoAlignConstants {
 	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 
 	// AA Poses
-	public static final PosePair TRENCH_LEFT = new PosePair(new Pose2d(12.5, 0.652, new Rotation2d(0)), new Pose2d(4.158, 0.652, new Rotation2d(0)));
-	public static final PosePair TRENCH_RIGHT = new PosePair(new Pose2d(12.505, 7.434, new Rotation2d(Math.PI)), new Pose2d(4.158, 7.434, new Rotation2d(Math.PI)));
+	public static final PosePair TRENCH_LEFT = new PosePair(new Pose2d(13, 0.652, new Rotation2d(0)), new Pose2d(3.5, 7.434, new Rotation2d(0)));
+	public static final PosePair TRENCH_RIGHT = new PosePair(new Pose2d(13, 7.434, new Rotation2d(Math.PI)), new Pose2d(3.5, 0.652, new Rotation2d(Math.PI)));
+
+	public static final PosePair OUTSIDE_TRENCH_LEFT = new PosePair(new Pose2d(10.8, 0.652, new Rotation2d(Math.PI)), new Pose2d(5.7, 7.434, new Rotation2d(Math.PI)));
+	public static final PosePair OUTSIDE_TRENCH_RIGHT = new PosePair(new Pose2d(10.8, 7.434, new Rotation2d(Math.PI)), new Pose2d(5.7, 0.652, new Rotation2d(Math.PI)));
 
 	public static final double CLOSE_TO_ANGLE = 8;
 

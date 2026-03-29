@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.GameStates;
@@ -161,8 +161,17 @@ public class Drive extends Subsystem<DriveStates> {
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
 
-		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AA_TRENCH_LEFT, () -> DRIVER_CONTROLLER.getPOV() == 0);
-		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AA_TRENCH_RIGHT, () -> DRIVER_CONTROLLER.getPOV() == 180);
+		addRunnableTrigger(() -> {
+			boolean isLeft = Robot.isRedAlliance ? getPose().getY() < FIELD_WIDTH / 2 : getPose().getY() > FIELD_WIDTH / 2;
+			
+			if (isInTeamAllianceZone(getPose())) {
+				if (isLeft) setState(DriveStates.AA_OUTSIDE_TRENCH_LEFT);
+				else setState(DriveStates.AA_OUTSIDE_TRENCH_RIGHT);
+			} else {
+				if (isLeft) setState(DriveStates.AA_TRENCH_LEFT);
+				else setState(DriveStates.AA_TRENCH_RIGHT);
+			}
+		}, DRIVER_CONTROLLER::getRightBumperButtonPressed);
 	}
 
 	/**
@@ -226,13 +235,12 @@ public class Drive extends Subsystem<DriveStates> {
 				Logger.recordOutput("shooter/ShooterPosition", shooterPosition);
 				break;
 			case AA_NEUTRAL:
+			case AA_OUTSIDE_TRENCH_LEFT:
+			case AA_OUTSIDE_TRENCH_RIGHT:
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
-
-				
-				Rotation2d targetRot = targetPose.getRotation();
-				if (Math.abs(getPose().getRotation().minus(targetRot).getDegrees()) > CLOSE_TO_ANGLE) targetPose = new Pose2d(getPose().getTranslation(), targetRot);
+	
 				if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
 					executeRepulsorAutoAlign();
 					usedRepulsor = true;
@@ -243,6 +251,7 @@ public class Drive extends Subsystem<DriveStates> {
 					}
 					executeScaledFeedforwardAutoAlign();
 				}
+				Logger.recordOutput("AutoAlign/Target Pose", targetPose);
 				break;
 			case SNAKE_DRIVE:
 				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());
