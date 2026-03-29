@@ -14,21 +14,24 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.littletonrobotics.junction.Logger;
+import org.team7525.subsystem.Subsystem;
 
-public class Vision extends SubsystemBase {
+public class Vision extends Subsystem<VisionStates> {
 
 	private final VisionIO[] io;
 	private final VisionIOOutputs[] outputs;
 	private final Alert[] disconnectedAlerts;
+
+	private final Set<Integer> cameraIgnoreList = Set.of();
 
 	List<Pose3d> allTagPoses = new LinkedList<>();
 	List<Pose3d> allRobotPoses = new LinkedList<>();
@@ -44,9 +47,15 @@ public class Vision extends SubsystemBase {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
-					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose) };
-					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
+					/*
+						0: Back Left Camera
+						1: Back Right Camera
+						2: Shooter cam (whenever added)
+					*/
+
+					case REAL -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA) };
+					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose) };
+					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA) };
 				}
 			);
 		}
@@ -54,6 +63,7 @@ public class Vision extends SubsystemBase {
 	}
 
 	private Vision(VisionIO... io) {
+		super("Vision", VisionStates.NORMAL);
 		this.io = io;
 
 		// Initialize outputs
@@ -67,6 +77,7 @@ public class Vision extends SubsystemBase {
 		for (int i = 0; i < outputs.length; i++) {
 			disconnectedAlerts[i] = new Alert("Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
 		}
+
 	}
 
 	/**
@@ -80,7 +91,8 @@ public class Vision extends SubsystemBase {
 	}
 
 	@Override
-	public void periodic() {
+	public void runState() {
+		setState(decideVisionState());
 		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
 		allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
 
@@ -101,6 +113,7 @@ public class Vision extends SubsystemBase {
 
 		processVision();
 		// Log summary data
+		Logger.recordOutput("Vision/State", getState());
 		Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
 		Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
 		Logger.recordOutput("Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
@@ -148,6 +161,9 @@ public class Vision extends SubsystemBase {
 
 				// Skip if rejected
 				if (rejectPose) continue;
+
+				// skip is camera is disabled
+				if (cameraIgnoreList.contains(cameraIndex)) continue;
 
 				//254 standard dev
 				Matrix<N3, N1> visionStandardDev = calculateStandardDev(observation);
@@ -236,5 +252,19 @@ public class Vision extends SubsystemBase {
 			}
 		}
 		return false;
+	}
+
+	private VisionStates decideVisionState() {
+		System.out.println(Robot.isRedAlliance);
+		if (Drive.getInstance().isInTeamAllianceZone()) {
+			if (Drive.getInstance().getPose().getY() > AutoAlignConstants.FIELD_WIDTH / 2) {
+				if (Robot.isRedAlliance) return VisionStates.IGNORE_BL;
+				else return VisionStates.IGNORE_BR;
+			} else {
+				if (Robot.isRedAlliance) return VisionStates.IGNORE_BR;
+				else return VisionStates.IGNORE_BL;
+			}
+		}
+		return VisionStates.NORMAL;
 	}
 }

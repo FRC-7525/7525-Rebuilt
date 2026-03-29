@@ -14,7 +14,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.Subsystems.Drive.Drive;
 import java.util.Set;
 
 public class VisionConstants {
@@ -33,20 +32,16 @@ public class VisionConstants {
 	public record VisionMeasurment(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 
 	// Front Left
-	public static final String FRONT_CAM_1_NAME = "Back Left Camera";
-	public static final Translation3d ROBOT_TO_FRONT_CAM_1_TRANSLATION = new Translation3d(Units.inchesToMeters(-11.298), Units.inchesToMeters(11.294259), Units.inchesToMeters(8.887162));
-	public static final Rotation3d ROBOT_TO_FRONT_CAM_1_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(135));
-	public static final Transform3d ROBOT_TO_FRONT_CAM_1 = new Transform3d(ROBOT_TO_FRONT_CAM_1_TRANSLATION, ROBOT_TO_FRONT_CAM_1_ROTATION);
+	public static final String BACK_LEFT_CAMERA_NAME = "Back Left Camera";
+	public static final Translation3d ROBOT_TO_BACK_LEFT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-11.298), Units.inchesToMeters(11.294259), Units.inchesToMeters(8.887162));
+	public static final Rotation3d ROBOT_TO_BACK_LEFT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(135));
+	public static final Transform3d ROBOT_TO_BACK_LEFT_CAMERA = new Transform3d(ROBOT_TO_BACK_LEFT_CAMERA_TRANSLATION, ROBOT_TO_BACK_LEFT_CAMERA_ROTATION);
 
 	// Front Right
-	public static final String FRONT_CAM_2_NAME = "Back Right Camera";
-	public static final Translation3d ROBOT_TO_FRONT_CAM_2_TRANSLATION = new Translation3d(Units.inchesToMeters(-9.953607), Units.inchesToMeters(-9.953249), Units.inchesToMeters(8.887162));
-	public static final Rotation3d ROBOT_TO_FRONT_CAM_2_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
-	public static final Transform3d ROBOT_TO_FRONT_CAM_2 = new Transform3d(ROBOT_TO_FRONT_CAM_2_TRANSLATION, ROBOT_TO_FRONT_CAM_2_ROTATION);
-
-	public static final VisionIO[] FRONT_SIM_IOS = new VisionIO[] { new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose) };
-
-	public static final VisionIO[] FRONT_REAL_IOS = new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
+	public static final String BACK_RIGHT_CAMERA = "Back Right Camera";
+	public static final Translation3d ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-9.953607), Units.inchesToMeters(-9.953249), Units.inchesToMeters(8.887162));
+	public static final Rotation3d ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
+	public static final Transform3d ROBOT_TO_BACK_RIGHT_CAMERA = new Transform3d(ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION, ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION);
 
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
