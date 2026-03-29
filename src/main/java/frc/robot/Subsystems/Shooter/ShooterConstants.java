@@ -23,7 +23,7 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772);
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544);
 
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(10.5);
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(0);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	//TODO: Change standby values to actual values after testing is done
