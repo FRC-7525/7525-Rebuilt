@@ -48,7 +48,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	private static final String FORCE_RED = "RED";
 	private static final String FORCE_BLUE = "BLUE";
 	private SendableChooser<String> autoWinnerChooser = new SendableChooser<>();
-	private boolean test = false;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -106,7 +105,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2 && drive.isInTeamAllianceZone(drive.getPose()));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		//TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
 
 		// SHOOTING --> WINDING_UP
@@ -172,7 +170,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE", getState().getStateString());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/STATE TIME", getStateTime());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/HUB ACTIVE", isHubActive());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/test", test);
 
 		// Set subsystem states
 		shooter.setState(getState().getShooterState());
