@@ -16,8 +16,10 @@ public class LEDsConstants {
     //Rio can only handle one addressable LED, so we have one super long strip, then split it into sections of LEDs
     //TODO: Get actual values for index, and different strip lengths
     public static final int LED_INDEX = 9;
-    public static final int MANAGER_LEDS_LENGTH = 60;
-    public static final int DRIVE_LEDS_LENGTH = 60;
+    public static final int LEFT_SIDE_LEDS_LENGTH = 60;
+    public static final int SPINDEXER_LEDS_LENGTH = 60;
+    public static final int RIGHT_SIDE_LEDS_LENGTH = 60;
+    public static final int UNDERGLOW_LEDS_LENGTH = 60;
 
     public static final HSV PIONEERS_ORANGE = new HSV(13, 204, 231);
     public static final HSV PIONEERS_BLUE = new HSV(107, 140, 200);
@@ -28,13 +30,13 @@ public class LEDsConstants {
 
     //Manager State LEDs Constants
     //Idle constants
-    public static final double IDLE_SCROLL_SPEED = 0.25;
+    public static final double IDLE_SCROLL_SPEED = 25;
     public static final LEDPattern IDLE_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kContinuous, Color.fromHSV(PIONEERS_BLUE.hue, PIONEERS_BLUE.sat, PIONEERS_BLUE.val), Color.fromHSV(PIONEERS_ORANGE.hue, PIONEERS_ORANGE.sat, PIONEERS_ORANGE.val))
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(IDLE_SCROLL_SPEED));
 
     //Intaking constants
-    public static final double INTAKING_SCROLL_SPEED = 0.25;
+    public static final double INTAKING_SCROLL_SPEED = 25;
     public static final LEDPattern INTAKING_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, Color.kBlack, Color.kBlack, Color.kRoyalBlue)
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(INTAKING_SCROLL_SPEED));
@@ -50,20 +52,20 @@ public class LEDsConstants {
         .breathe(WOUND_UP_BREATH_PERIOD);
 
     //Shooting constants
-    public static final double SHOOTING_SCROLL_SPEED = 0.5;
+    public static final double SHOOTING_SCROLL_SPEED = 50;
     public static final LEDPattern SHOOTING_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, Color.kBlack, Color.kBlack, Color.kYellow)
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(SHOOTING_SCROLL_SPEED));
 
     //Shuttling constants
-    public static final double SHUTTLING_SCROLL_SPEED = 0.5;
+    public static final double SHUTTLING_SCROLL_SPEED = 50;
     public static final LEDPattern SHUTTLING_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, Color.kBlack, Color.kRoyalBlue, Color.kRed)
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(SHUTTLING_SCROLL_SPEED));
 
     //Drive state LEDs constants
     //Snake Drive constants
-    public static final double SNAKE_SCROLL_SPEED = 0.25;
+    public static final double SNAKE_SCROLL_SPEED = 25;
     public static final LEDPattern SNAKE_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, Color.kBlack, Color.kBlack, Color.kMediumSeaGreen)
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(SNAKE_SCROLL_SPEED));
@@ -76,7 +78,7 @@ public class LEDsConstants {
         .breathe(NORMAL_BREATH_PERIOD);
 
     //Autoalign constants
-    public static final double AUTOALIGN_SCROLL_SPEED = 0.25;
+    public static final double AUTOALIGN_SCROLL_SPEED = 25;
     public static final LEDPattern AUTOALIGN_PATTERN = LEDPattern
         .gradient(LEDPattern.GradientType.kContinuous, Color.kOrangeRed, Color.kFirebrick)
         .scrollAtRelativeSpeed(Percent.per(Seconds).of(AUTOALIGN_SCROLL_SPEED));
