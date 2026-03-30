@@ -44,6 +44,12 @@ public class VisionConstants {
 	public static final Rotation3d ROBOT_TO_FRONT_CAM_2_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
 	public static final Transform3d ROBOT_TO_FRONT_CAM_2 = new Transform3d(ROBOT_TO_FRONT_CAM_2_TRANSLATION, ROBOT_TO_FRONT_CAM_2_ROTATION);
 
+	// Shooter Camera
+	public static final String SHOOTER_CAM_NAME = "Shooter Camera";
+	public static final Translation3d ROBOT_TO_SHOOTER_CAM_TRANSLATION = new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)); // TODO: Measure and update
+	public static final Rotation3d ROBOT_TO_SHOOTER_CAM_ROTATION = new Rotation3d(0, 0, 0); // TODO: Measure and update
+	public static final Transform3d ROBOT_TO_SHOOTER_CAM = new Transform3d(ROBOT_TO_SHOOTER_CAM_TRANSLATION, ROBOT_TO_SHOOTER_CAM_ROTATION);
+
 	public static final VisionIO[] FRONT_SIM_IOS = new VisionIO[] { new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose) };
 
 	public static final VisionIO[] FRONT_REAL_IOS = new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
@@ -91,6 +97,7 @@ public class VisionConstants {
 	public static final double[] cameraStdDevFactors = new double[] {
 		1.0, // Camera 0
 		1.0, // Camera 1
+		1.0, // Camera 2 (Shooter)
 	};
 
 	// Multipliers to apply for MegaTag 2 observations

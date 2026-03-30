@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.Drive;
+import frc.robot.Subsystems.Manager.Manager;
+import frc.robot.Subsystems.Manager.ManagerStates;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
 import java.util.LinkedList;
@@ -44,9 +46,21 @@ public class Vision extends SubsystemBase {
 		if (instance == null) {
 			instance = new Vision(
 				switch (ROBOT_MODE) {
-					case REAL -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
-					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose) };
-					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1), new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2) };
+					case REAL -> new VisionIO[] {
+						new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1),
+						new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2),
+						new VisionIOPhotonVision(SHOOTER_CAM_NAME, ROBOT_TO_SHOOTER_CAM)
+					};
+					case SIM -> new VisionIO[] {
+						new VisionIOPhotonVisionSim(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1, Drive.getInstance()::getPose),
+						new VisionIOPhotonVisionSim(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2, Drive.getInstance()::getPose),
+						new VisionIOPhotonVisionSim(SHOOTER_CAM_NAME, ROBOT_TO_SHOOTER_CAM, Drive.getInstance()::getPose)
+					};
+					case TESTING -> new VisionIO[] {
+						new VisionIOPhotonVision(FRONT_CAM_1_NAME, ROBOT_TO_FRONT_CAM_1),
+						new VisionIOPhotonVision(FRONT_CAM_2_NAME, ROBOT_TO_FRONT_CAM_2),
+						new VisionIOPhotonVision(SHOOTER_CAM_NAME, ROBOT_TO_SHOOTER_CAM)
+					};
 				}
 			);
 		}
@@ -108,6 +122,16 @@ public class Vision extends SubsystemBase {
 	}
 
 	private void processVision() {
+		
+		ManagerStates currentState = Manager.getInstance().getState();
+		boolean isAimingOrShooting =
+			currentState == ManagerStates.WINDING_UP ||
+			currentState == ManagerStates.WINDING_UP_FIXED_SHOT ||
+			currentState == ManagerStates.SHOOTING_HUB ||
+			currentState == ManagerStates.SHOOTING_FIXED ||
+			currentState == ManagerStates.SCORING_AUTO ||
+			currentState == ManagerStates.WINDING_TO_SCORE_AUTO;
+
 		// Loop over cameras
 		for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
 			// Update disconnected alert
@@ -149,7 +173,12 @@ public class Vision extends SubsystemBase {
 				// Skip if rejected
 				if (rejectPose) continue;
 
-				//254 standard dev
+				if (isAimingOrShooting && cameraIndex != 2) {
+					robotPosesRejected.add(observation.pose());
+					continue; //reject poses if cam not shooter and we're ready to shoot
+				}
+
+				// Calculate standard deviations
 				Matrix<N3, N1> visionStandardDev = calculateStandardDev(observation);
 
 				// Send vision observation
