@@ -89,7 +89,7 @@ public final class ShooterConstants {
 	public static final double HOOD_ERROR_TOLERANCE = 0.1;
 	public static final double HOOD_I_ZONE = 0.5;
 
-	public static final double WHEEL_STRATOR_CURRENT_LIMIT = 160; 
+	public static final double WHEEL_STRATOR_CURRENT_LIMIT = 160;
 
 	// Placeholder positions; replace with real field measurements, Define based on alliance side
 	public static final Transform3d ROBOT_TO_SHOOTER = new Transform3d(-0.2270125, -0.119366, 19, new Rotation3d(0, 0, Math.PI / 2));
