@@ -103,7 +103,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		this.snakeDriveController = SNAKE_DRIVE_CONTROLLER.get();
 
-		this.shooterYawController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
+		this.shooterYawController = SHOOTER_YAW_CONTROLLER.get();
 		//this.shooterYawControllerFast = SHOOTER_YAW_CONTROLLER_FAST.get();
 		this.rotationController = SCALED_FF_ROTATIONAL_CONTROLLER.get();
 		this.translationalController = SCALED_FF_TRANSLATIONAL_CONTROLLER.get();
@@ -226,6 +226,7 @@ public class Drive extends Subsystem<DriveStates> {
 					thetaVelocity = 0;
 				}
 				Logger.recordOutput(SUBSYSTEM_NAME + "/AIMLOCK THETA VELOCITY", thetaVelocity);
+				SmartDashboard.putData(SUBSYSTEM_NAME + "/PID FOR AIMING", shooterYawController);
 				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, thetaVelocity, true);
 				break;
 			case AA_NEUTRAL:

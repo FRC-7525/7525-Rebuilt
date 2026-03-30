@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.List;
 
@@ -38,8 +37,8 @@ public class ShooterIOReal implements ShooterIO {
 	public ShooterIOReal() {
 		hoodPID = HOOD_PID.get();
 		hoodPID.setSetpoint(0);
-		hoodPID.setTolerance(0.1);
-		hoodPID.setIZone(.5);
+		hoodPID.setTolerance(HOOD_ERROR_TOLERANCE);
+		hoodPID.setIZone(HOOD_I_ZONE);
 		hoodDownPID = HOOD_DOWN_PID.get();
 		wheelPID = WHEEL_PID.get();
 		wheelFeedforward = WHEEL_FEEDFORWARD.get();
@@ -48,11 +47,11 @@ public class ShooterIOReal implements ShooterIO {
 		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		leftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		leftMotorConfig.Slot0.kP = 3.399E+34;
+		leftMotorConfig.Slot0.kP = wheelPID.getP();
 		leftMotorConfig.Slot0.kI = wheelPID.getI();
 		leftMotorConfig.Slot0.kD = wheelPID.getD();
 		leftMotorConfig.Voltage.PeakReverseVoltage = 0;
-		leftMotorConfig.CurrentLimits.StatorCurrentLimit = 160;
+		leftMotorConfig.CurrentLimits.StatorCurrentLimit = WHEEL_STRATOR_CURRENT_LIMIT;
 		leftMotor.getConfigurator().apply(leftMotorConfig);
 
 		rightMotor = new TalonFX(RIGHT_SHOOTER_MOTOR_ID);
@@ -79,7 +78,7 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
-		velocity = RotationsPerSecond.of(SmartDashboard.getNumber("SHOOTER SPEED", 0));
+		//velocity = RotationsPerSecond.of(SmartDashboard.getNumber("SHOOTER SPEED", 0));
 		SmartDashboard.putNumber("SHOOTER SPEED", velocity.in(RotationsPerSecond));
 		if (velocity.in(RotationsPerSecond) == 0) {
 			leftMotor.stopMotor();
@@ -91,10 +90,10 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setHoodAngle(Angle angle) {
 		hoodSetpoint = angle;
-		double anglTest = SmartDashboard.getNumber("HOOD ANGLE", 0);
-		SmartDashboard.putNumber("HOOD ANGLE", anglTest);
-		if (anglTest != 0) {
-			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), anglTest));
+		// double anglTest = SmartDashboard.getNumber("HOOD ANGLE", 0);
+		// SmartDashboard.putNumber("HOOD ANGLE", anglTest);
+		if (hoodSetpoint.in(Degrees) != 0) {
+			hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		} else {
 			if (!limitSwitch.get() && hoodMotor.getPosition().getValue().in(Degrees) != 0) {
 				hoodMotor.set(0);
@@ -103,7 +102,7 @@ public class ShooterIOReal implements ShooterIO {
 				hoodDownPID.reset();
 				return;
 			}
-			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), anglTest));
+			hoodMotor.set(hoodDownPID.calculate(hoodMotor.getPosition().getValue().div(HOOD_GEARING).in(Degrees), hoodSetpoint.in(Degrees)));
 		}
 	}
 
