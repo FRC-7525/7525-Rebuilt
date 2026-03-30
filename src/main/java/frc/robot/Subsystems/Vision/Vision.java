@@ -125,12 +125,9 @@ public class Vision extends SubsystemBase {
 		
 		ManagerStates currentState = Manager.getInstance().getState();
 		boolean isAimingOrShooting =
-			currentState == ManagerStates.WINDING_UP ||
-			currentState == ManagerStates.WINDING_UP_FIXED_SHOT ||
 			currentState == ManagerStates.SHOOTING_HUB ||
 			currentState == ManagerStates.SHOOTING_FIXED ||
-			currentState == ManagerStates.SCORING_AUTO ||
-			currentState == ManagerStates.WINDING_TO_SCORE_AUTO;
+			currentState == ManagerStates.SCORING_AUTO;
 
 		// Loop over cameras
 		for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
