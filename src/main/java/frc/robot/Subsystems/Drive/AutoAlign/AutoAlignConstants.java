@@ -107,13 +107,14 @@ public final class AutoAlignConstants {
 	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 
 	// AA Poses
-	public static final PosePair TRENCH_LEFT = new PosePair(new Pose2d(13, 0.652, new Rotation2d(0)), new Pose2d(3.5, 7.434, new Rotation2d(0)));
-	public static final PosePair TRENCH_RIGHT = new PosePair(new Pose2d(13, 7.434, new Rotation2d(Math.PI)), new Pose2d(3.5, 0.652, new Rotation2d(Math.PI)));
+	public static final PosePair TRENCH_LEFT = new PosePair(new Pose2d(13.15, 0.652, new Rotation2d(0)), new Pose2d(3.35, 7.434, new Rotation2d(0)));
+	public static final PosePair TRENCH_RIGHT = new PosePair(new Pose2d(13.15, 7.434, new Rotation2d(Math.PI)), new Pose2d(3.35, 0.652, new Rotation2d(Math.PI)));
 
 	public static final PosePair OUTSIDE_TRENCH_LEFT = new PosePair(new Pose2d(10.8, 0.652, new Rotation2d(Math.PI)), new Pose2d(5.7, 7.434, new Rotation2d(Math.PI)));
 	public static final PosePair OUTSIDE_TRENCH_RIGHT = new PosePair(new Pose2d(10.8, 7.434, new Rotation2d(Math.PI)), new Pose2d(5.7, 0.652, new Rotation2d(Math.PI)));
 
 	public static final double CLOSE_TO_ANGLE = 8;
+	public static final double CLOSE_TO_POSE = 0.25;
 
 	public static final class Obstacles {
 
