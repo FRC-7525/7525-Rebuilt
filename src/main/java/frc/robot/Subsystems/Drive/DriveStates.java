@@ -14,11 +14,12 @@ public enum DriveStates implements SubsystemStates {
 	AIMLOCK_ALLIANCE_LEFT_SHALLOW("Locking Aim To shallow left side of alliance station", AIMLOCK_LEFT_SHALLOW_POSES),
 	AIMLOCK_ALLIANCE_RIGHT_DEEP("Locking Aim To deep right side of alliance station", AIMLOCK_RIGHT_DEEP_POSES),
 	AIMLOCK_ALLIANCE_RIGHT_SHALLOW("Locking Aim To shallow right side of alliance station", AIMLOCK_RIGHT_SHALLOW_POSES),
-	AA_TRENCH_LEFT("Going to left trench", TRENCH_LEFT),
-	AA_TRENCH_RIGHT("Going to right trench", TRENCH_RIGHT),
-	AA_OUTSIDE_TRENCH_LEFT("Going outside left trench", OUTSIDE_TRENCH_LEFT),
-	AA_OUTSIDE_TRENCH_RIGHT("Going outside right trench", OUTSIDE_TRENCH_RIGHT),
-	AA_NEUTRAL("Going to neutral zone", NEUTRAL_POSES),
+	//Important: Make sure AA states contain AA in the string
+	AA_TRENCH_LEFT("AA to left trench", TRENCH_LEFT),
+	AA_TRENCH_RIGHT("AA to right trench", TRENCH_RIGHT),
+	AA_OUTSIDE_TRENCH_LEFT("AA outside left trench", OUTSIDE_TRENCH_LEFT),
+	AA_OUTSIDE_TRENCH_RIGHT("AA outside right trench", OUTSIDE_TRENCH_RIGHT),
+	AA_NEUTRAL("AA to neutral zone", NEUTRAL_POSES),
 	SNAKE_DRIVE("Snake Drive Mode", new PosePair(Pose2d.kZero, Pose2d.kZero)),
 	AUTO("test", NEUTRAL_POSES),
 	LOCKED_X_POSE("Locking X Pose", new PosePair(Pose2d.kZero, Pose2d.kZero));

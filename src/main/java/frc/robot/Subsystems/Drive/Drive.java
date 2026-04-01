@@ -87,6 +87,8 @@ public class Drive extends Subsystem<DriveStates> {
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
 	private double driveMultiplier = 1;
 
+	private boolean autoAligning = false;
+
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
 	 *
@@ -162,6 +164,7 @@ public class Drive extends Subsystem<DriveStates> {
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
 
 		addRunnableTrigger(() -> {
+			cachedState = getState();
 			boolean isLeft = Robot.isRedAlliance ? getPose().getY() < FIELD_WIDTH / 2 : getPose().getY() > FIELD_WIDTH / 2;
 			
 			if (isInTeamAllianceZone(getPose())) {
@@ -274,6 +277,13 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
+
+		//TODO: is this cooked?
+		if (getState().getStateString().contains("AA")) {
+			autoAligning = true;
+		} else autoAligning = false;
+
+		Logger.recordOutput("Drive/Autoaligning", autoAligning);
 
 		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
 			setState(DriveStates.SNAKE_DRIVE);
