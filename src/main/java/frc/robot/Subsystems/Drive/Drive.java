@@ -245,16 +245,16 @@ public class Drive extends Subsystem<DriveStates> {
 			case AA_TRENCH_RIGHT:
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
 	
-				if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
+				// if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
 					executeRepulsorAutoAlign();
 					usedRepulsor = true;
-				} else {
-					if (usedRepulsor) {
-						resetPID();
-						usedRepulsor = false;
-					}
-					executeScaledFeedforwardAutoAlign();
-				}
+				// } else {
+				// 	if (usedRepulsor) {
+				// 		resetPID();
+				// 		usedRepulsor = false;
+				// 	}
+				// 	executeScaledFeedforwardAutoAlign();
+				// }
 				Logger.recordOutput("AutoAlign/Using Repulsor", usedRepulsor);
 				Logger.recordOutput("AutoAlign/Target Pose", targetPose);
 				break;
