@@ -120,18 +120,13 @@ public final class AutoAlignConstants {
 
 		public static final List<Obstacle> FIELD_OBSTACLES = List.of(
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 2.625)),
-			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(4.6, 4)), 
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(4.6, 4)),
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 5.375)),
-			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 2.625)), 
-			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(11.9, 4)), 
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 2.625)),
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(11.9, 4)),
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 5.375))
 		);
 
-		public static final List<Obstacle> WALLS = List.of(
-			new HorizontalObstacle(0.3, true, 0, Meters.of(1)),
-			new HorizontalObstacle(0.5, false, FIELD_WIDTH, Meters.of(1)),
-			new VerticalObstacle(0.5, true, 0, Meters.of(1)),
-			new VerticalObstacle(0.5, false, FIELD_LENGTH, Meters.of(1))
-		);
+		public static final List<Obstacle> WALLS = List.of(new HorizontalObstacle(0.3, true, 0, Meters.of(1)), new HorizontalObstacle(0.5, false, FIELD_WIDTH, Meters.of(1)), new VerticalObstacle(0.5, true, 0, Meters.of(1)), new VerticalObstacle(0.5, false, FIELD_LENGTH, Meters.of(1)));
 	}
 }

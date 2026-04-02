@@ -165,18 +165,21 @@ public class Drive extends Subsystem<DriveStates> {
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
 
-		addRunnableTrigger(() -> {
-			cachedState = getState();
-			boolean isLeft = Robot.isRedAlliance ? getPose().getY() < FIELD_WIDTH / 2 : getPose().getY() > FIELD_WIDTH / 2;
-			
-			if (isInTeamAllianceZone(getPose())) {
-				if (isLeft) setState(DriveStates.AA_OUTSIDE_TRENCH_LEFT);
-				else setState(DriveStates.AA_OUTSIDE_TRENCH_RIGHT);
-			} else {
-				if (isLeft) setState(DriveStates.AA_TRENCH_LEFT);
-				else setState(DriveStates.AA_TRENCH_RIGHT);
-			}
-		}, DRIVER_CONTROLLER::getRightBumperButtonPressed);
+		addRunnableTrigger(
+			() -> {
+				cachedState = getState();
+				boolean isLeft = Robot.isRedAlliance ? getPose().getY() < FIELD_WIDTH / 2 : getPose().getY() > FIELD_WIDTH / 2;
+
+				if (isInTeamAllianceZone(getPose())) {
+					if (isLeft) setState(DriveStates.AA_OUTSIDE_TRENCH_LEFT);
+					else setState(DriveStates.AA_OUTSIDE_TRENCH_RIGHT);
+				} else {
+					if (isLeft) setState(DriveStates.AA_TRENCH_LEFT);
+					else setState(DriveStates.AA_TRENCH_RIGHT);
+				}
+			},
+			DRIVER_CONTROLLER::getRightBumperButtonPressed
+		);
 		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
 	}
 
@@ -251,10 +254,10 @@ public class Drive extends Subsystem<DriveStates> {
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
-	
+
 				// if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
-					executeRepulsorAutoAlign();
-					usedRepulsor = true;
+				executeRepulsorAutoAlign();
+				usedRepulsor = true;
 				// } else {
 				// 	if (usedRepulsor) {
 				// 		resetPID();
