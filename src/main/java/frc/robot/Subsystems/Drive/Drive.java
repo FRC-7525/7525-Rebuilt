@@ -356,11 +356,11 @@ public class Drive extends Subsystem<DriveStates> {
 		Pose2d currentPose = getPose();
 		// Set repulsor goal and get command
 		repulsor.setGoal(targetPose.getTranslation());
-		Pose2d[] arrows = new Pose2d[repulsor.getArrows().size()];
-		for (int i = 0; i < arrows.length; i++) {
-			arrows[i] = repulsor.getArrows().get(i);
-		}
-		Logger.recordOutput("AutoAlign/Arrows", arrows);
+		// Pose2d[] arrows = new Pose2d[repulsor.getArrows().size()];
+		// for (int i = 0; i < arrows.length; i++) {
+		// 	arrows[i] = repulsor.getArrows().get(i);
+		// }
+		// Logger.recordOutput("AutoAlign/Arrows", arrows);
 		SwerveSample sample = repulsor.getCmd(currentPose, getRobotRelativeSpeeds(), MAX_SPEED.in(MetersPerSecond), USE_GOAL, targetPose.getRotation());
 
 		// Extract and modify chassis speeds with additional control
