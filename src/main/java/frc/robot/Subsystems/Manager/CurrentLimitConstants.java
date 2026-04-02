@@ -36,7 +36,7 @@ public class CurrentLimitConstants {
 		LOW_TURN_LIMITS.SupplyCurrentLimit = 20;
 
 		IDLE_SHOOTER_LIMITS.SupplyCurrentLimit = 10;
-		WINDUP_SHOOTER_LIMITS.SupplyCurrentLimit = 40;
+		WINDUP_SHOOTER_LIMITS.SupplyCurrentLimit = 70;
 		FIRING_SHOOTER_LIMITS.SupplyCurrentLimit = 90;
 
 		INTAKE_PIVOT_LIMITS.SupplyCurrentLimit = 20;
@@ -44,7 +44,7 @@ public class CurrentLimitConstants {
 
 		HOOD_LIMITS.SupplyCurrentLimit = 20;
 		SPINDEXER_LIMITS.SupplyCurrentLimit = 20;
-		KICKER_LIMITS.SupplyCurrentLimit = 40;
+		KICKER_LIMITS.SupplyCurrentLimit = 60;
 		KICKER_LIMITS_2.SupplyCurrentLimit = 10;
 	}
 }

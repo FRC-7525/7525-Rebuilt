@@ -50,14 +50,14 @@ public final class AutoAlignConstants {
 	public static final double FIELD_LENGTH = 16.42;
 	public static final double FIELD_WIDTH = 8.2;
 
-	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(2);
+	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(3);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
 
-	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER = () ->
+	public static final Supplier<ProfiledPIDController> SHOOTER_YAW_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL -> new PIDController(0.1, 0, 0);
-			case SIM -> new PIDController(1, 0, .01);
-			default -> new PIDController(20, 1, 0);
+			case REAL -> new ProfiledPIDController(0.23, 0, 0.1, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
+			case SIM -> new ProfiledPIDController(20, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
+			default -> new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 2, Math.PI * 2), 0.02);
 		};
 	public static final Angle SWITCH_DIST = Degrees.of(10); // When to switch from fast(below) to slow(above) controller
 	public static final Supplier<PIDController> SHOOTER_YAW_CONTROLLER_FAST = () ->
@@ -120,18 +120,13 @@ public final class AutoAlignConstants {
 
 		public static final List<Obstacle> FIELD_OBSTACLES = List.of(
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 2.625)),
-			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(4.6, 4)), 
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(4.6, 4)),
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 5.375)),
-			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 2.625)), 
-			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(11.9, 4)), 
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 2.625)),
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(11.9, 4)),
 			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 5.375))
 		);
 
-		public static final List<Obstacle> WALLS = List.of(
-			new HorizontalObstacle(0.3, true, 0, Meters.of(1)),
-			new HorizontalObstacle(0.5, false, FIELD_WIDTH, Meters.of(1)),
-			new VerticalObstacle(0.5, true, 0, Meters.of(1)),
-			new VerticalObstacle(0.5, false, FIELD_LENGTH, Meters.of(1))
-		);
+		public static final List<Obstacle> WALLS = List.of(new HorizontalObstacle(0.3, true, 0, Meters.of(1)), new HorizontalObstacle(0.5, false, FIELD_WIDTH, Meters.of(1)), new VerticalObstacle(0.5, true, 0, Meters.of(1)), new VerticalObstacle(0.5, false, FIELD_LENGTH, Meters.of(1)));
 	}
 }

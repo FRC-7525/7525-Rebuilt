@@ -104,14 +104,23 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
-		addRunnableTrigger(() -> {
-			numTimesYPressed = 2;
-			setState(ManagerStates.SHOOTING_HUB);
-		}, () -> isHubActive() && Math.abs(drive.getAngleDiffBetweenShooterAndTarget().in(Degrees)) < SHOOTER_TARGET_ANGLE_DIFF_DEGREES && Math.abs(drive.getVelocity().in(MetersPerSecond)) < CLOSE_TO_NOT_MOVING_MPS && getState() == WINDING_UP && drive.getState() == DriveStates.AIMLOCK_HUB && drive.isInTeamAllianceZone(drive.getPose()));
+		addRunnableTrigger(
+			() -> {
+				numTimesYPressed = 2;
+				setState(ManagerStates.SHOOTING_HUB);
+			},
+			() ->
+				isHubActive() &&
+				Math.abs(drive.getAngleDiffBetweenShooterAndTarget().in(Degrees)) < SHOOTER_TARGET_ANGLE_DIFF_DEGREES &&
+				Math.abs(drive.getVelocity().in(MetersPerSecond)) < CLOSE_TO_NOT_MOVING_MPS &&
+				getState() == WINDING_UP &&
+				drive.getState() == DriveStates.AIMLOCK_HUB &&
+				drive.isInTeamAllianceZone(drive.getPose())
+		);
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2 && drive.isInTeamAllianceZone(drive.getPose()));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
 		//TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
+		// addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
 
 		// SHOOTING --> WINDING_UP
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
@@ -183,7 +192,7 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		//Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE
