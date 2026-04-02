@@ -14,16 +14,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class ClimberIOSim extends ClimberIOReal {
 
-	protected TalonFXSimState leftMotorSim;
-	protected TalonFXSimState rightMotorSim;
+	protected TalonFXSimState motorSim;
 	protected ElevatorSim climbSim;
 	protected Angle positionSetpoint;
 
 	public ClimberIOSim() {
-		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Aligned));
 
-		leftMotorSim = new TalonFXSimState(leftMotor);
-		rightMotorSim = new TalonFXSimState(rightMotor);
+		motorSim = new TalonFXSimState(motor);
 		climbSim = new ElevatorSim(
 			LinearSystemId.createElevatorSystem(DCMotor.getFalcon500(1), ClimberConstants.CLIMBER_MASS, ClimberConstants.CLIMBER_RADIUS, ClimberConstants.CLIMBER_GEARING),
 			DCMotor.getFalcon500(1),
@@ -40,29 +37,25 @@ public class ClimberIOSim extends ClimberIOReal {
 	public void logOutputs(ClimberIOOutputs outputs) {
 		climbSim.update(GlobalConstants.SIMULATION_PERIOD);
 
-		leftMotorSim.setRawRotorPosition(climbSim.getPositionMeters());
-		leftMotorSim.setRotorVelocity(climbSim.getVelocityMetersPerSecond());
-		rightMotorSim.setRawRotorPosition(climbSim.getPositionMeters());
-		rightMotorSim.setRotorVelocity(climbSim.getVelocityMetersPerSecond());
+		motorSim.setRawRotorPosition(climbSim.getPositionMeters());
+		motorSim.setRotorVelocity(climbSim.getVelocityMetersPerSecond());
 
-		outputs.leftPosition = leftMotor.getPosition().getValue();
-		outputs.rightPosition = rightMotor.getPosition().getValue();
-		outputs.setpoint = positionSetpoint;
+		outputs.angularPos = motor.getPosition().getValue();
+		outputs.angularSetpoint = positionSetpoint;
 
-		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimLeftRot", outputs.leftPosition.in(Rotations));
-		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimRightRot", outputs.rightPosition.in(Rotations));
-		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimSetpointRot", outputs.setpoint.in(Rotations));
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimAngularPosRot", outputs.angularPos.in(Rotations));
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SimSetpointRot", outputs.angularSetpoint.in(Rotations));
 	}
 
 	@Override
 	public void setPosition(Angle position) {
 		this.positionSetpoint = position;
-		climbSim.setInput(pid.calculate(leftMotor.getPosition().getValue().in(Rotations), positionSetpoint.in(Rotations)));
+		climbSim.setInput(pid.calculate(motor.getPosition().getValue().in(Rotations), positionSetpoint.in(Rotations)));
 	}
 
 	@Override
 	public boolean atPositionSetpoint() {
-		double currentRot = leftMotor.getPosition().getValue().in(Rotations);
+		double currentRot = motor.getPosition().getValue().in(Rotations);
 		return Math.abs(currentRot - positionSetpoint.in(Rotations)) < ClimberConstants.CLIMB_POSITION_TOLERANCE.in(Rotations);
 	}
 }

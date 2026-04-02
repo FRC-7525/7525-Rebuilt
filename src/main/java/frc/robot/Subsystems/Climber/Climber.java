@@ -34,9 +34,8 @@ public class Climber extends Subsystem<ClimberStates> {
 		io.setPosition(getState().getClimberSetpoint());
 		io.logOutputs(outputs);
 
-		Logger.recordOutput(getName() + "/LeftPositionRot", outputs.leftPosition.in(Rotations));
-		Logger.recordOutput(getName() + "/RightPositionRot", outputs.rightPosition.in(Rotations));
-		Logger.recordOutput(getName() + "/SetpointRot", outputs.setpoint.in(Rotations));
+		Logger.recordOutput(getName() + "/AngularPosRot", outputs.angularPos.in(Rotations));
+		Logger.recordOutput(getName() + "/SetpointRot", outputs.angularSetpoint.in(Rotations));
 		Logger.recordOutput(getName() + "/state", getState().getStateString());
 	}
 
