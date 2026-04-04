@@ -15,8 +15,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
+import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOOutputs;
 import java.util.LinkedList;
@@ -77,7 +77,6 @@ public class Vision extends Subsystem<VisionStates> {
 		for (int i = 0; i < outputs.length; i++) {
 			disconnectedAlerts[i] = new Alert("Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
 		}
-
 	}
 
 	/**
