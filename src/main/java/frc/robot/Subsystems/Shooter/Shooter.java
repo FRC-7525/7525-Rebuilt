@@ -7,7 +7,6 @@ import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
