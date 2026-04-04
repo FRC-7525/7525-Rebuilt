@@ -40,7 +40,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private GameStates currentGameState = GameStates.UNKNOWN;
 	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
-	
+
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
 	private double remainingPeriodTime = 10;
 
@@ -122,7 +122,7 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// Operator override HoodSnapDown
 		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
-		
+
 		addRunnableTrigger(
 			() -> {
 				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
@@ -192,7 +192,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		}
 
 		double currentTime = shiftTimer.get();
-	
+
 		if (currentTime < 10) {
 			currentGameState = gameStates[0];
 			nextGameState = gameStates[1];
@@ -221,7 +221,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		Logger.recordOutput("Manager/TIME UNTIL NEXT SHIFT", remainingPeriodTime);
 		Logger.recordOutput("Manager/CURRENT HUB STATE", currentGameState.getStateString());
 		Logger.recordOutput("Manager/NEXT HUB STATE", nextGameState.getStateString());
-
 	}
 
 	public GameStates getCurrentGameState() {
