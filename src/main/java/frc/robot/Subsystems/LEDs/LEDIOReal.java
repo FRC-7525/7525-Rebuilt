@@ -17,13 +17,12 @@ public class LEDIOReal implements LEDIO {
 
 	public LEDIOReal() {
 		ledStrip = new AddressableLED(LED_INDEX);
-		ledBuffer = new AddressableLEDBuffer(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
-
 		ledStrip.setLength(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
+		ledBuffer = new AddressableLEDBuffer(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
 
 		underglowBuffer = ledBuffer.createView(0, UNDERGLOW_LEDS_LENGTH - 1);
 		leftSideBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH - 1);
-		rightSideBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH);
+		rightSideBuffer = ledBuffer.createView(UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH, UNDERGLOW_LEDS_LENGTH + LEFT_SIDE_LEDS_LENGTH + RIGHT_SIDE_LEDS_LENGTH - 1);
 
 		ledStrip.setData(ledBuffer);
 		ledStrip.start();
