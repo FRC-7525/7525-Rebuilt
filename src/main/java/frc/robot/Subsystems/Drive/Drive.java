@@ -426,6 +426,10 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 	}
 
+	public boolean isInTeamAllianceZone() {
+		return isInTeamAllianceZone(getPose());
+	}
+
 	public boolean isInTeamAllianceZone(Pose2d currentPose) {
 		double x = currentPose.getX();
 		double y = currentPose.getY();
