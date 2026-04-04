@@ -56,7 +56,7 @@ public class AutoRoutines {
 		AutoRoutine routine = autoFactory.newRoutine("Left2CycleRoutine");
 		AutoTrajectory part1 = ChoreoTraj.Left2Cycle_P1.asAutoTraj(routine);
 		AutoTrajectory part2 = ChoreoTraj.Left2Cycle_P2.asAutoTraj(routine);
-		AutoTrajectory part3 = ChoreoTraj.Right2Cycle_P3.asAutoTraj(routine);
+		AutoTrajectory part3 = ChoreoTraj.Left2Cycle_P3.asAutoTraj(routine);
 
 		routine.active().onTrue(
 			Commands.print("AUTO STARTED")

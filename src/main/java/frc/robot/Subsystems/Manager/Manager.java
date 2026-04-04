@@ -81,18 +81,20 @@ public class Manager extends Subsystem<ManagerStates> {
 		// INTAKING --> EXTENDED_IDLE
 		addTrigger(ManagerStates.INTAKING, ManagerStates.EXTENDED_IDLE, DRIVER_CONTROLLER::getXButtonPressed);
 
-		addRunnableTrigger(() -> {
-			numTimesYPressed++;
+		addRunnableTrigger(
+			() -> {
+				numTimesYPressed++;
 
-			if (numTimesYPressed == 3) {
-				setState(WINDING_UP);
-				numTimesYPressed = 1;
-			}
-		}, () -> DRIVER_CONTROLLER.getYButtonPressed() || OPERATOR_CONTROLLER.getYButtonPressed());
+				if (numTimesYPressed == 3) {
+					setState(WINDING_UP);
+					numTimesYPressed = 1;
+				}
+			},
+			() -> DRIVER_CONTROLLER.getYButtonPressed() || OPERATOR_CONTROLLER.getYButtonPressed()
+		);
 
 		// IDLE/EXTENDED_IDLE --> WINDING_UP
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
-		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP, () -> numTimesYPressed == 1);
 		addTrigger(ManagerStates.IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 		addTrigger(ManagerStates.EXTENDED_IDLE, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
@@ -103,9 +105,10 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.INTAKING, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// WINDING_UP --> SHOOTING_HUB/SHOOTING_FIXED/SHOOTING_ALLIANCE
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2 && drive.isInTeamAllianceZone(drive.getPose()));
+		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2);
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
+		//TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
+		// addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
 
 		// SHOOTING --> WINDING_UP
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
@@ -127,7 +130,6 @@ public class Manager extends Subsystem<ManagerStates> {
 				if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
 				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
-
 			},
 			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
 		);
@@ -235,7 +237,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		boolean redWon = true;
 		if (gameData.length() > 0) {
 			if (gameData.charAt(0) == 'R') redWon = true;
-			if (gameData.charAt(0) == 'B') redWon = false;
+			else if (gameData.charAt(0) == 'B') redWon = false;
 			else {
 				gameStates = UNKNOWN_ALLIANCE_WON;
 				return;
@@ -246,7 +248,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
 		if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
 		if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
-
 
 		shiftTimer.start();
 	}
