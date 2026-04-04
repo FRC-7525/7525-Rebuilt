@@ -23,7 +23,7 @@ public final class ShooterConstants {
 	public static final Angle HOOD_MIN_ANGLE = Degrees.of(-4.8025772);
 	public static final Angle HOOD_MAX_ANGLE = Degrees.of(-54.6051544);
 
-	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(0);
+	public static final Angle FIXED_SHOT_ANGLE = Degrees.of(35);
 	public static final AngularVelocity FIXED_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	//TODO: Change standby values to actual values after testing is done
@@ -31,7 +31,7 @@ public final class ShooterConstants {
 	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65); //TODO: Change standby values to good values
 
 	//TODO: Change later if we actually add a table to do alliance shots
-	public static final Angle ALLIANCE_SHOT_ANGLE = Degrees.of(45);
+	public static final Angle ALLIANCE_SHOT_ANGLE = Degrees.of(35);
 	public static final AngularVelocity ALLIANCE_SHOT_SPEED = RotationsPerSecond.of(65);
 
 	// Numerical constants (moved from magic literals)

@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.GameStates;
@@ -88,6 +88,8 @@ public class Drive extends Subsystem<DriveStates> {
 	private double aimlockffMinRadius = Units.degreesToRadians(0.5), aimlockffMaxRadius = Units.degreesToRadians(180);
 	private double driveMultiplier = 1;
 
+	private boolean autoAligning = false;
+
 	/**
 	 * Constructs a new Drive subsystem with the given DriveIO.
 	 *
@@ -122,8 +124,8 @@ public class Drive extends Subsystem<DriveStates> {
 		this.rotationController.setTolerance(ANGLE_ERROR_MARGIN.in(Radians));
 		this.headingController.setTolerance(1);
 
-		this.snakeDriveController.enableContinuousInput(-Math.PI, Math.PI);
-		this.shooterYawController.enableContinuousInput(-Math.PI, Math.PI);
+		this.snakeDriveController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
+		this.shooterYawController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.headingController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.rotationController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
 		this.repulsorRotationalController.enableContinuousInput(MIN_HEADING_ANGLE.in(Radians), MAX_HEADING_ANGLE.in(Radians));
@@ -153,7 +155,7 @@ public class Drive extends Subsystem<DriveStates> {
 			() -> {
 				setState(DriveStates.AIMLOCK_HUB);
 			},
-			() -> isInAimlockActivationZone(getPose()) && Manager.getInstance().getState() == ManagerStates.WINDING_UP
+			() -> isInTeamAllianceZone(getPose()) && Manager.getInstance().getState() == ManagerStates.WINDING_UP && !autoAligning
 		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
@@ -162,6 +164,23 @@ public class Drive extends Subsystem<DriveStates> {
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
+
+		addRunnableTrigger(
+			() -> {
+				cachedState = getState();
+				boolean isLeft = Robot.isRedAlliance ? getPose().getY() < FIELD_WIDTH / 2 : getPose().getY() > FIELD_WIDTH / 2;
+
+				if (isInTeamAllianceZone(getPose())) {
+					if (isLeft) setState(DriveStates.AA_OUTSIDE_TRENCH_LEFT);
+					else setState(DriveStates.AA_OUTSIDE_TRENCH_RIGHT);
+				} else {
+					if (isLeft) setState(DriveStates.AA_TRENCH_LEFT);
+					else setState(DriveStates.AA_TRENCH_RIGHT);
+				}
+			},
+			DRIVER_CONTROLLER::getRightBumperButtonPressed
+		);
+		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
 	}
 
 	/**
@@ -230,19 +249,24 @@ public class Drive extends Subsystem<DriveStates> {
 				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, thetaVelocity, true);
 				break;
 			case AA_NEUTRAL:
-			case AA_TOWER_LEFT:
-			case AA_TOWER_RIGHT:
+			case AA_OUTSIDE_TRENCH_LEFT:
+			case AA_OUTSIDE_TRENCH_RIGHT:
+			case AA_TRENCH_LEFT:
+			case AA_TRENCH_RIGHT:
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
-				if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
-					executeRepulsorAutoAlign();
-					usedRepulsor = true;
-				} else {
-					if (usedRepulsor) {
-						resetPID();
-						usedRepulsor = false;
-					}
-					executeScaledFeedforwardAutoAlign();
-				}
+
+				// if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
+				executeRepulsorAutoAlign();
+				usedRepulsor = true;
+				// } else {
+				// 	if (usedRepulsor) {
+				// 		resetPID();
+				// 		usedRepulsor = false;
+				// 	}
+				// 	executeScaledFeedforwardAutoAlign();
+				// }
+				Logger.recordOutput("AutoAlign/Using Repulsor", usedRepulsor);
+				Logger.recordOutput("AutoAlign/Target Pose", targetPose);
 				break;
 			case SNAKE_DRIVE:
 				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());
@@ -265,6 +289,11 @@ public class Drive extends Subsystem<DriveStates> {
 		}
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
+
+		//TODO: is this cooked?
+		if (getState().getStateString().contains("AA")) {
+			autoAligning = true;
+		} else autoAligning = false;
 
 		if (DRIVER_CONTROLLER.getStartButtonPressed() || OPERATOR_CONTROLLER.getStartButtonPressed()) {
 			setState(DriveStates.SNAKE_DRIVE);
@@ -337,6 +366,11 @@ public class Drive extends Subsystem<DriveStates> {
 		Pose2d currentPose = getPose();
 		// Set repulsor goal and get command
 		repulsor.setGoal(targetPose.getTranslation());
+		// Pose2d[] arrows = new Pose2d[repulsor.getArrows().size()];
+		// for (int i = 0; i < arrows.length; i++) {
+		// 	arrows[i] = repulsor.getArrows().get(i);
+		// }
+		// Logger.recordOutput("AutoAlign/Arrows", arrows);
 		SwerveSample sample = repulsor.getCmd(currentPose, getRobotRelativeSpeeds(), MAX_SPEED.in(MetersPerSecond), USE_GOAL, targetPose.getRotation());
 
 		// Extract and modify chassis speeds with additional control
@@ -386,7 +420,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		// Apply drive commands with alliance compensation
 		if (Robot.isRedAlliance) {
-			executeAutoAlignDriveInstruction(-translationVelocity.getX(), translationVelocity.getY(), thetaVelocity, false);
+			executeAutoAlignDriveInstruction(-translationVelocity.getX(), -translationVelocity.getY(), thetaVelocity, false);
 		} else {
 			executeAutoAlignDriveInstruction(translationVelocity.getX(), translationVelocity.getY(), thetaVelocity, false);
 		}
@@ -527,7 +561,7 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public Angle getAngleDiffBetweenShooterAndTarget() {
-		Pose2d target = RED_HUB_POSE;
+		Pose2d target = sotmTarget;
 		Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 		Pose2d shooterToTarget = target.relativeTo(shooterPosition);
 		return shooterToTarget.getTranslation().getAngle().getMeasure();

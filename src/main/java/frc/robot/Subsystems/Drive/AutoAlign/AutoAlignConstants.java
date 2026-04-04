@@ -48,7 +48,7 @@ public final class AutoAlignConstants {
 
 	public static final double GOAL_STRENGTH = 0.1;
 	public static final double FIELD_LENGTH = 16.42;
-	public static final double FIELD_WIDTH = 8.16;
+	public static final double FIELD_WIDTH = 8.2;
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(3);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
@@ -70,7 +70,7 @@ public final class AutoAlignConstants {
 	public static final Supplier<ProfiledPIDController> SCALED_FF_TRANSLATIONAL_CONTROLLER = () ->
 		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new ProfiledPIDController(25, 0, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
-			case SIM -> new ProfiledPIDController(20, 1, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
+			case SIM -> new ProfiledPIDController(30, 1, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
 			default -> new ProfiledPIDController(20, 1, 0, new TrapezoidProfile.Constraints(Units.feetToMeters(9), 7), 0.02);
 		};
 
@@ -107,19 +107,26 @@ public final class AutoAlignConstants {
 	public static final PosePair NEUTRAL_POSES = new PosePair(new Pose2d(9.5, 4.08, Rotation2d.kZero), new Pose2d(7, 2, Rotation2d.kZero));
 
 	// AA Poses
-	public static final PosePair TOWER_LEFT = new PosePair(new Pose2d(14.946, 4.898, new Rotation2d(180)), new Pose2d(1.554, 3.102, new Rotation2d(0)));
-	public static final PosePair TOWER_RIGHT = new PosePair(new Pose2d(14.946, 4.119, new Rotation2d(180)), new Pose2d(1.554, 3.881, new Rotation2d(0)));
+	public static final PosePair TRENCH_LEFT = new PosePair(new Pose2d(13.15, 0.652, new Rotation2d(0)), new Pose2d(3.35, 7.434, new Rotation2d(Math.PI)));
+	public static final PosePair TRENCH_RIGHT = new PosePair(new Pose2d(13.15, 7.434, new Rotation2d(Math.PI)), new Pose2d(3.35, 0.652, new Rotation2d(0)));
+
+	public static final PosePair OUTSIDE_TRENCH_LEFT = new PosePair(new Pose2d(10.8, 0.652, new Rotation2d(Math.PI)), new Pose2d(5.7, 7.434, new Rotation2d(0)));
+	public static final PosePair OUTSIDE_TRENCH_RIGHT = new PosePair(new Pose2d(10.8, 7.434, new Rotation2d(Math.PI)), new Pose2d(5.7, 0.652, new Rotation2d(0)));
+
+	public static final double CLOSE_TO_ANGLE = 8;
+	public static final double CLOSE_TO_POSE = 0.25;
 
 	public static final class Obstacles {
 
-		public static final List<Obstacle> FIELD_OBSTACLES = List.of(new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 2.625)), new GuidedObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 4)), new PointObstacle(1.0, true, Meters.of(0.5), new Translation2d(4.6, 5.375)));
-
-		public static final List<Obstacle> WALLS = List.of(
-			new HorizontalObstacle(0.5, true, 0, Meters.of(1)),
-			new HorizontalObstacle(0.5, true, FIELD_WIDTH, Meters.of(1)),
-			new VerticalObstacle(0.5, true, 0, Meters.of(1)),
-			new VerticalObstacle(0.5, true, FIELD_LENGTH, Meters.of(1)),
-			new VerticalObstacle(0.5, true, FIELD_LENGTH, Meters.of(FIELD_LENGTH))
+		public static final List<Obstacle> FIELD_OBSTACLES = List.of(
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 2.625)),
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(4.6, 4)),
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(4.6, 5.375)),
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 2.625)),
+			new GuidedObstacle(1.0, true, Meters.of(0.7), new Translation2d(11.9, 4)),
+			new GuidedObstacle(0.9, true, Meters.of(0.5), new Translation2d(11.9, 5.375))
 		);
+
+		public static final List<Obstacle> WALLS = List.of(new HorizontalObstacle(0.3, true, 0, Meters.of(1)), new HorizontalObstacle(0.5, false, FIELD_WIDTH, Meters.of(1)), new VerticalObstacle(0.5, true, 0, Meters.of(1)), new VerticalObstacle(0.5, false, FIELD_LENGTH, Meters.of(1)));
 	}
 }

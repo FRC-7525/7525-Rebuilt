@@ -47,7 +47,7 @@ public class ShooterIOReal implements ShooterIO {
 		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		leftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		leftMotorConfig.Slot0.kP = wheelPID.getP();
+		leftMotorConfig.Slot0.kP = 3.399E+34;
 		leftMotorConfig.Slot0.kI = wheelPID.getI();
 		leftMotorConfig.Slot0.kD = wheelPID.getD();
 		leftMotorConfig.Voltage.PeakReverseVoltage = 0;
