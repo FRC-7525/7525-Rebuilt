@@ -15,8 +15,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
+import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
@@ -55,7 +55,7 @@ public class Vision extends Subsystem<VisionStates> {
 						2: Shooter cam (whenever added)
 					*/
 
-					case REAL -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA), new VisionIOPhotonVision(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA)};
+					case REAL -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA), new VisionIOPhotonVision(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA) };
 					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose) };
 					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA) };
 				}
@@ -256,8 +256,7 @@ public class Vision extends Subsystem<VisionStates> {
 	}
 
 	private VisionStates decideVisionState() {
-		if (Manager.getInstance().getState() == ManagerStates.WINDING_UP || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB)
-			return VisionStates.IGNORE_BL_BR;
+		if (Manager.getInstance().getState() == ManagerStates.WINDING_UP || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB) return VisionStates.IGNORE_BL_BR;
 
 		if (Drive.getInstance().isInTeamAllianceZone()) {
 			if (Drive.getInstance().getPose().getY() > AutoAlignConstants.FIELD_WIDTH / 2) {
