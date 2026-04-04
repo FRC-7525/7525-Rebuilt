@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +23,8 @@ public class IntakeIOTalonFX implements IntakeIO {
 	private final PIDController pivotBounceController;
 	private Angle setpoint;
 	protected DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+	private Debouncer limitSwitchDebouncer;
+	private boolean limitSwitchOn = false;
 
 	public IntakeIOTalonFX() {
 		pivotController = PIVOT_PID.get();
@@ -35,7 +38,8 @@ public class IntakeIOTalonFX implements IntakeIO {
 		pivotMotor.setNeutralMode(NeutralModeValue.Coast);
 		pivotMotor.setPosition(0);
 		setpoint = Degrees.of(0);
-	}
+		limitSwitchDebouncer = new Debouncer(0.2, Debouncer.DebounceType.kBoth);
+	}	
 
 	@Override
 	public void logOutputs(IntakeIOOutputs outputs) {
@@ -55,9 +59,11 @@ public class IntakeIOTalonFX implements IntakeIO {
 
 	@Override
 	public void setAngularPosition(Angle setpoint) {
-		// if (!limitSwitch.get() && !(pivotMotor.getPosition().getValueAsDouble() < TOLERANCE)) { // If the limit switch is pressed and we're not near 0;
-		// 	pivotMotor.setPosition(0);
-		// }
+		limitSwitchOn = limitSwitchDebouncer.calculate(!limitSwitch.get());
+		
+		if (limitSwitchOn && !(pivotMotor.getPosition().getValueAsDouble() < TOLERANCE)) { // If the limit switch is pressed and we're not near 0;
+			pivotMotor.setPosition(0);
+		}
 		this.setpoint = setpoint;
 		if (setpoint.in(Degrees) == INTAKE_OUT_POS.in(Degrees) && Math.abs(pivotMotor.getPosition().getValue().minus(setpoint).in(Degrees)) < BOUNCE_ACTIVATION_TOLERANCE.in(Degrees)) {
 			pivotMotor.set(pivotBounceController.calculate(pivotMotor.getPosition().getValue().in(Degrees) / GEARING, setpoint.in(Degrees)));
