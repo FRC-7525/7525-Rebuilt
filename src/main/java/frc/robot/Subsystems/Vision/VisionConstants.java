@@ -31,17 +31,23 @@ public class VisionConstants {
 
 	public record VisionMeasurment(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 
-	// Front Left
+	// Back Left Swerve Mod
 	public static final String BACK_LEFT_CAMERA_NAME = "Back Left Camera";
 	public static final Translation3d ROBOT_TO_BACK_LEFT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-11.298), Units.inchesToMeters(11.294259), Units.inchesToMeters(8.887162));
 	public static final Rotation3d ROBOT_TO_BACK_LEFT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(135));
 	public static final Transform3d ROBOT_TO_BACK_LEFT_CAMERA = new Transform3d(ROBOT_TO_BACK_LEFT_CAMERA_TRANSLATION, ROBOT_TO_BACK_LEFT_CAMERA_ROTATION);
 
-	// Front Right
+	// Back Right Swerve Mod
 	public static final String BACK_RIGHT_CAMERA = "Back Right Camera";
 	public static final Translation3d ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-9.953607), Units.inchesToMeters(-9.953249), Units.inchesToMeters(8.887162));
 	public static final Rotation3d ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
 	public static final Transform3d ROBOT_TO_BACK_RIGHT_CAMERA = new Transform3d(ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION, ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION);
+
+	// Back Right Swerve Mod
+	public static final String SHOOTER_CAMERA = "Shooter Camera";
+	public static final Translation3d ROBOT_TO_SHOOTER_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-10.974), Units.inchesToMeters(6.531), Units.inchesToMeters(19.643));
+	public static final Rotation3d ROBOT_TO_SHOOTER_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
+	public static final Transform3d ROBOT_TO_SHOOTER_CAMERA = new Transform3d(ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION, ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION);
 
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
