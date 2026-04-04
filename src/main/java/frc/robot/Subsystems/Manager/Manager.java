@@ -179,7 +179,7 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		//Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		// Emergency stop to IDLE

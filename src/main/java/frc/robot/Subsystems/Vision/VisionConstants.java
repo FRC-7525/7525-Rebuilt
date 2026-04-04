@@ -46,8 +46,8 @@ public class VisionConstants {
 	// Back Right Swerve Mod
 	public static final String SHOOTER_CAMERA = "Shooter Camera";
 	public static final Translation3d ROBOT_TO_SHOOTER_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(-10.974), Units.inchesToMeters(6.531), Units.inchesToMeters(19.643));
-	public static final Rotation3d ROBOT_TO_SHOOTER_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-135));
-	public static final Transform3d ROBOT_TO_SHOOTER_CAMERA = new Transform3d(ROBOT_TO_BACK_RIGHT_CAMERA_TRANSLATION, ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION);
+	public static final Rotation3d ROBOT_TO_SHOOTER_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(90));
+	public static final Transform3d ROBOT_TO_SHOOTER_CAMERA = new Transform3d(ROBOT_TO_SHOOTER_CAMERA_TRANSLATION, ROBOT_TO_SHOOTER_CAMERA_ROTATION);
 
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
