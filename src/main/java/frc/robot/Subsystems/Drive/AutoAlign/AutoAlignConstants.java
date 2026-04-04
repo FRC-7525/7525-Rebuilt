@@ -47,8 +47,8 @@ public final class AutoAlignConstants {
 	public static final Angle MAX_YAW_ERROR = Degrees.of(0.5);
 
 	public static final double GOAL_STRENGTH = 0.1;
-	static final double FIELD_LENGTH = 16.42;
-	static final double FIELD_WIDTH = 8.16;
+	public static final double FIELD_LENGTH = 16.42;
+	public static final double FIELD_WIDTH = 8.16;
 
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = RotationsPerSecond.of(3);
 	public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(1);
