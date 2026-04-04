@@ -127,6 +127,11 @@ public class ShooterIOReal implements ShooterIO {
 		return false;
 	}
 
+	@Override
+	public AngularVelocity getWheelVelocity() {
+		return leftMotor.getVelocity().getValue();
+	}
+
 	public List<TalonFX> getShooterMotors() {
 		return java.util.Arrays.asList(leftMotor, rightMotor);
 	}

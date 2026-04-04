@@ -65,6 +65,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private Pose2d sotmTarget = Pose2d.kZero;
 	private double lastTime = 0;
 	private DriveStates cachedState = DriveStates.NORMAL;
+	public double shooterToTargetAngle = 0;
 
 	private boolean usedRepulsor = false;
 	private final RepulsorFieldPlanner repulsor = new RepulsorFieldPlanner(Obstacles.FIELD_OBSTACLES, Obstacles.WALLS, (ROBOT_MODE == RobotMode.SIM));
@@ -212,6 +213,7 @@ public class Drive extends Subsystem<DriveStates> {
 				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+				shooterToTargetAngle = shooterToTarget.getRotation().getDegrees();
 				// Calculate rotation velocity with PID and FF scaling
 				double currentDistance = shooterToTarget.getTranslation().getAngle().getRadians();
 				Logger.recordOutput(SUBSYSTEM_NAME + "/MAGIC FF CURRENT DISTANCE", currentDistance);
