@@ -46,7 +46,7 @@ public class AutoRoutines {
 	public AutoRoutine CenterScorePreloadAndBump() {
 		AutoRoutine routine = autoFactory.newRoutine("CenterScorePreload");
 		AutoTrajectory part1 = ChoreoTraj.CenterScore8.asAutoTraj(routine);
-		AutoTrajectory part2 = ChoreoTraj.RightBump2Cycle.asAutoTraj(routine);
+//		AutoTrajectory part2 = ChoreoTraj.RightBump2Cycle.asAutoTraj(routine);
 
 		routine.active().onTrue(Commands.print("AUTO STARTED")
 			.andThen(part1.resetOdometry())
@@ -56,7 +56,7 @@ public class AutoRoutines {
 			.andThen(autoCommands.enableAgitation())
 			.andThen(new WaitCommand(3.5))
 			.andThen(autoCommands.disableAgitation())
-			.andThen(part2.cmd())
+//			.andThen(part2.cmd())
 			.andThen(autoCommands.startScoring())
 			.andThen(autoCommands.enableAgitation())
 		);

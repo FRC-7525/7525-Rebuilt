@@ -201,6 +201,19 @@
               "red_start_time": 20,
               "yellow_start_time": 30
             }
+          },
+          {
+            "title": "Autoalign Disabled",
+            "x": 1230.0,
+            "y": 0.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/SmartDashboard/Autoalign Disabled",
+              "period": 0.06,
+              "data_type": "boolean"
+            }
           }
         ]
       }

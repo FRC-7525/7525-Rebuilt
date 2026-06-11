@@ -247,6 +247,17 @@ public class Drive extends Subsystem<DriveStates> {
 			case AA_OUTSIDE_TRENCH_RIGHT:
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
+				if (Robot.getAutoalignedDisabled()) {
+					Logger.recordOutput(SUBSYSTEM_NAME + "/WARNING: Autoalign Disabled", true);
+					// If autoalign is disabled, revert to normal drive
+					executeDriveInstruction(
+						-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+						-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+						-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
+						isFieldRelative
+					);
+					break;
+				}
 				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
 
 				// if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
@@ -488,6 +499,13 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public void driveRobotAutonomous(SwerveSample sample) {
+		// If autoalign is disabled, don't follow trajectories during autonomous
+		if (Robot.getAutoalignedDisabled()) {
+			// Just maintain current position/heading without trajectory following
+			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
+			return;
+		}
+
 		Pose2d currentPose = Drive.getInstance().getPose();
 		var targetSpeeds = sample.getChassisSpeeds();
 		targetSpeeds.vxMetersPerSecond = targetSpeeds.vxMetersPerSecond + xController.calculate(currentPose.getX(), sample.x);

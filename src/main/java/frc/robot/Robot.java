@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Autonomous.AutoRoutines;
@@ -34,6 +35,7 @@ public class Robot extends LoggedRobot {
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
 	public static boolean isDisabled = false;
+	public static boolean autoAlignDisabled = false;
 
 	@Override
 	public void robotInit() {
@@ -74,6 +76,9 @@ public class Robot extends LoggedRobot {
 		SmartDashboard.putData("autoChooser", autoChooser);
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+
+		autoAlignDisabled = Preferences.getBoolean("Autoalign Disabled", false);
+		SmartDashboard.putBoolean("Autoalign Disabled", autoAlignDisabled);
 	}
 
 	@Override
@@ -82,6 +87,14 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
+
+		autoAlignDisabled = SmartDashboard.getBoolean("Autoalign Disabled", autoAlignDisabled);
+		Preferences.setBoolean("Autoalign Disabled", autoAlignDisabled);
+
+    	if (DriverStation.isFMSAttached() && autoAlignDisabled) {
+			DriverStation.reportWarning("WARNING: FMS Connected yet autoalign disabled!", false);
+       		Logger.recordOutput("WARNING: FMS Connected yet autoalign disabled", true);
+    	}
 	}
 
 	@Override
@@ -129,5 +142,14 @@ public class Robot extends LoggedRobot {
 	public void disabledExit() {
 		isDisabled = false;
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
+
+	public static boolean getAutoalignedDisabled() {
+		return autoAlignDisabled;
+	}
+
+	public static void setAutoalignedDisabled(boolean disabled) {
+		autoAlignDisabled = disabled;
+		Preferences.setBoolean("Autoalign Disabled", disabled);
 	}
 }
