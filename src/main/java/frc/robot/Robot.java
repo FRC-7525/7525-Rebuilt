@@ -4,11 +4,14 @@ import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import choreo.auto.AutoChooser;
+
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -24,12 +27,14 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
+import frc.robot.Subsystems.Orchestra.*;
 
 public class Robot extends LoggedRobot {
 
 	private final AutoChooser autoChooser = new AutoChooser();
 	private final AutoRoutines autoRoutines = new AutoRoutines();
 	private final Manager manager = Manager.getInstance();
+	private final Timer musicTimer = new Timer();
 
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
@@ -104,6 +109,7 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void teleopInit() {
+	
 		CommandScheduler.getInstance().cancelAll();
 		Manager.getInstance().initalizeShiftTimer();
 		manager.setState(IDLE);
@@ -117,10 +123,17 @@ public class Robot extends LoggedRobot {
 	public void disabledInit() {
 		System.gc();
 		isDisabled = true;
+		OrchestraSubsystem.getInstance().playMusic();
 	}
 
 	@Override
 	public void disabledPeriodic() {
+		musicTimer.start();
+		if (!OrchestraSubsystem.getInstance().isPlaying()) {
+			OrchestraSubsystem.getInstance().stopMusic();
+			OrchestraSubsystem.getInstance().playMusic();
+			musicTimer.reset();
+		}
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 		allianceZone = isRedAlliance ? RED_ALLIANCE_BOUNDS : BLUE_ALLIANCE_BOUNDS;
 	}
