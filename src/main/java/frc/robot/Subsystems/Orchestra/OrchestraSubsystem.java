@@ -70,7 +70,18 @@ public class OrchestraSubsystem {
       
 
         // Attempt to load the chrp
-        var status = m_orchestra.loadMusic("anotheronebitesthedust.chrp");
+        
+        var anotheronebitesthedust = m_orchestra.loadMusic("anotheronebitesthedust.chrp");
+        var thunderstrick = m_orchestra.loadMusic("thunderstruck.chrp");
+        var vivaLaVida = m_orchestra.loadMusic("VivaLaVida.chrp");
+        var underTheSea = m_orchestra.loadMusic("UnderTheSea.chrp");
+        var TheFinalCountDown = m_orchestra.loadMusic("TheFinalCountDown.chrp");
+        var RickRolled = m_orchestra.loadMusic("RickRolled.chrp");
+        var PiratesOfTheCaribbean = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
+        var PiratesOfTheCaribbean2 = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
+        var IWantItThatWay = m_orchestra.loadMusic("IWantItThatWay.chrp");
+        var BohimeanRapsody = m_orchestra.loadMusic("BohimeanRapsody.chrp");
+        var BillieJean = m_orchestra.loadMusic("BillieJean.chrp");
     }
 
     public void playMusic() {
