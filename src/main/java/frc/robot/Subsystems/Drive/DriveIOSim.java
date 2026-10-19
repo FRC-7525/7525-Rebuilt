@@ -3,10 +3,12 @@ package frc.robot.Subsystems.Drive;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 
-public class DriveIOSim extends DriveIOReal {
+public class DriveIOSim implements DriveIO {
 
 	private double lastSimTime;
 	private Notifier simNotifier;
@@ -25,8 +27,20 @@ public class DriveIOSim extends DriveIOReal {
 			lastSimTime = currentTime;
 
 			/* use the measured time delta, get battery voltage from WPILib */
-			getDrive().updateSimState(deltaTime, RobotController.getBatteryVoltage());
+			//getDrive().updateSimState(deltaTime, RobotController.getBatteryVoltage());
 		});
 		simNotifier.startPeriodic(SIM_UPDATE_TIME);
+	}
+
+	@Override
+	public TalonFX[] getDriveMotors() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getDriveMotors'");
+	}
+
+	@Override
+	public TalonFX[] getSteerMotors() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getSteerMotors'");
 	}
 }

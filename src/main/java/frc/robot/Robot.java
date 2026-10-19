@@ -28,6 +28,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
 import frc.robot.Subsystems.Orchestra.*;
+import com.ctre.phoenix6.configs.AudioConfigs;
 
 public class Robot extends LoggedRobot {
 
@@ -87,6 +88,13 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
+		if(!OrchestraSubsystem.getInstance().isPlaying()) {
+			if(!OrchestraSubsystem.getInstance().isPlaying()){
+				OrchestraSubsystem.getInstance().stopMusic();
+             	var thunderstrick = OrchestraSubsystem.getInstance().m_orchestra.loadMusic("thunderstruck.chrp");
+            	OrchestraSubsystem.getInstance().playMusic();
+			}
+        }
 	}
 
 	@Override
@@ -128,12 +136,6 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		musicTimer.start();
-		if (!OrchestraSubsystem.getInstance().isPlaying()) {
-			OrchestraSubsystem.getInstance().stopMusic();
-			OrchestraSubsystem.getInstance().playMusic();
-			musicTimer.reset();
-		}
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 		allianceZone = isRedAlliance ? RED_ALLIANCE_BOUNDS : BLUE_ALLIANCE_BOUNDS;
 	}

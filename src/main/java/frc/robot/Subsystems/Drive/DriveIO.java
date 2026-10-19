@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 
 public interface DriveIO {
 	public class DriveIOOutputs {
@@ -26,8 +25,8 @@ public interface DriveIO {
 
 	public default void logOutputs(DriveIOOutputs outputs) {}
 
-	public default TunerSwerveDrivetrain getDrive() {
-		return null;
+	public default void getDrive() {
+		return;
 	}
 
 	public default void zeroGyro() {}

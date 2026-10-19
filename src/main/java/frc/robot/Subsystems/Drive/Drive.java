@@ -10,7 +10,7 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
-import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+//import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
 
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
@@ -34,15 +34,18 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 //import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
-import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
+//import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.autoAlign.RepulsorFieldPlanner;
@@ -93,9 +96,10 @@ public class Drive extends Subsystem<DriveStates> {
 	private Drive() {
 		super("Drive", DriveStates.SNAKE_DRIVE);
 		this.driveIO = switch (ROBOT_MODE) {
-			case REAL -> new DriveIOReal();
-			case SIM -> new DriveIOSim();
-			case TESTING -> new DriveIOReal();
+					//case REAL -> new DriveIOReal();
+					case SIM -> new DriveIOSim();
+					//case TESTING -> new DriveIOReal();
+					default -> new DriveIOSim();
 		};
 
 		this.snakeDriveController = SNAKE_DRIVE_CONTROLLER.get();
@@ -199,20 +203,21 @@ public class Drive extends Subsystem<DriveStates> {
 		else driveMultiplier = 1;
 
 		// Zero on init/when first disabled
-		if (!robotMirrored && !DriverStation.isDisabled()) {
-			DriverStation.getAlliance()
-				.ifPresent(allianceColor -> {
-					driveIO.getDrive().setOperatorPerspectiveForward(allianceColor == Alliance.Red ? RED_ALLIANCE_PERSPECTIVE_ROTATION : BLUE_ALLIANCE_PERSPECTIVE_ROTATION);
-					robotMirrored = true;
-				});
-		}
-		logOutputs(driveIO.getDrive().getState());
+		// if (!robotMirrored && !DriverStation.isDisabled()) {
+		// 	DriverStation.getAlliance()
+		// 		.ifPresent(allianceColor -> {
+		// 			driveIO.getDrive().setOperatorPerspectiveForward(allianceColor == Alliance.Red ? RED_ALLIANCE_PERSPECTIVE_ROTATION : BLUE_ALLIANCE_PERSPECTIVE_ROTATION);
+		// 			robotMirrored = true;
+		// 		});
+		// }
+		robotMirrored = true;
+		//logOutputs(driveIO.getDrive().getState());
 
 		switch (getState()) {
 			case NORMAL:
 				executeDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier * 0.35,
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier * 0.35,
+					-DRIVER_CONTROLLER.getLeftY() * 1 * driveMultiplier * 0.35,
+					-DRIVER_CONTROLLER.getLeftX() * 1 * driveMultiplier * 0.35,
 					-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
 					isFieldRelative
 				);
@@ -271,8 +276,8 @@ public class Drive extends Subsystem<DriveStates> {
 				else leftStickDir = Robot.isRedAlliance ? leftStickVector.getAngle().plus(Rotation2d.kCW_90deg).div(-1) : leftStickVector.getAngle().plus(Rotation2d.kCCW_90deg).div(-1);
 
 				executeAutoAlignDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftY() * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftX() * driveMultiplier,
 					snakeDriveController.calculate(getPose().getRotation().getRadians(), leftStickDir.getRadians()),
 					true
 				);
@@ -447,20 +452,24 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public Pose2d getPose() {
-		return driveIO.getDrive().getState().Pose;
+		return new Pose2d();
+		//return driveIO.getDrive().getState().Pose;
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
-		return driveIO.getDrive().getState().Speeds;
+		return new ChassisSpeeds();
+		//return driveIO.getDrive().getState().Speeds;
 	}
 
 	public LinearVelocity getVelocity() {
-		return MetersPerSecond.of(Math.hypot(driveIO.getDrive().getState().Speeds.vxMetersPerSecond, driveIO.getDrive().getState().Speeds.vyMetersPerSecond));
+		return LinearVelocity.ofBaseUnits(CLOSE_TO_ZERO, MetersPerSecond);
+		//return MetersPerSecond.of(Math.hypot(driveIO.getDrive().getState().Speeds.vxMetersPerSecond, driveIO.getDrive().getState().Speeds.vyMetersPerSecond));
 	}
 
-	public TunerSwerveDrivetrain getDriveTrain() {
-		return driveIO.getDrive();
-	}
+	// public TunerSwerveDrivetrain getDriveTrain() {
+	// 	//return driveIO.getDrive();
+
+	// }
 
 	public void logOutputs(SwerveDriveState state) {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Robot Pose", state.Pose);
@@ -471,7 +480,7 @@ public class Drive extends Subsystem<DriveStates> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/swerveModulePosition", state.ModulePositions);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Translation Difference", state.Pose.getTranslation().minus(lastPose.getTranslation()));
 		Logger.recordOutput(SUBSYSTEM_NAME + "/State", getState().getStateString());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Pose Jumped", Math.hypot(state.Pose.getTranslation().minus(lastPose.getTranslation()).getX(), state.Pose.getTranslation().minus(lastPose.getTranslation()).getY()) > (kSpeedAt12Volts.in(MetersPerSecond) * 2 * (Utils.getSystemTimeSeconds() - lastTime)));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Pose Jumped", Math.hypot(state.Pose.getTranslation().minus(lastPose.getTranslation()).getX(), state.Pose.getTranslation().minus(lastPose.getTranslation()).getY()) > (1 * 2 * (Utils.getSystemTimeSeconds() - lastTime)));
 		FIELD.setRobotPose(lastPose);
 
 		lastPose = state.Pose;
@@ -533,23 +542,27 @@ public class Drive extends Subsystem<DriveStates> {
 	}
 
 	public void resetPose(Pose2d pose) {
-		this.driveIO.getDrive().resetPose(pose);
+		//this.driveIO.getDrive().resetPose(pose);
 	}
 
 	public List<TalonFX> getDriveMotors() {
-		List<TalonFX> driveMotors = new java.util.ArrayList<>();
-		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
-			driveMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getDriveMotor()));
-		}
-		return driveMotors;
+		List<TalonFX> thing = new ArrayList<TalonFX>();
+		return thing;
+		// List<TalonFX> driveMotors = new java.util.ArrayList<>();
+		// for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+		// 	driveMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getDriveMotor()));
+		// }
+		// return driveMotors;
 	}
 
 	public List<TalonFX> getTurnMotors() {
-		List<TalonFX> turnMotors = new java.util.ArrayList<>();
-		for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
-			turnMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getSteerMotor()));
-		}
-		return turnMotors;
+		// List<TalonFX> turnMotors = new java.util.ArrayList<>();
+		// for (int modules = 0; modules < driveIO.getDrive().getModules().length; modules++) {
+		// 	turnMotors.addAll(java.util.Arrays.asList(driveIO.getDrive().getModules()[modules].getSteerMotor()));
+		// }
+		// return turnMotors;
+		List<TalonFX> thing = new ArrayList<TalonFX>();
+		return thing;
 	}
 
 	public void setAutoAimlock(boolean allowed) {

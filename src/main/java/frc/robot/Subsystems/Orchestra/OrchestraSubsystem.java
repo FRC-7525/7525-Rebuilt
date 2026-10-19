@@ -1,4 +1,6 @@
 package frc.robot.Subsystems.Orchestra;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.AudioConfigs;
 
@@ -8,7 +10,7 @@ import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
 
 public class OrchestraSubsystem {
-    Orchestra m_orchestra = new Orchestra();
+    public Orchestra m_orchestra = new Orchestra();
     private static OrchestraSubsystem instance;
 
     public static OrchestraSubsystem getInstance() {
@@ -25,17 +27,18 @@ public class OrchestraSubsystem {
         m_orchestra.addInstrument(Hopper.getInstance().getSpinMotor());
         m_orchestra.addInstrument(Intake.getInstance().getSpinMotor());
         m_orchestra.addInstrument(Intake.getInstance().getPivotMotor());
-        m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(0));
-        m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(1));
-        m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(2));
-        m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(3));
-        m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(0));
-        m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(1));
-        m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(2));
-        m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(3));
+        // m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(0));
+        // m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(1));
+        // m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(2));
+        // m_orchestra.addInstrument(Drive.getInstance().getDriveMotors().get(3));
+        // m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(0));
+        // m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(1));
+        // m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(2));
+        // m_orchestra.addInstrument(Drive.getInstance().getTurnMotors().get(3));
         m_orchestra.addInstrument(Shooter.getInstance().getHoodMotor());
         m_orchestra.addInstrument(Shooter.getInstance().getShooterMotors().get(0));
         m_orchestra.addInstrument(Shooter.getInstance().getShooterMotors().get(1));
+        
         
         
         AudioConfigs configs = new AudioConfigs().withAllowMusicDurDisable(true);
@@ -50,16 +53,16 @@ public class OrchestraSubsystem {
         Intake.getInstance().getPivotMotor().getConfigurator().apply(configs);
 
         // Drive - Drive Motors
-        Drive.getInstance().getDriveMotors().get(0).getConfigurator().apply(configs);
-        Drive.getInstance().getDriveMotors().get(1).getConfigurator().apply(configs);
-        Drive.getInstance().getDriveMotors().get(2).getConfigurator().apply(configs);
-        Drive.getInstance().getDriveMotors().get(3).getConfigurator().apply(configs);
+        // Drive.getInstance().getDriveMotors().get(0).getConfigurator().apply(configs);
+        // Drive.getInstance().getDriveMotors().get(1).getConfigurator().apply(configs);
+        // Drive.getInstance().getDriveMotors().get(2).getConfigurator().apply(configs);
+        // Drive.getInstance().getDriveMotors().get(3).getConfigurator().apply(configs);
 
-        // Drive - Turn Motors
-        Drive.getInstance().getTurnMotors().get(0).getConfigurator().apply(configs);
-        Drive.getInstance().getTurnMotors().get(1).getConfigurator().apply(configs);
-        Drive.getInstance().getTurnMotors().get(2).getConfigurator().apply(configs);
-        Drive.getInstance().getTurnMotors().get(3).getConfigurator().apply(configs);
+        // // Drive - Turn Motors
+        // Drive.getInstance().getTurnMotors().get(0).getConfigurator().apply(configs);
+        // Drive.getInstance().getTurnMotors().get(1).getConfigurator().apply(configs);
+        // Drive.getInstance().getTurnMotors().get(2).getConfigurator().apply(configs);
+        // Drive.getInstance().getTurnMotors().get(3).getConfigurator().apply(configs);
 
         // Shooter
         Shooter.getInstance().getHoodMotor().getConfigurator().apply(configs);
@@ -71,18 +74,19 @@ public class OrchestraSubsystem {
 
         // Attempt to load the chrp
         
-        var anotheronebitesthedust = m_orchestra.loadMusic("anotheronebitesthedust.chrp");
-        var thunderstrick = m_orchestra.loadMusic("thunderstruck.chrp");
-        var vivaLaVida = m_orchestra.loadMusic("VivaLaVida.chrp");
-        var underTheSea = m_orchestra.loadMusic("UnderTheSea.chrp");
-        var TheFinalCountDown = m_orchestra.loadMusic("TheFinalCountDown.chrp");
-        var RickRolled = m_orchestra.loadMusic("RickRolled.chrp");
-        var PiratesOfTheCaribbean = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
-        var PiratesOfTheCaribbean2 = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
-        var IWantItThatWay = m_orchestra.loadMusic("IWantItThatWay.chrp");
-        var BohimeanRapsody = m_orchestra.loadMusic("BohimeanRapsody.chrp");
-        var BillieJean = m_orchestra.loadMusic("BillieJean.chrp");
+        var anotheronebitesthedust = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
+        // var thunderstrick = m_orchestra.loadMusic("thunderstruck.chrp");
+        // var vivaLaVida = m_orchestra.loadMusic("VivaLaVida.chrp");
+        // var underTheSea = m_orchestra.loadMusic("UnderTheSea.chrp");
+        // var TheFinalCountDown = m_orchestra.loadMusic("TheFinalCountDown.chrp");
+        // var RickRolled = m_orchestra.loadMusic("RickRolled.chrp");
+        // var PiratesOfTheCaribbean = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
+        // var PiratesOfTheCaribbean2 = m_orchestra.loadMusic("PiratesOfTheCaribbean.chrp");
+        // var IWantItThatWay = m_orchestra.loadMusic("IWantItThatWay.chrp");
+        // var BohimeanRapsody = m_orchestra.loadMusic("BohimeanRapsody.chrp");
+        // var BillieJean = m_orchestra.loadMusic("BillieJean.chrp");
     }
+
 
     public void playMusic() {
         // Start playing the music
@@ -95,6 +99,7 @@ public class OrchestraSubsystem {
     }
 
     public boolean isPlaying() {
+        Logger.recordOutput("MUSIC/Time", m_orchestra.getCurrentTime());
         return m_orchestra.isPlaying();
     }
 }
