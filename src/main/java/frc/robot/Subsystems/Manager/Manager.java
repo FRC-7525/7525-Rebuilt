@@ -5,6 +5,7 @@ import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerConstants.*;
+import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
@@ -132,13 +133,19 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		// SHOOTING --> WINDING_UP
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
+		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.IDLE, DRIVER_CONTROLLER::getAButtonPressed);
+		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.IDLE, DRIVER_CONTROLLER::getAButtonPressed);
+
+		
 
 		// // IDLE <---> EXTENDING_CLIMBER
-		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
+		//addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
 		// // EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
 		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
+
+		
 
 		// Operator override HoodSnapDown
 		// addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
@@ -197,8 +204,8 @@ public class Manager extends Subsystem<ManagerStates> {
 
 		shooter.periodic();
 		hopper.periodic();
-		intake.periodic();
-		drive.periodic();
+		//intake.periodic();
+		//drive.periodic();
 		//vision.periodic();
 
 		// Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
@@ -213,6 +220,9 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);
 			numTimesYPressed = 0;
+		}
+		if(DRIVER_CONTROLLER.getAButtonPressed()) {
+			setState(ManagerStates.IDLE);
 		}
 
 		double currentTime = shiftTimer.get();
